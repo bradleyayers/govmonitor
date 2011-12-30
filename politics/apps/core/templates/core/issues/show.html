@@ -1,0 +1,41 @@
+{% extends "core/base_main_secondary.html" %}
+
+{% load core %}
+
+{% block title %}
+    {{ issue.name }}
+{% endblock %}
+
+{% block main %}
+    {{ block.super }}
+    <h1>{{ issue.name }}</h1>
+    {% if issue.description_html %}
+        {{ issue.description_html|safe }}
+    {% else %}
+        <p><em>No description available.</em></p>
+    {% endif %}
+    <p>
+        {% for tag in issue.tags.all %}
+            {% tag_link tag %}
+        {% endfor %}
+    </p>
+    {% if request.user.is_authenticated %}
+        <p>
+            <a href="{% url core:issues:edit issue.pk %}">Edit</a>
+        </p>
+    {% endif %}
+    <table class="views">
+        <tbody>
+            {% for view in views %}
+               <tr>
+                   <th>
+                       <a href="{% url core:parties:show view.party.pk view.party.slug %}">{{ view.party.name }}</a>
+                   </th>
+                   <td class="{{ view.stance }}">
+                       <a href="{% url core:views:show view.pk view.slug %}">{{ view.get_stance_display }}</a>
+                   </td>
+               </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

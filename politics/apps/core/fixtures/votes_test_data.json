@@ -1,0 +1,22 @@
+[
+    {
+        "model": "core.Vote",
+        "pk": null,
+        "fields": {
+            "author": 1,
+            "content_type": ["auth", "user"],
+            "is_archived": false,
+            "object_id": 1
+        }
+    },
+    {
+        "model": "core.Vote",
+        "pk": null,
+        "fields": {
+            "author": 1,
+            "content_type": ["auth", "user"],
+            "is_archived": true,
+            "object_id": 1
+        }
+    }
+]

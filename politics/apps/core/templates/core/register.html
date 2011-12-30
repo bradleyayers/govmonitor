@@ -1,0 +1,15 @@
+{% extends "core/base_main_secondary.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    {{ block.super }}
+    <h1>Register</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p><input type="submit" value="Register"/></p>
+    </form>
+{% endblock %}

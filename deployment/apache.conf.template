@@ -1,0 +1,30 @@
+# This file assumes that the Listen and NameVirtualHost directives have been
+# used elsewhere (e.g. /etc/apache2/ports.conf on Ubuntu). If not, uncomment:
+#
+#Listen 80
+#NameVirtualHost *:80
+
+<VirtualHost *:80>
+    # A hostname that uniquely identifies this host for use in name-based
+    # virtual hosting. This will typically just be the site's domain name.
+    ServerName example.com
+
+    # Use the ServerAlias directive to add alternate hostnames:
+    #
+    #ServerAlias www.example.com
+
+    # The admin's email address.
+    ServerAdmin admin@example.com
+
+    # The root of the project on the filesystem.
+    DocumentRoot /srv/www/example
+
+    # Hook up the media directories for Apache to serve.
+    Alias /media/ /DocumentRoot/example/example/media/
+    Alias /static/ /DocumentRoot/example/example/static/
+
+    # Configure mod_wsgi to run in daemon mode.
+    WSGIDaemonProcess example processes=2 threads=15 user=example
+    WSGIProcessGroup example
+    WSGIScriptAlias / /DocumentRoot/example/deployment/wsgi.wsgi
+</VirtualHost>

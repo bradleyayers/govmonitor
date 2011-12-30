@@ -1,0 +1,78 @@
+div.reference {
+    border-bottom: 1px solid #DDD;
+    margin-bottom: 1em;
+    padding-left: 60px;
+    position: relative;
+}
+
+div.reference:last-child {
+    border-bottom: 0;
+}
+
+div.reference div.vote-widget {
+    left: 0;
+    position: absolute;
+    text-align: center;
+    width: 60px;
+}
+
+div.reference div.vote-widget a {
+    background: transparent url("../img/ticks.png") no-repeat;
+    display: block;
+    height: 38px;
+    margin: 0 auto;
+    width: 38px;
+}
+
+div.reference div.vote-widget a.selected {
+    background-position: 0 -38px;
+}
+
+div.reference div.stance {
+    color: #FFF;
+    font-weight: bold;
+    margin-bottom: 1em;
+    padding: 0.35em 0.5em 0.5em 0.5em;
+}
+
+div.reference div.stance.support {
+    background-color: #081;
+}
+
+div.reference div.stance.oppose {
+    background-color: #C00;
+}
+
+div.reference div.stance.unclear {
+    background-color: #FFDA00;
+}
+
+div.reference-form {
+    border-top: 1px solid #DDD;
+}
+
+form.reference input, form.reference label {
+    font-size: 15px;
+}
+
+form.reference label {
+    font-weight: bold;
+    line-height: 23px;
+}
+
+form.reference input[type=text] {
+    float: right;
+    width: 640px;
+}
+
+form.reference select {
+    position: relative;
+    top: -1px;
+}
+
+form.reference textarea {
+    font-family: monospace;
+    height: 150px;
+    padding: 0;
+    width: 698px;
+}

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>{% block title %}{% endblock %}</title>
+        {% block javascript %}{% endblock %}
+        {% block stylesheets %}
+            <link href="{{ STATIC_URL }}core/css/reset.css" rel="stylesheet" type="text/css"/>
+        {% endblock %}
+    </head>
+    <body class="{% block body_class %}{% endblock %}">
+        {% block body %}{% endblock %}
+    </body>
+</html>

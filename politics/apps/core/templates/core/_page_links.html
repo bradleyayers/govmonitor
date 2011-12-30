@@ -1,0 +1,25 @@
+{% load core %}
+
+{% if pages|last > pages.0 %}
+    <div class="pager">
+        {% if pages.0 > 1 %}
+            <a href="{% query_string page=1 %}">1</a>
+            {% if 2 < pages.0 %}…{% endif %}
+        {% endif %}
+
+        {% for page in pages %}
+            {% if page == current_page.number %}
+                <span>{{ page }}</span>
+            {% else %}
+                <a href="{% query_string page=page %}">{{ page }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% with last_page=current_page.paginator.num_pages %}
+            {% if pages|last < last_page %}
+                {% if pages|last|add:"1" < last_page %}…{% endif %}
+                <a href="{% query_string page=last_page %}">{{ last_page }}</a>
+            {% endif %}
+        {% endwith %}
+    </div>
+{% endif %}

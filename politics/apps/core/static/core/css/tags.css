@@ -1,0 +1,44 @@
+a.tag {
+    background-color: #E0F9EA;
+    border-bottom: 1px solid #BCB;
+    border-right: 1px solid #CDC;
+    color: #393;
+    padding: 3px 4px;
+}
+
+a.tag:hover {
+    background-color: #181;
+    color: #DFD;
+    text-decoration: none;
+}
+
+table.tags {
+    width: 100%;
+}
+
+table.tags tr {
+    border-bottom: 1px dotted #DDD;
+}
+
+table.tags tr:last-child {
+    border-bottom: none;
+}
+
+table.tags td {
+    padding: 0.7em 0.5em 0.7em 0;
+    width: 25%;
+}
+
+table.tags td a {
+    margin-right: 5px;
+    white-space: nowrap;
+}
+
+table.tags td span {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+body.tags p.pages {
+    text-align: right;
+}

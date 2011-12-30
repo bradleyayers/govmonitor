@@ -1,0 +1,242 @@
+# coding=utf-8
+"""Deployment tasks.
+
+To use this fabfile, you must first configure several ``env`` settings:
+``env.host``, ``env.user``, etc. Constraints apply to these settings:
+
+* ``env.user`` on the host must be the owner of the site's files and it must
+  allow SSH connections (``authorized_keys`` or similar must be configured).
+* ``env.user`` on the host must have permission to reload Apache and write to
+  its ``sites-{available,enabled}`` directories (``sudo`` must be configured).
+
+Several assumptions are made about both the host's and the repository's layout:
+
+* Apache's ``sites-{available,enabled}`` directories must be located in
+  ``/etc/apache2``. This is the default if Apache was installed with aptitude.
+* The site's configuration files in said directories on the host must be named
+  after the project (i.e. their filenames must be ``env.project_name``).
+"""
+from fabric.api import *
+from fabric.colors import green, red, yellow
+from fabric.utils import indent
+import os.path
+import sys
+
+
+# The host we are deploying to and the credentials that should be used for SSH
+# and sudo prompts. Do not include a username in the host (e.g. user@host).
+env.host = "HOST"
+env.user = "USER"
+env.password = "PASSWORD"
+
+# The paths of files or directories that must be preserved across deployments,
+# relative to the project directory. Silently fails if a file doesn't exist.
+env.preserved_files = (
+    "deployment/apache.conf",
+    "deployment/apache.conf.maintenance",
+)
+
+# The project name: the name of the project's root python module. The project
+# directory within the site's root directory must also share this name.
+env.project_name = "PROJECT_NAME"
+
+# The deployment's root directory on the server, containing the project's root
+# directory, logs, etc. This is effectively our "working" area.
+env.root_directory = "ROOT_DIRECTORY"
+
+
+@task
+def deploy():
+    """Deploy to the server.
+
+    The branch that is deployed is that of the repository in the root
+    directory. Thus, it must have the master branched checked out for a
+    production deployment, development for a development deployment, etc.
+
+    Maintenance mode is turned on while deploying. It if was on before
+    deployment began, it will remain so when it has finished.
+
+    .. note::
+
+        This task does not perform database migrations.
+    """
+    _check_root_directory()
+    _check_project_directory()
+
+    # Is maintenance mode on? If not, turn it on.
+    maintenance_was_on = _file_exists(os.path.join(
+            env.root_directory, "maintenance"))
+
+    if not maintenance_was_on:
+        print "> Turning maintenance mode on."
+        maintenance("on")
+
+    try:
+        # Create a copy of the project directory as a backup.
+        run("cp -R \"{0}\" \"{0}_old\"".format(env.project_directory))
+
+        with cd(env.project_directory):
+            # Pull down the latest version.
+            print "> Pulling the latest version."
+            run("git reset --hard HEAD && git pull origin")
+
+            with prefix("source environment/bin/activate"):
+                # Install requirements. We're working in the original
+                # repository so we've got the requirements cache!
+                print "> Installing requirements."
+                run("pip install -r requirements.txt "
+                    "--download-cache=requirements_cache")
+
+                # Collect static files.
+                print "> Collecting static files."
+                run("\"{0}/manage.py\" collectstatic --noinput".format(
+                        env.project_name))
+
+            # Copy preserved files from the backup.
+            print "> Copying preserved files."
+            old_project_directory = env.project_directory + "_old"
+
+            for path in env.preserved_files:
+                try:
+                    # Recursive so directories are copied.
+                    run("cp -R \"{0}\" \"{1}\"".format(
+                            os.path.join(old_project_directory, path),
+                            os.path.join(env.project_directory, path)))
+                except SystemExit:
+                    print yellow("Couldn't preserve the file \"%s\"." % path)
+
+        print "> Setting permissions."
+        _set_permissions()
+
+        # We're done! Remove the backup.
+        run("rm -fr \"{0}_old\"".format(env.project_directory))
+    except SystemExit:
+        # Something failed; restore the backup.
+        run("rm -fr \"{0}\"".format(env.project_directory))
+        run("mv \"{0}_old\" \"{0}\"".format(env.project_directory))
+
+    # This reloads Apache for us; how convenient. If maintenance mode is
+    # staying on, we don't need to reload it anyway!
+    if not maintenance_was_on:
+        print "> Turning maintenance mode off."
+        maintenance("off")
+
+    print green("Done!")
+
+@task
+def maintenance(state=""):
+    """Turn maintenance mode on or off.
+
+    .. code-block:: bash
+
+        $ fab maintenance:on
+        Maintenance mode on.
+        $ fab maintenance:off
+        Maintenance mode off.
+    """
+    if state == "":
+        print "Usage:\n", indent(["fab maintenance:on", "fab maintenance:off"])
+        sys.exit()
+
+    if state not in ("on", "off"):
+        message = "Invalid argument \"{0}\": must be \"on\" or \"off\"."
+        print red(message.format(state))
+        sys.exit(1)
+
+    _check_root_directory()
+    _check_project_directory()
+
+    # Does the required Apache configuration file exist?
+    deployment_directory = os.path.join(env.project_directory, "deployment")
+    apache_conf_file = os.path.join(deployment_directory, "apache.conf%s"
+            % (".maintenance" if state == "on" else ""))
+
+    if not _file_exists(apache_conf_file):
+        message = "The Apache configuration file \"%s\" doesn't exist."
+        print red(message % apache_conf_file)
+        sys.exit(1)
+
+    # Does the maintenance directory exist? This is only required when turning
+    # maintenance mode on as its contents are served in place of the site.
+    maintenance_directory = os.path.join(deployment_directory, "maintenance")
+    if state == "on" and not _file_exists(maintenance_directory):
+        message = "The maintenance directory \"%s\" doesn't exist."
+        print red(message % maintenance_directory)
+        sys.exit(1)
+
+    # Remove the copied maintenance directory (if it exists).
+    with settings(warn_only=True):
+        run("rm -r \"%s\"" % os.path.join(env.root_directory, "maintenance"))
+
+    # Copy the Apache configuration files (overrides old ones).
+    for directory in ("available", "enabled"):
+        sudo("cp \"{0}\" \"/etc/apache2/sites-{1}/{2}\"".format(
+                apache_conf_file, directory, env.project_name))
+
+    # Copy the maintenance files if we're turning maintenance mode on; that
+    # way, deploying a new version won't override the files that we need!
+    if state == "on":
+        run("cp -R \"{0}\" \"{1}\"".format(maintenance_directory,
+                os.path.join(env.root_directory, "maintenance")))
+
+    # Set permissions, reload Apache, and we're done!
+    _set_permissions()
+    sudo("/etc/init.d/apache2 reload")
+    print green("Maintenance mode %s." % state)
+
+
+def _check_project_directory():
+    """Check that the project directory exists."""
+    path = env.project_directory
+    if not _file_exists(path):
+        print red("The project directory \"%s\" doesn't exist." % path)
+        sys.exit(1)
+
+
+def _check_root_directory():
+    """Check that the root directory exists."""
+    path = env.root_directory
+    if not _file_exists(path):
+        print red("The root directory \"%s\" doesn't exist." % path)
+        sys.exit(1)
+
+
+@with_settings(warn_only=True)
+def _file_exists(path):
+    """Check if a file exists.
+
+    :param path: An absolute or relative path to the file to check for.
+    :type  path: ``str``
+    :returns: ``True`` if the described file exists; ``False`` otherwise.
+    :rtype: ``bool``
+
+    .. warning::
+
+        Returns ``False`` if the user has insufficient permissions.
+    """
+    return not run("file \"{0}\"".format(path)).failed
+
+
+def _set_permissions():
+    """Set permissions throughout the site directory.
+
+    ..note ::
+
+        Assumes that both the root and project directories exist.
+    """
+    # Use sudo as we may not be a member of www-data.
+    sudo("chmod -R 750 \"{0}\"".format(env.root_directory))
+    sudo("chown -R {0}:www-data \"{1}\"".format(env.user, env.root_directory))
+
+    # Make the static directory writable for django-compressor.
+    sudo("chmod -R 770 \"{0}\"".format(os.path.join(
+            env.project_directory, env.project_name, "static")))
+
+
+# Calculate the host string and the path to the project directory.
+env.hosts = [env.user + "@" + env.host]
+env.project_directory = os.path.join(env.root_directory, env.project_name)
+
+# Don't be so verbose.
+ignore = ("running", "status", "stderr", "stdout", "warnings")
+output.update(dict((level, False) for level in ignore))

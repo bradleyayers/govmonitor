@@ -1,0 +1,24 @@
+# coding=utf-8
+from .common import *
+
+
+# -----------------------------------------------------------------------------
+# Database
+# -----------------------------------------------------------------------------
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "HOST": "",
+        "NAME": "DATABASE_NAME",
+        "PASSWORD": "DATABASE_PASSWORD",
+        "USER": "DATABASE_USER"
+    }
+}
+
+# -----------------------------------------------------------------------------
+# General
+# -----------------------------------------------------------------------------
+
+DEBUG = False
+TEMPLATE_DEBUG = False

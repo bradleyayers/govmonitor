@@ -1,0 +1,30 @@
+<table class="views">
+    <thead>
+        <tr>
+            <th></th>
+            {% for view in view_groups.0 %}
+                {% with party=view.party %}
+                    <th class="party">
+                        <a href="{% url core:parties:show party.pk party.slug %}">{{ party.name }}</a>
+                    </th>
+                {% endwith %}
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for view_group in view_groups %}
+            <tr>
+                {% with issue=view_group.0.issue %}
+                    <th>
+                        <a href="{% url core:issues:show issue.pk issue.slug %}" title="{{ issue.name }}">{{ issue.name }}</a>
+                    </th>
+                {% endwith %}
+                {% for view in view_group %}
+                    <td class="{{ view.stance }}">
+                        <a href="{% url core:views:show view.pk view.slug %}">{{ view.get_stance_display }}</a>
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

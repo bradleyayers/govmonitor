@@ -1,0 +1,24 @@
+{% extends "core/base_main_secondary.html" %}
+
+{% load core %}
+
+{% block title %}
+    Notifications
+{% endblock %}
+
+{% block main %}
+    {{ block.super }}
+    <h1>Notifications</h1>
+    {% if notifications %}
+        <ul class="notifications">
+            {% for notification in notifications %}
+                <li {% if not notification.is_read %}class="unread"{% endif %}>
+                    <a href="{{ notification.url }}">{{ notification.title }}</a>
+                    <span>{{ notification.created_at|interval_string }} ago</span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p><i>No notifications.</i></p>
+    {% endif %}
+{% endblock %}

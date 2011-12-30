@@ -1,0 +1,52 @@
+body.issue-form #main {
+    width: 650px;
+}
+
+body.issue-form #secondary {
+    width: 295px;
+}
+
+form.issue * {
+    font-size: 15px;
+}
+
+form.issue label {
+    font-weight: bold;
+    line-height: 23px;
+}
+
+form.issue input[type=text] {
+    float: right;
+    width: 590px;
+}
+
+form.issue textarea {
+    font-family: monospace;
+    height: 150px;
+    padding: 0;
+    width: 648px;
+}
+
+form.issue ol.tag_suggestions {
+    background: #FFF;
+    border: 1px solid #999;
+    position: absolute;
+}
+
+form.issue ol.tag_suggestions li {
+    padding: 3px 4px;
+    cursor: pointer;
+}
+
+form.issue ol.tag_suggestions li.hover {
+    background-color: #33F;
+    color: #FFF;
+}
+
+form.issue > p:first-child {
+    margin-top: 0;
+}
+
+form.issue p.actions a {
+    font-size: 11px;
+}

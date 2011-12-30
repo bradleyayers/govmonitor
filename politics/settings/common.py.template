@@ -1,0 +1,179 @@
+# coding=utf-8
+import os
+import os.path
+
+
+# The root directory of the project.
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# -----------------------------------------------------------------------------
+# Authentication
+# -----------------------------------------------------------------------------
+
+# A single UserProfile should be associated with each User. We use this class
+# to store additional information like the user's score, etc.
+AUTH_PROFILE_MODULE = "core.UserProfile"
+
+AUTHENTICATION_BACKENDS = (
+    "social_auth.backends.facebook.FacebookBackend",
+    "social_auth.backends.twitter.TwitterBackend",
+    "django.contrib.auth.backends.ModelBackend",
+)
+
+# Required for Facebook authentication.
+FACEBOOK_APP_ID = "FACEBOOK_APP_ID"
+FACEBOOK_API_SECRET = "FACEBOOK_API_SECRET"
+
+# If you don't request the offline_access permission, access tokens expire
+# after a relatively short period of time; logging in frequently is annoying.
+FACEBOOK_EXTENDED_PERMISSIONS = ("offline_access",)
+
+# The absolute path to the page that users are shown when login fails.
+LOGIN_ERROR_URL = "/login/?error=1"
+
+# The absolute path to the page that users are redirected to after logging in.
+LOGIN_REDIRECT_URL = "/"
+
+# The absolute path to the login page (the page that displays a login form or
+# links to the Facebook authentication procedure, etc.).
+LOGIN_URL = "/login/"
+
+SOCIAL_AUTH_ENABLED_BACKENDS = ("facebook", "twitter")
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/"
+
+# Required for Twitter authentication.
+TWITTER_CONSUMER_KEY = "TWITTER_CONSUMER_KEY"
+TWITTER_CONSUMER_SECRET = "TWITTER_CONSUMER_SECRET"
+
+# -----------------------------------------------------------------------------
+# Database
+# -----------------------------------------------------------------------------
+
+# Connection information is defined in the development/production files.
+
+# Alternative migration modules. We use this to declare where migrations should
+# be stored for third-party libraries (otherwise they'd be in the virtualenv).
+SOUTH_MIGRATION_MODULES = {
+    "social_auth": "politics.apps.south_libraries.migrations.social_auth",
+}
+
+# -----------------------------------------------------------------------------
+# Email
+# -----------------------------------------------------------------------------
+
+DEFAULT_FROM_EMAIL = "DEFAULT_FROM_EMAIL"
+EMAIL_HOST = "EMAIL_HOST"
+EMAIL_HOST_PASSWORD = "EMAIL_HOST_PASSWORD"
+EMAIL_HOST_USER = "EMAIL_HOST_USER"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+# -----------------------------------------------------------------------------
+# General
+# -----------------------------------------------------------------------------
+
+ADMINS = (("NAME", "EMAIL"),)
+MANAGERS = ADMINS
+
+INSTALLED_APPS = (
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.sites",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.admin",
+
+    "compressor",
+    "debug_toolbar",
+    "haystack",
+    "social_auth",
+    "south",
+
+    "politics.apps.core",
+    "politics.apps.south_libraries",
+)
+
+APPEND_SLASH = True
+INTERNAL_IPS = ("127.0.0.1",)
+LANGUAGE_CODE = "en-us"
+ROOT_URLCONF = "politics.urls"
+SECRET_KEY = "SECRET_KEY"
+SITE_ID = 1
+TIME_ZONE = "UTC"
+USE_I18N = True
+USE_L10N = True
+
+# -----------------------------------------------------------------------------
+# Media
+# -----------------------------------------------------------------------------
+
+COMPRESS_ENABLED = True
+
+# The absolute path to the directory that is to hold user-uploaded files and
+# the URL path from which those files should be served.
+MEDIA_ROOT = os.path.join(ROOT, "media")
+MEDIA_URL = "/media/"
+
+# The absolute path to the directory that is to hold collected static files
+# and the URL path from which those files should be served.
+STATIC_ROOT = os.path.join(ROOT, "static")
+STATIC_URL = "/static/"
+
+# The finder classes that should be used to find static files.
+STATICFILES_FINDERS = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "compressor.finders.CompressorFinder",
+)
+
+# -----------------------------------------------------------------------------
+# Other
+# -----------------------------------------------------------------------------
+
+# Django Debug Toolbar configuration.
+DEBUG_TOOLBAR_CONFIG = {
+    "INTERCEPT_REDIRECTS": False,
+}
+
+MIDDLEWARE_CLASSES = (
+    "django.middleware.common.CommonMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.transaction.TransactionMiddleware",
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.contrib.messages.context_processors.messages",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.request",
+    "social_auth.context_processors.social_auth_backends",
+)
+
+TEMPLATE_DIRS = (
+    os.path.join(ROOT, "templates"),
+)
+
+TEMPLATE_LOADERS = (
+    "django.template.loaders.filesystem.Loader",
+    "django.template.loaders.app_directories.Loader",
+)
+
+# -----------------------------------------------------------------------------
+# reCAPTCHA
+# -----------------------------------------------------------------------------
+
+RECAPTCHA_PUBLIC_KEY = "RECAPTCHA_PUBLIC_KEY"
+RECAPTCHA_PRIVATE_KEY = "RECAPTCHA_PRIVATE_KEY"
+
+# -----------------------------------------------------------------------------
+# Search
+# -----------------------------------------------------------------------------
+
+HAYSTACK_SITECONF = "politics.search_sites"
+HAYSTACK_SEARCH_ENGINE = "simple"

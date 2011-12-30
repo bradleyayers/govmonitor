@@ -1,0 +1,11 @@
+body.settings ul.connect li {
+    margin-bottom: 0.5em;
+    position: relative;
+    top: -10px;
+}
+
+body.settings ul.connect img {
+    margin-right: 0.5em;
+    position: relative;
+    top: 10px;
+}

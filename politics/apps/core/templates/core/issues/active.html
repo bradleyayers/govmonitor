@@ -1,0 +1,29 @@
+{% extends "core/base_main_secondary.html" %}
+
+{% load core %}
+
+{% block title %}Active Issues{% endblock %}
+
+{% block body_class %}issues{% endblock %}
+
+{% block main %}
+    <ol class="tabs">
+        <li><a href="{% url core:issues:popular %}">Popular</a></li>
+        <li class="selected"><a href="{% url core:issues:active %}">Active</a></li>
+    </ol>
+    <hr/>
+    <p>Create a <a href="{% url core:issues:new %}">new issue</a> or a <a href="{% url core:parties:new %}">new party</a>.</p>
+    {% issue_table page.object_list number_of_parties %}
+    {% page_links page %}
+{% endblock %}
+
+{% block secondary %}
+    {{ block.super }}
+    <div class="info module">
+        <h2>Active Issues</h2>
+        <p>
+            These are issues that have recently been added, updated, or a party's
+            stance on it has changed.
+        </p>
+    </div>
+{% endblock %}

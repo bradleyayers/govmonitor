@@ -1,0 +1,105 @@
+[
+    {
+        "model": "auth.User",
+        "pk": 1,
+        "fields": {
+            "is_active": true,
+            "is_staff": true,
+            "is_superuser": true,
+            "password": "sha1$1e281$ddea3418bd7ef660a827d197de332a80acef47cd",
+            "username": "chris"
+        }
+    },
+    {
+        "model": "auth.User",
+        "pk": 2,
+        "fields": {
+            "is_active": true,
+            "is_staff": true,
+            "is_superuser": true,
+            "password": "sha1$1e281$ddea3418bd7ef660a827d197de332a80acef47cd",
+            "username": "brad"
+        }
+    },
+    {
+        "model": "core.Issue",
+        "pk": 1,
+        "fields": {
+            "description": "A tax on carbon emissions.",
+            "is_popular": true,
+            "name": "Carbon tax"
+        }
+    },
+    {
+        "model": "core.Party",
+        "pk": 1,
+        "fields": {
+            "name": "Australian Labor Party"
+        }
+    },
+    {
+        "model": "core.View",
+        "pk": 1,
+        "fields": {
+            "issue": 1,
+            "party": 1,
+            "stance": "support"
+        }
+    },
+    {
+        "model": "core.Reference",
+        "pk": 1,
+        "fields": {
+            "author": 1,
+            "is_archived": false,
+            "stance": "support",
+            "text": "This is a reference.",
+            "url": "http://a.com/",
+            "view": 1
+        }
+    },
+    {
+        "model": "core.Reference",
+        "pk": 2,
+        "fields": {
+            "author": 1,
+            "is_archived": false,
+            "stance": "oppose",
+            "text": "This is another reference.",
+            "url": "http://b.com/",
+            "view": 1
+        }
+    },
+    {
+        "model": "core.Reference",
+        "pk": 3,
+        "fields": {
+            "author": 1,
+            "is_archived": true,
+            "stance": "oppose",
+            "text": "This is an archived reference.",
+            "url": "http://c.com/",
+            "view": 1
+        }
+    },
+    {
+        "model": "core.Vote",
+        "pk": null,
+        "fields": {
+            "author": 1,
+            "content_type": ["core", "reference"],
+            "is_archived": false,
+            "object_id": 1
+        }
+    },
+    {
+        "model": "core.Vote",
+        "pk": null,
+        "fields": {
+            "content_type": ["core", "reference"],
+            "is_archived": true,
+            "object_id": 1,
+            "author": 1
+        }
+    }
+]

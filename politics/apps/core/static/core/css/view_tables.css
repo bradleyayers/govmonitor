@@ -1,0 +1,50 @@
+body.issues table.views {
+    width: 100%;
+}
+
+table.views {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+table.views td, table.views th {
+    border: 1px solid #E0E0E0;
+    padding: 0.2em 0.3em;
+    text-align: center;
+    vertical-align: middle;
+}
+
+table.views thead {
+    background: -moz-linear-gradient(top, #FAFAFA 0%, #F0F0F0 100%);
+    background: -webkit-gradient(linear, left top, left bottom, from(#FAFAFA), to(#F0F0F0));
+}
+
+table.views thead th {
+    font-weight: bold;
+}
+
+table.views tbody th {
+    background-color: #F5F5F5;
+    text-align: left;
+    width: 200px;
+}
+
+table.views tbody tr td.oppose {
+    background-color: #FFE0E0;
+}
+
+table.views tbody tr td.support {
+    background-color: #E0FFE0;
+}
+
+table.views tbody tr td.unclear {
+    background-color: #FFFFC3;
+}
+
+table.views tbody tr td.unknown {
+    background-color: #FFFFFF;
+}
+
+table.views tbody tr td.unknown a {
+    color: #F0F0F0;
+}
