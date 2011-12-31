@@ -5,16 +5,16 @@ To use this fabfile, you must first configure several ``env`` settings:
 ``env.host``, ``env.user``, etc. Constraints apply to these settings:
 
 * ``env.user`` on the host must be the owner of the site's files and it must
-  allow SSH connections (``authorized_keys`` or similar must be configured).
+  permit SSH connections (``authorized_keys`` or similar must be configured).
 * ``env.user`` on the host must have permission to reload Apache and write to
   its ``sites-{available,enabled}`` directories (``sudo`` must be configured).
 
 Several assumptions are made about both the host and repository layout:
 
 * Apache's ``sites-{available,enabled}`` directories must be located in
-  ``/etc/apache2``. This is the default if Apache was installed with aptitude.
+  ``/etc/apache2``. This is the default if Apache is installed with aptitude.
 * The site's configuration files in said directories must be named after the
-  project (i.e. their filenames must be equal to ``env.project_name``).
+  site's root directory (i.e. the basename of ``env.root_path``).
 * If it's being used, Solr's home directory must be ``/etc/opt/solr``, it must
   be running on port ``8983``, and the core administration interface must be
   accessible at ``http://localhost:8983/solr/admin/cores`` (no trailing slash).
@@ -22,31 +22,28 @@ Several assumptions are made about both the host and repository layout:
 from fabric.api import *
 from fabric.colors import green, red, yellow
 from fabric.contrib.files import exists
-from fabric.utils import indent
 import os.path
 import sys
 
 
-# The host we are deploying to and the credentials that should be used for SSH
-# and sudo prompts. Do not include a username in the host (e.g. user@host).
+# The host we're deploying to and the credentials that are to be used for SSH
+# and sudo prompts. Do not include a username in ``env.host`` (e.g. user@host).
 env.host = "HOST"
 env.user = "USER"
 env.password = "PASSWORD"
 
 # The paths of files or directories that must be preserved across deployments,
-# relative to the project directory. Silently fails if a file doesn't exist.
+# relative to the repository's root. Prints a message if a file doesn't exist.
 env.preserved_files = (
     "deployment/apache.conf",
     "deployment/apache.conf.maintenance",
 )
 
-# The project name: the name of the project's root python module. The project
-# directory within the site's root directory must also share this name.
-env.project_name = "PROJECT_NAME"
+# The name of the site's root python module.
+env.root_module_name = "ROOT_MODULE_NAME"
 
-# The deployment's root directory on the server, containing the project's root
-# directory, logs, etc. This is effectively our "working" area.
-env.root_directory = "ROOT_DIRECTORY"
+# The path to the site's root directory. Do not include a tailing slash.
+env.root_path = "ROOT_PATH"
 
 # The name of the site's Solr core or None if the host isn't running Solr.
 env.solr_core_name = "SOLR_CORE_NAME"
@@ -56,36 +53,37 @@ env.solr_core_name = "SOLR_CORE_NAME"
 def deploy():
     """Deploy to the server.
 
-    The branch that is deployed is that of the repository in the root
-    directory. Thus, it must have the master branched checked out for a
-    production deployment, development for a development deployment, etc.
+    The branch that is checked out in ``env.root_path``'s repository is
+    deployed. Thus, the master branch must be checked out for a production
+    deployment, the development branch for a development deployment, etc.
 
     Maintenance mode is turned on while deploying. It if was on before
     deployment began, it will remain so when it has finished.
 
     .. note::
 
-        This task does not perform database migrations.
+        This task doesn't run database migrations or rebuild the Solr index.
     """
-    _check_root_directory()
-    _check_project_directory()
+    _check_directories()
 
     # Is maintenance mode on? If not, turn it on.
-    maintenance_was_on = exists(os.path.join(
-            env.root_directory, "maintenance"))
+    maintenance_was_on = exists(os.path.join(env.root_path, "maintenance"))
 
     if not maintenance_was_on:
         print "> Turning maintenance mode on."
-        maintenance("on")
+        maintenance("on", quiet=True)
 
     try:
-        # Create a copy of the project directory as a backup.
-        run("cp -R \"{0}\" \"{0}_old\"".format(env.project_directory))
+        # Create a backup.
+        with cd(env.root_path):
+            run("cp -R repository repository_old")
 
-        with cd(env.project_directory):
-            # Pull down the latest version.
+        with cd(env.repository_path):
+            # Fetch from origin, then hard reset the local branch to make it
+            # match origin. The subcommand just gets the current branch's name.
             print "> Pulling the latest version."
-            run("git reset --hard HEAD && git pull origin")
+            run("git fetch && git reset --hard origin/`%s`"
+                % "git branch | grep '^\*' | cut -c 3-")
 
             with prefix("source environment/bin/activate"):
                 # Install requirements. We're working in the original
@@ -96,21 +94,20 @@ def deploy():
 
                 # Collect static files.
                 print "> Collecting static files."
-                run("\"{0}/manage.py\" collectstatic --noinput".format(
-                        env.project_name))
+                run("\"%s/manage.py\" collectstatic --noinput"
+                    % env.root_module_name)
 
-            # Copy preserved files from the backup.
-            print "> Copying preserved files."
-            old_project_directory = env.project_directory + "_old"
-
-            for path in env.preserved_files:
-                try:
+        with cd(env.root_path):
+            with settings(warn_only=True):
+                # Copy preserved files from the backup.
+                print "> Copying preserved files."
+                for path in env.preserved_files:
                     # Recursive so directories are copied.
-                    run("cp -R \"{0}\" \"{1}\"".format(
-                            os.path.join(old_project_directory, path),
-                            os.path.join(env.project_directory, path)))
-                except SystemExit:
-                    print yellow("Couldn't preserve the file \"%s\"." % path)
+                    result = run("cp -R \"{0}/{2}\" \"{1}/{2}\"".format(
+                            "repository_old", "repository", path))
+
+                    if result.failed:
+                        print yellow("Couldn't preserve the file \"%s\"." % path)
 
         # Refresh the Solr core.
         if env.solr_core_name:
@@ -120,99 +117,98 @@ def deploy():
         print "> Setting permissions."
         _set_permissions()
 
-        # We're done! Remove the backup.
-        run("rm -fr \"{0}_old\"".format(env.project_directory))
+        # Remove the backup.
+        with cd(env.root_path):
+            run("rm -fr repository_old")
     except (Exception, SystemExit):
         # Something failed; restore the backup. Catching any old exception
         # isn't good practice, but we really don't want the site to go down.
-        run("rm -fr \"{0}\"".format(env.project_directory))
-        run("mv \"{0}_old\" \"{0}\"".format(env.project_directory))
+        run("rm -fr repository && mv repository_old repository")
 
     # This reloads Apache for us; how convenient. If maintenance mode is
     # staying on, we don't need to reload it anyway!
     if not maintenance_was_on:
         print "> Turning maintenance mode off."
-        maintenance("off")
+        maintenance("off", quiet=True)
 
     print green("Done!")
 
 
 @task
-def maintenance(state=""):
+def maintenance(state="", quiet=False):
     """Turn maintenance mode on or off.
 
-    .. code-block:: bash
-
-        $ fab maintenance:on
-        Maintenance mode on.
-        $ fab maintenance:off
-        Maintenance mode off.
+    :param state: The state to transition to: "on" or "off".
+    :type  state: ``str``
+    :param quiet: If ``False`` a status message will be output.
+    :type  quiet: ``boolean``
     """
     if state == "":
-        print "Usage:\n", indent(["fab maintenance:on", "fab maintenance:off"])
+        print "Usage:\n"
+        print "  fab maintenance:on"
+        print "  fab maintenance:off"
         sys.exit()
 
     if state not in ("on", "off"):
-        message = "Invalid argument \"{0}\": must be \"on\" or \"off\"."
-        print red(message.format(state))
-        sys.exit(1)
+        _abort("Invalid argument \"%s\": must be \"on\" or \"off\"." % state)
 
-    _check_root_directory()
-    _check_project_directory()
+    _check_directories()
 
     # Does the required Apache configuration file exist?
-    deployment_directory = os.path.join(env.project_directory, "deployment")
-    apache_conf_file = os.path.join(deployment_directory, "apache.conf%s"
-            % (".maintenance" if state == "on" else ""))
+    apache_file = "apache.conf%s" % (".maintenance" if state == "on" else "")
+    apache_path = os.path.join(env.deployment_path, apache_file)
 
-    if not exists(apache_conf_file):
+    if not exists(apache_path):
         message = "The Apache configuration file \"%s\" doesn't exist."
-        print red(message % apache_conf_file)
-        sys.exit(1)
-
-    # Does the maintenance directory exist? This is only required when turning
-    # maintenance mode on as its contents are served in place of the site.
-    maintenance_directory = os.path.join(deployment_directory, "maintenance")
-    if state == "on" and not exists(maintenance_directory):
-        message = "The maintenance directory \"%s\" doesn't exist."
-        print red(message % maintenance_directory)
-        sys.exit(1)
+        _abort(message % apache_file)
 
     # Remove the copied maintenance directory (if it exists).
     with settings(warn_only=True):
-        run("rm -r \"%s\"" % os.path.join(env.root_directory, "maintenance"))
+        run("rm -r \"%s\"" % env.maintenance_copy_path)
 
-    # Copy the Apache configuration files (overrides old ones).
+    # Copy the Apache configuration files.
     for directory in ("available", "enabled"):
-        sudo("cp \"{0}\" \"/etc/apache2/sites-{1}/{2}\"".format(
-                apache_conf_file, directory, env.project_name))
+        sudo("cp \"%s\" \"/etc/apache2/sites-%s/%s\""
+             % (apache_path, directory, env.site_name))
 
     # Copy the maintenance files if we're turning maintenance mode on; that
     # way, deploying a new version won't override the files being served!
     if state == "on":
-        run("cp -R \"{0}\" \"{1}\"".format(maintenance_directory,
-                os.path.join(env.root_directory, "maintenance")))
+        run("cp -R \"{0}\" \"{1}\"".format(
+                env.maintenance_path, env.maintenance_copy_path))
 
     # Set permissions, reload Apache, and we're done!
     _set_permissions()
     sudo("/etc/init.d/apache2 reload")
-    print green("Maintenance mode %s." % state)
+
+    if not quiet:
+        print green("Maintenance mode %s." % state)
 
 
-def _check_project_directory():
-    """Check that the project directory exists."""
-    path = env.project_directory
-    if not exists(path):
-        print red("The project directory \"%s\" doesn't exist." % path)
-        sys.exit(1)
+def _abort(message):
+    """Outputs ``message`` to STDERR in red and raises ``SystemExit``.
+
+    :param message: The message to be output to STDERR.
+    :type  message: ``str``.
+    """
+    if output.aborts:
+        print >> sys.stderr, red(message)
+
+    sys.exit(1)
 
 
-def _check_root_directory():
-    """Check that the root directory exists."""
-    path = env.root_directory
-    if not exists(path):
-        print red("The root directory \"%s\" doesn't exist." % path)
-        sys.exit(1)
+def _check_directories():
+    """Check that the required directories exist; abort if not."""
+    paths = (
+        env.root_path,
+        env.repository_path,
+        env.deployment_path,
+        env.maintenance_path,
+    )
+
+    for path in paths:
+        if not exists(path):
+            _abort("The directory \"%s\" doesn't exist." % path)
 
 
 def _refresh_solr_core():
@@ -229,18 +225,20 @@ def _refresh_solr_core():
 
         This method doesn't rebuild the index.
     """
-    with cd(os.path.join(env.project_directory, "deployment")):
-        # Ensure that the required configuration files exist.
-        for filename in ("solr_config.xml", "solr_schema.xml"):
+    filenames = ("schema.xml", "solrconfig.xml")
+    core_path = "/etc/opt/solr/%s/conf" % env.solr_core_name
+
+    with cd(os.path.join(env.deployment_path, "solr")):
+        # Ensure that the files exist.
+        for filename in filenames:
             if not exists(filename):
                 message = "The Solr configuration file \"%s\" doesn't exist."
-                print red(message % filename)
-                sys.exit(1)
+                _abort(message % filename)
 
-        # Copy the configuration files into Solr's home directory.
-        core_directory = "/etc/opt/solr/%s/conf" % env.solr_core_name
-        sudo("cp solr_config.xml \"%s/solrconfig.xml\"" % core_directory)
-        sudo("cp solr_schema.xml \"%s/schema.xml\"" % core_directory)
+        # Copy the files into the core's directory.
+        for filename in filenames:
+            sudo("cp {0} \"{1}/{0}\" && chown solr:solr \"{1}/{0}\"".format(
+                    filename, core_path))
 
     # Reload the core.
     run("curl localhost:8983/solr/admin/cores?action=RELOAD&core=%s"
@@ -255,18 +253,25 @@ def _set_permissions():
         Assumes that both the root and project directories exist.
     """
     # Use sudo as we may not be a member of www-data.
-    sudo("chmod -R 750 \"{0}\"".format(env.root_directory))
-    sudo("chown -R {0}:www-data \"{1}\"".format(env.user, env.root_directory))
+    sudo("chmod -R 750 \"{0}\" && chown -R {1}:www-data \"{0}\"".format(
+            env.root_path, env.user))
 
     # Make the static directory writable for django-compressor.
-    sudo("chmod -R 770 \"{0}\"".format(os.path.join(
-            env.project_directory, env.project_name, "static")))
+    sudo("chmod -R 770 \"%s\"" % os.path.join(
+            env.repository_path, env.root_module_name, "static"))
 
 
-# Calculate the host string and the path to the project directory.
+# Calculate the final host string and the site's name. We can't just use the
+# root python module's name for the latter as there may be multiple instances.
 env.hosts = [env.user + "@" + env.host]
-env.project_directory = os.path.join(env.root_directory, env.project_name)
+env.site_name = os.path.basename(env.root_path)
 
-# Don't be so verbose.
+# Calculate the paths to some frequently referenced directories.
+env.repository_path = os.path.join(env.root_path, "repository")
+env.deployment_path = os.path.join(env.repository_path, "deployment")
+env.maintenance_path = os.path.join(env.deployment_path, "maintenance")
+env.maintenance_copy_path = os.path.join(env.root_path, "maintenance")
+
+# Shut up, Fabric.
 ignore = ("running", "status", "stderr", "stdout", "warnings")
 output.update(dict((level, False) for level in ignore))
