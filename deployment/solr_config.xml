@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+  <admin>
+    <defaultQuery>*:*</defaultQuery>
+  </admin>
+
+  <directoryFactory name="DirectoryFactory" class="solr.StandardDirectoryFactory"/>
+  <luceneMatchVersion>LUCENE_35</luceneMatchVersion>
+
+  <requestDispatcher handleSelect="true" >
+    <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="2048" />
+  </requestDispatcher>
+
+  <requestHandler name="/admin/" class="org.apache.solr.handler.admin.AdminHandlers" />
+  <requestHandler name="/update" class="solr.XmlUpdateRequestHandler" />
+  <requestHandler name="standard" class="solr.StandardRequestHandler" default="true" />
+  <updateHandler class="solr.DirectUpdateHandler2"/>
+</config>

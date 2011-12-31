@@ -9,15 +9,19 @@ To use this fabfile, you must first configure several ``env`` settings:
 * ``env.user`` on the host must have permission to reload Apache and write to
   its ``sites-{available,enabled}`` directories (``sudo`` must be configured).
 
-Several assumptions are made about both the host's and the repository's layout:
+Several assumptions are made about both the host and repository layout:
 
 * Apache's ``sites-{available,enabled}`` directories must be located in
   ``/etc/apache2``. This is the default if Apache was installed with aptitude.
-* The site's configuration files in said directories on the host must be named
-  after the project (i.e. their filenames must be ``env.project_name``).
+* The site's configuration files in said directories must be named after the
+  project (i.e. their filenames must be equal to ``env.project_name``).
+* If it's being used, Solr's home directory must be ``/etc/opt/solr``, it must
+  be running on port ``8983``, and the core administration interface must be
+  accessible at ``http://localhost:8983/solr/admin/cores`` (no trailing slash).
 """
 from fabric.api import *
 from fabric.colors import green, red, yellow
+from fabric.contrib.files import exists
 from fabric.utils import indent
 import os.path
 import sys
@@ -44,6 +48,9 @@ env.project_name = "PROJECT_NAME"
 # directory, logs, etc. This is effectively our "working" area.
 env.root_directory = "ROOT_DIRECTORY"
 
+# The name of the site's Solr core or None if the host isn't running Solr.
+env.solr_core_name = "SOLR_CORE_NAME"
+
 
 @task
 def deploy():
@@ -64,7 +71,7 @@ def deploy():
     _check_project_directory()
 
     # Is maintenance mode on? If not, turn it on.
-    maintenance_was_on = _file_exists(os.path.join(
+    maintenance_was_on = exists(os.path.join(
             env.root_directory, "maintenance"))
 
     if not maintenance_was_on:
@@ -105,13 +112,19 @@ def deploy():
                 except SystemExit:
                     print yellow("Couldn't preserve the file \"%s\"." % path)
 
+        # Refresh the Solr core.
+        if env.solr_core_name:
+            print "> Refreshing Solr core."
+            _refresh_solr_core()
+
         print "> Setting permissions."
         _set_permissions()
 
         # We're done! Remove the backup.
         run("rm -fr \"{0}_old\"".format(env.project_directory))
-    except SystemExit:
-        # Something failed; restore the backup.
+    except (Exception, SystemExit):
+        # Something failed; restore the backup. Catching any old exception
+        # isn't good practice, but we really don't want the site to go down.
         run("rm -fr \"{0}\"".format(env.project_directory))
         run("mv \"{0}_old\" \"{0}\"".format(env.project_directory))
 
@@ -122,6 +135,7 @@ def deploy():
         maintenance("off")
 
     print green("Done!")
+
 
 @task
 def maintenance(state=""):
@@ -151,7 +165,7 @@ def maintenance(state=""):
     apache_conf_file = os.path.join(deployment_directory, "apache.conf%s"
             % (".maintenance" if state == "on" else ""))
 
-    if not _file_exists(apache_conf_file):
+    if not exists(apache_conf_file):
         message = "The Apache configuration file \"%s\" doesn't exist."
         print red(message % apache_conf_file)
         sys.exit(1)
@@ -159,7 +173,7 @@ def maintenance(state=""):
     # Does the maintenance directory exist? This is only required when turning
     # maintenance mode on as its contents are served in place of the site.
     maintenance_directory = os.path.join(deployment_directory, "maintenance")
-    if state == "on" and not _file_exists(maintenance_directory):
+    if state == "on" and not exists(maintenance_directory):
         message = "The maintenance directory \"%s\" doesn't exist."
         print red(message % maintenance_directory)
         sys.exit(1)
@@ -174,7 +188,7 @@ def maintenance(state=""):
                 apache_conf_file, directory, env.project_name))
 
     # Copy the maintenance files if we're turning maintenance mode on; that
-    # way, deploying a new version won't override the files that we need!
+    # way, deploying a new version won't override the files being served!
     if state == "on":
         run("cp -R \"{0}\" \"{1}\"".format(maintenance_directory,
                 os.path.join(env.root_directory, "maintenance")))
@@ -188,7 +202,7 @@ def maintenance(state=""):
 def _check_project_directory():
     """Check that the project directory exists."""
     path = env.project_directory
-    if not _file_exists(path):
+    if not exists(path):
         print red("The project directory \"%s\" doesn't exist." % path)
         sys.exit(1)
 
@@ -196,25 +210,41 @@ def _check_project_directory():
 def _check_root_directory():
     """Check that the root directory exists."""
     path = env.root_directory
-    if not _file_exists(path):
+    if not exists(path):
         print red("The root directory \"%s\" doesn't exist." % path)
         sys.exit(1)
 
 
-@with_settings(warn_only=True)
-def _file_exists(path):
-    """Check if a file exists.
+def _refresh_solr_core():
+    """Refreshes the site's Solr core.
 
-    :param path: An absolute or relative path to the file to check for.
-    :type  path: ``str``
-    :returns: ``True`` if the described file exists; ``False`` otherwise.
-    :rtype: ``bool``
+    Copies the site's Solr configuration files into the core's ``conf``
+    directory and reloads it using the core administration interface.
+
+    .. note::
+
+        Assumes that ``env.solr_core_name`` is not ``None``.
 
     .. warning::
 
-        Returns ``False`` if the user has insufficient permissions.
+        This method doesn't rebuild the index.
     """
-    return not run("file \"{0}\"".format(path)).failed
+    with cd(os.path.join(env.project_directory, "deployment")):
+        # Ensure that the required configuration files exist.
+        for filename in ("solr_config.xml", "solr_schema.xml"):
+            if not exists(filename):
+                message = "The Solr configuration file \"%s\" doesn't exist."
+                print red(message % filename)
+                sys.exit(1)
+
+        # Copy the configuration files into Solr's home directory.
+        core_directory = "/etc/opt/solr/%s/conf" % env.solr_core_name
+        sudo("cp solr_config.xml \"%s/solrconfig.xml\"" % core_directory)
+        sudo("cp solr_schema.xml \"%s/schema.xml\"" % core_directory)
+
+    # Reload the core.
+    run("curl localhost:8983/solr/admin/cores?action=RELOAD&core=%s"
+        % env.solr_core_name)
 
 
 def _set_permissions():

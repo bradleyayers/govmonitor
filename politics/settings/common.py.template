@@ -175,5 +175,6 @@ RECAPTCHA_PRIVATE_KEY = "RECAPTCHA_PRIVATE_KEY"
 # Search
 # -----------------------------------------------------------------------------
 
+HAYSTACK_SEARCH_ENGINE = "solr"
 HAYSTACK_SITECONF = "politics.search_sites"
-HAYSTACK_SEARCH_ENGINE = "simple"
+HAYSTACK_SOLR_URL = "http://127.0.0.1:8983/solr/politics"

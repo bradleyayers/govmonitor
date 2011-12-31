@@ -5,6 +5,8 @@ from haystack.indexes import *
 
 
 class TagIndex(RealTimeSearchIndex):
+    """The :class:`Tag` search index."""
+
     text = CharField(document=True, use_template=True)
 
 
