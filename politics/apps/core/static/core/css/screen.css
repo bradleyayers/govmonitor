@@ -37,6 +37,11 @@ body {
     float: right;
 }
 
+#dashboard form {
+  display: inline;
+  margin-left: 1em;
+}
+
 #dashboard li {
     padding: 0 0 0 0.2em;
 }

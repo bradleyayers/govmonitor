@@ -46,6 +46,10 @@
                     <li><a href="{% url core:settings %}">Settings</a></li>
                     <li><a href="{% url core:logout %}?next={{ request.path }}">Log Out</a></li>
                 {% endif %}
+                <form action="{% url core:search %}">
+                    <label for="q">Search</label>
+                    <input id="q" name="q" type="text" value="{{ request.GET.q }}"/>
+                </form>
             </ol>
         </div>
     </div>

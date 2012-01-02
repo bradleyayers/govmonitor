@@ -185,6 +185,14 @@ def maintenance(state="", quiet=False):
         print green("Maintenance mode %s." % state)
 
 
+@task
+def rebuild_search_index():
+    """Rebuild the search index (run ``manage.py rebuild_index``)."""
+    with cd(env.repository_path):
+        with prefix("source environment/bin/activate"):
+            run("%s/manage.py rebuild_index --no-input" % env.root_module_name)
+
+
 def _abort(message):
     """Outputs ``message`` to STDERR in red and raises ``SystemExit``.
 

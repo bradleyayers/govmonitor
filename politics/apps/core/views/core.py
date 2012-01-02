@@ -1,9 +1,12 @@
 # coding=utf-8
 from ..forms import LoginForm, UserForm
+from ..models import Issue
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
+from haystack.query import SearchQuerySet
 from politics.utils.decorators import render_to_template
+from politics.utils.paginator import Paginator
 
 
 @render_to_template("core/log_in.html")
@@ -54,6 +57,19 @@ def register(request):
             return redirect("core:home")
 
     return {"form": form}
+
+
+@render_to_template("core/search.html")
+def search(request):
+    """Search issues."""
+    # Execute the search, preemptively loading objects from the database.
+    results = SearchQuerySet().models(Issue).auto_query(
+            request.GET.get("q", "*")).load_all()
+
+    # Create a paginator and convert the page's objects to Issues.
+    page = Paginator(results, 25).page(request.GET.get("page", 1))
+    page.object_list = [result.object for result in page.object_list]
+    return {"page": page}
 
 
 @login_required

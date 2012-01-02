@@ -1,0 +1,15 @@
+{% extends "core/base_main_secondary.html" %}
+
+{% load core %}
+
+{% block title %}Search{% endblock %}
+
+{% block main %}
+    <h1>Search Results</h1>
+    {% if page.object_list %}
+        {% issue_table page.object_list 5 %}
+        {% page_links page %}
+    {% else %}
+        <i>No results.</i>
+    {% endif %}
+{% endblock %}

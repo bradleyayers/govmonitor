@@ -27,17 +27,23 @@ class Party(models.Model):
         return self.name
 
     @staticmethod
-    def create_views(instance, created, **kwargs):
+    def create_views(instance, created, raw, **kwargs):
         """Creates initial views for a new ``Party``.
 
-        :param instance: The ``Party`` that was saved.
+        Called when a :class:`Party` is saved.
+
+        :param instance: The party that was saved.
         :type  instance: ``politics.apps.core.models.Party``
-        :param  created: Whether the ``Party`` is newly created.
+        :param  created: Whether the party is newly created.
         :type   created: ``bool``
+        :param      raw: ``True`` if the party was saved as a result of loading
+                         a fixture; ``False`` if it was just a normal save.
+        :type       raw: ``bool``
         """
         from politics.apps.core.models import Issue, View
 
-        if created:
+        # Don't bother if we're loading a fixture as it will contain the views.
+        if created and not raw:
             for issue in Issue.objects.all():
                 View(issue=issue, party=instance).save()
 
