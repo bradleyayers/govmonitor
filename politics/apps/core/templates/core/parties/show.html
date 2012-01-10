@@ -2,9 +2,8 @@
 
 {% load core %}
 
-{% block title %}
-    {{ party.name }}
-{% endblock %}
+{% block html-class %}parties{% endblock %}
+{% block title %}{{ party.name }}{% endblock %}
 
 {% block main %}
     {{ block.super }}

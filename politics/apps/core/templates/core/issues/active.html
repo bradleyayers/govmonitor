@@ -2,9 +2,8 @@
 
 {% load core %}
 
+{% block html-class %}issues{% endblock %}
 {% block title %}Active Issues{% endblock %}
-
-{% block body_class %}issues{% endblock %}
 
 {% block main %}
     <ol class="tabs">
@@ -19,11 +18,10 @@
 
 {% block secondary %}
     {{ block.super }}
-    <div class="info module">
-        <h2>Active Issues</h2>
-        <p>
-            These are issues that have recently been added, updated, or a party's
-            stance on it has changed.
-        </p>
-    </div>
+    <h1>About Active Issues</h1>
+    <p>
+        These issues have recently been added, updated, or a party's stance on
+        them has changed.
+    </p>
+    <h1><a href="{% url core:tags:list %}">Active Tags</a></h1>
 {% endblock %}

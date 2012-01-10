@@ -1,12 +1,10 @@
 {% extends "core/base_main_secondary.html" %}
 
-{% block title %}
-    Log In
-{% endblock %}
+{% block html-class %}log-in{% endblock %}
+{% block title %}Log In{% endblock %}
 
 {% block main %}
     {{ block.super }}
-    <h1>Log In</h1>
     {% if request.GET.error %}
         <p class="error">Uh oh, we couldn't log you in. Give it another go.</p>
     {% endif %}

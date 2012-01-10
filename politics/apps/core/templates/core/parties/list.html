@@ -2,13 +2,11 @@
 
 {% load core %}
 
-{% block title %}
-    Parties
-{% endblock %}
+{% block html-class %}parties{% endblock %}
+{% block title %}Parties{% endblock %}
 
 {% block main %}
     {{ block.super }}
-    <h1>Parties</h1>
     <p>Create a <a href="{% url core:parties:new %}">new party</a>.</p>
     <ol>
         {% for party in page.object_list %}

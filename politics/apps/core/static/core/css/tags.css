@@ -1,17 +1,3 @@
-a.tag {
-    background-color: #E0F9EA;
-    border-bottom: 1px solid #BCB;
-    border-right: 1px solid #CDC;
-    color: #393;
-    padding: 3px 4px;
-}
-
-a.tag:hover {
-    background-color: #181;
-    color: #DFD;
-    text-decoration: none;
-}
-
 table.tags {
     width: 100%;
 }

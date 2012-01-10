@@ -19,7 +19,6 @@
         {{ block.super }}
         <link href="{{ STATIC_URL }}core/css/core.css" rel="stylesheet" type="text/css"/>
         <link href="{{ STATIC_URL }}core/css/issues.css" rel="stylesheet" type="text/css"/>
-        <link href="{{ STATIC_URL }}core/css/screen.css" rel="stylesheet" type="text/css"/>
         <link href="{{ STATIC_URL }}core/css/tags.css" rel="stylesheet" type="text/css"/>
         <link href="{{ STATIC_URL }}core/css/view_tables.css" rel="stylesheet" type="text/css"/>
         <link href="{{ STATIC_URL }}core/css/views.css" rel="stylesheet" type="text/css"/>
@@ -29,32 +28,62 @@
 {% block body %}
     {{ block.super }}
     <div id="header">
-        <div id="header-inner">
-            {# Site Navigation #}
-            <ol id="navigation">
-                <li><a href="{% url core:issues:popular %}">Issues</a></li>
-                <li><a href="{% url core:parties:list %}">Parties</a></li>
-                <li><a href="{% url core:tags:list %}">Tags</a></li>
-            </ol>
+        <div id="header-content">
+            {# The primary menu. #}
+            <div id="header-primary">
+                <ol>
+                    <li><a href="{% url core:issues:popular %}" id="navigation-issues">Issues</a></li>
+                    <li><a href="{% url core:parties:list %}" id="navigation-parties">Parties</a></li>
+                    <li><a href="{% url core:tags:list %}" id="navigation-tags">Tags</a></li>
+                </ol>
 
-            {# Account Functionality #}
-            <ol id="dashboard">
-                {% if not request.user.is_authenticated %}
-                    <li>{% login_link "Log In" %}</li>
-                {% else %}
-                    <li>{% user_link request.user "Profile" %}</li>
-                    <li><a href="{% url core:settings %}">Settings</a></li>
-                    <li><a href="{% url core:logout %}?next={{ request.path }}">Log Out</a></li>
-                {% endif %}
-                <form action="{% url core:search %}">
-                    <label for="q">Search</label>
-                    <input id="q" name="q" type="text" value="{{ request.GET.q }}"/>
-                </form>
-            </ol>
+                {# Account, search. #}
+                <div class="right">
+                    <ol>
+                        {% if not request.user.is_authenticated %}
+                            <li><a href="{% url core:login %}" id="navigation-log-in">Log In</a></li>
+                        {% else %}
+                            <li><a href="{% url core:users:show user.pk %}">Profile</a></li>
+                            <li><a href="{% url core:settings %}">Settings</a></li>
+                            <li><a href="{% url core:logout %}">Log Out</a></li>
+                        {% endif %}
+                        <li><a href="#" id="navigation-about">About</a></li>
+                    </ol>
+                    <form action="{% url core:search %}">
+                        <input id="q" name="q" placeholder="Search" type="text" value="{{ request.GET.q }}"/>
+                    </form>
+                </div>
+            </div>
+
+            {# The secondary menu. #}
+            <div id="header-secondary">
+                <ol>
+                  <li><a href="{% url core:issues:popular %}" id="navigation-issues-popular">Popular</a></li>
+                  <li><a href="{% url core:issues:active %}">Active</a></li>
+                </ol>
+
+                {# Other links. #}
+                <div class="right">
+                </div>
+            </div>
         </div>
     </div>
+
     <div id="content">
-        {% block content %}{% endblock %}
+        <div id="content-content">
+            {% block content %}{% endblock %}
+        </div>
     </div>
-    <div id="footer"></div>
+
+    <div id="footer">
+        <div id="footer-content">
+            <a href="http://creativecommons.org/licenses/by-sa/3.0/" id="cc-by-sa-link" rel="license"><img alt="cc-by-sa" src="{{ STATIC_URL }}core/img/cc-by-sa.png"/></a>
+            <ol>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ol>
+            <p>Copyright &copy; Christopher Doble 2011–2012.</p>
+            <p>User contributions are licensed under the <a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license">Creative Commons Attribution-ShareAlike License</a>.</p>
+        </div>
+    </div>
 {% endblock %}

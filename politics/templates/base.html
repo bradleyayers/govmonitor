@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="{% block html-class %}{% endblock %}" lang="en">
     <head>
         <meta charset="utf-8"/>
         <title>{% block title %}{% endblock %}</title>
@@ -8,7 +8,7 @@
             <link href="{{ STATIC_URL }}core/css/reset.css" rel="stylesheet" type="text/css"/>
         {% endblock %}
     </head>
-    <body class="{% block body_class %}{% endblock %}">
+    <body>
         {% block body %}{% endblock %}
     </body>
 </html>

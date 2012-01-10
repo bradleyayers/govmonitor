@@ -1,11 +1,295 @@
-body.settings ul.connect li {
-    margin-bottom: 0.5em;
-    position: relative;
-    top: -10px;
+html {
+    background: #FFF;
+    color: #333;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
 }
 
-body.settings ul.connect img {
-    margin-right: 0.5em;
-    position: relative;
-    top: 10px;
+#header {
+    background: #F9F4F3 url("../img/header-background.png") repeat-x scroll top;
+    font-size: 0;
+    height: 50px;
+    padding-bottom: 2px;
+    width: 100%;
+}
+
+/* Show the secondary menu. */
+html.issues #header {
+   background-color: #84C961;
+   height: 80px;
+   padding-bottom: 0;
+}
+
+/* Resize with floating content. */
+#header-content {
+    height: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    width: 960px;
+}
+
+#header-content a {
+    color: #FFF;
+    display: inline-block;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: rgba(0, 0, 0, 0.2) 0 -1px 1px;
+}
+
+#header-content li, #header-content ol {
+    display: inline-block;
+}
+
+#header-content ol {
+    float: left;
+}
+
+#header-primary {
+    height: 52px;
+}
+
+#header-primary a {
+    font-size: 14px;
+    padding: 17px 20px 21px 20px;
+}
+
+#header-primary li, #header-primary ol {
+    height: 100%;
+}
+
+/* Highlight the current item. */
+#header-primary a:hover,
+html.about #navigation-about,
+html.log-in #navigation-log-in,
+html.issues #navigation-issues,
+html.parties #navigation-parties,
+html.tags #navigation-tags {
+    background-color: #84C961;
+}
+
+#header-primary div.right {
+    height: 100%;
+}
+
+#header-primary form {
+    display: inline-block;
+    float: right;
+}
+
+#header-primary input {
+    border: 0;
+    border-radius: 6px;
+    margin: 13px 0 0 15px;
+    outline: none;
+    padding: 5px 5px;
+    width: 150px;
+}
+
+#header-secondary a {
+    border-radius: 17px;
+    font-size: 12px;
+    margin: 4px 4px 0 0;
+    padding: 2px 7px 5px 7px;
+}
+
+/* Highlight the current item. */
+#header-secondary li a:hover,
+html.issues.popular #navigation-issues-popular {
+    background-color: #76B557;
+    -moz-box-shadow: inset rgba(0, 0, 0, 0.1) 0 1px, inset #89D164 0 -1px;
+    -webkit-box-shadow: inset rgba(0, 0, 0, 0.1) 0 1px, inset #89D164 0 -1px;
+    text-shadow: #76B557 0 -1px 1px;
+}
+
+#content {
+    background: #F9F4F3;
+    overflow: hidden;
+    padding: 20px 0;
+    width: 100%;
+}
+
+#content-content {
+    margin: 0 auto;
+    width: 960px;
+}
+
+#main > :first-child,
+#main-full > :first-child,
+#secondary > :first-child {
+    margin-top: 0;
+}
+
+#main, #main-full {
+    float: left;
+}
+
+#main {
+    width: 720px;
+}
+
+#main-full {
+    width: 960px;
+}
+
+#secondary {
+    float: right;
+    width: 220px;
+}
+
+#secondary h1 {
+    border-bottom: 2px solid #E5E5E5;
+    font-size: 14px;
+    margin-top: 18px;
+    padding-bottom: 6px;
+}
+
+#secondary p {
+    line-height: 16px;
+}
+
+#footer {
+    width: 100%;
+}
+
+#footer-content {
+    color: #B2B2B2;
+    margin: 0 auto;
+    padding: 15px 0;
+    width: 960px;
+}
+
+#footer-content a {
+    color: #999;
+    font-weight: bold;
+}
+
+#footer-content ol {
+    margin-bottom: 10px;
+}
+
+#footer-content li {
+    display: inline;
+    margin-right: 5px;
+}
+
+#footer-content p {
+    line-height: 18px;
+    margin: 0;
+}
+
+#cc-by-sa-link {
+    float: right;
+}
+
+.right {
+  float: right;
+}
+
+a, a:visited {
+    color: #3E3EC6;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a.tag {
+    background-color: #D9F3CC;
+    border-radius: 5px;
+    color: #5C9540;
+    line-height: 24px;
+    padding: 3px 5px;
+    white-space: nowrap;
+}
+
+a.tag:hover {
+    background-color: #b7f598;
+}
+
+b {
+    font-weight: bold;
+}
+
+code {
+    font-family: "Courier New", monospace;
+}
+
+div.errors {
+    color: red;
+    font-weight: bold;
+}
+
+div.pager {
+    margin-top: 5px;
+    padding: 5px 0;
+    text-align: right;
+}
+
+div.pager a, div.pager span {
+    background-color: #F0F0F0;
+    border: 1px solid #E0E0E0;
+    padding: 5px;
+}
+
+div.pager span {
+    background-color: #E0E0E0;
+}
+
+em {
+    font-style: italic;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+    margin: 0.75em 0 1em 0;
+}
+
+h1 {
+    font-size: 150%;
+}
+
+h2 {
+    font-size: 125%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #E0E0E0;
+}
+
+i {
+    font-style: italic;
+}
+
+ol.tabs {
+    margin-bottom: 15px;
+}
+
+ol.tabs li {
+    display: inline;
+}
+
+ol.tabs a {
+    color: #BBB;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+ol.tabs li.selected a {
+    color: #333;
+}
+
+p {
+    margin: 1em 0;
+}
+
+strong {
+    font-weight: bold;
+}
+
+ul {
+    list-style: disc;
+    margin-left: 1.2em;
 }

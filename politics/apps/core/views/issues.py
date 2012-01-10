@@ -55,9 +55,15 @@ def new(request):
 @render_to_template("core/issues/popular.html")
 def popular(request):
     """Shows issues that have been marked as popular."""
+    # Fetch issues that are marked as popular and paginate them.
     issues = Issue.objects.filter(is_popular=True).order_by("name")
     page = Paginator(issues, 25).page(request.GET.get("page", 1))
-    return {"number_of_parties": NUMBER_OF_PARTIES, "page": page}
+
+    # Extract the most frequently occurring tags in the issues.
+    tags = sum((list(issue.tags.all()) for issue in issues), [])
+    tags = sorted(set(tags), key=lambda tag: tags.count(tag), reverse=True)
+
+    return {"number_of_parties": NUMBER_OF_PARTIES, "page": page, "tags": tags}
 
 
 @slug_url(Issue)
