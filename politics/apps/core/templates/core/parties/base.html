@@ -4,3 +4,11 @@
     {{ block.super }}
     parties
 {% endblock %}
+
+{% block header-secondary %}
+    <div id="header-secondary">
+        <div class="right">
+            <a class="button" href="{% url core:parties:new %}">New Party</a>
+        </div>
+    </div>
+{% endblock %}

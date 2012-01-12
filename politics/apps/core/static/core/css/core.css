@@ -14,9 +14,10 @@ html {
 }
 
 /* Show the secondary header. */
-html.issues #header {
+html.issues #header,
+html.parties #header {
    background-color: #84C961;
-   height: 80px;
+   height: 84px;
    padding-bottom: 0;
 }
 
@@ -36,12 +37,13 @@ html.issues #header {
     text-shadow: rgba(0, 0, 0, 0.2) 0 -1px 1px;
 }
 
-#header-content li, #header-content ol {
-    display: inline-block;
+/* Chrome bugs out occasionally without this. */
+#header-content > div > ol {
+    float: left;
 }
 
-#header-content > ol {
-    float: left;
+#header-content li, #header-content ol {
+    display: inline-block;
 }
 
 #header-primary {
@@ -51,10 +53,6 @@ html.issues #header {
 #header-primary a {
     font-size: 14px;
     padding: 17px 20px 21px 20px;
-}
-
-#header-primary li, #header-primary ol {
-    height: 100%;
 }
 
 /* Highlight the current item. */
@@ -68,6 +66,10 @@ html.tags #header-tags {
 }
 
 #header-primary div.right {
+    height: 100%;
+}
+
+#header-primary li, #header-primary ol {
     height: 100%;
 }
 
@@ -87,8 +89,26 @@ html.tags #header-tags {
 #header-secondary a {
     border-radius: 17px;
     font-size: 12px;
-    margin: 4px 4px 0 0;
+    margin: 6px 4px 0 0;
     padding: 2px 7px 5px 7px;
+}
+
+#header-secondary a.button {
+    background-image: -webkit-linear-gradient(#8FDB69, #8AD466);
+    background-image: -moz-linear-gradient(#8FDB69, #8AD466);
+    border: 1px solid #7DBF5C;
+    border-radius: 3px;
+    -moz-box-shadow: inset #94E36D 0 1px;
+    -webkit-box-shadow: inset #94E36D 0 1px;
+    margin: 3px 4px 0 0;
+    padding: 4px 6px 6px 6px;
+}
+
+#header-secondary a.button:hover {
+    background-image: -webkit-linear-gradient(#93E06C, #8ED968);
+    background-image: -moz-linear-gradient(#93E06C, #8ED968);
+    -moz-box-shadow: inset #98E86F 0 1px;
+    -webkit-box-shadow: inset #98E86F 0 1px;
 }
 
 /* Highlight the current item. */

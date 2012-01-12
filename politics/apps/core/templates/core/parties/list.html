@@ -7,7 +7,6 @@
 {% block content %}
     {{ block.super }}
     <div id="content-primary">
-        <p>Create a <a href="{% url core:parties:new %}">new party</a>.</p>
         <ol>
             {% for party in page.object_list %}
                 <li><a href="{% url core:parties:show party.pk party.slug %}">{{ party.name }}</a></li>
