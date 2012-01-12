@@ -22,3 +22,7 @@ DATABASES = {
 
 DEBUG = False
 TEMPLATE_DEBUG = False
+
+# The site's Google Analytics tracking ID or None if it's not being used. If
+# set, this ID is automatically injected into each page by the base template.
+GOOGLE_ANALYTICS_TRACKING_ID = None
