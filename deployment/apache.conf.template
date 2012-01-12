@@ -4,6 +4,12 @@
 #Listen 80
 #NameVirtualHost *:80
 
+# Redirect www requests.
+<VirtualHost *:80>
+    ServerName www.example.com
+    Redirect permanent / http://example.com/
+</VirtualHost>
+
 <VirtualHost *:80>
     # A hostname that uniquely identifies this host for use in name-based
     # virtual hosting. This will typically just be the site's domain name.
