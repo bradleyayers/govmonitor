@@ -1,31 +1,32 @@
-{% extends "core/base_main_secondary.html" %}
+{% extends "core/parties/base.html" %}
 
 {% load core %}
 
-{% block html-class %}parties{% endblock %}
 {% block title %}{{ party.name }}{% endblock %}
 
-{% block main %}
+{% block content %}
     {{ block.super }}
-    <h1>{{ party.name }}</h1>
-    {% if not request.user.is_authenticated %}
-        <p>Think you could help with this data? <a href="{% url core:login %}?next={{ request.path }}">Log in</a> or <a href="{% url core:register %}">register</a>!</p>
-    {% endif %}
-    <table class="views">
-        <thead>
-            <tr>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-            </tr>
-        </thead>
-        <tbody>
-            {% for view in page.object_list %}
+    <div id="content-primary">
+        <h1>{{ party.name }}</h1>
+        {% if not request.user.is_authenticated %}
+            <p>Think you could help with this data? <a href="{% url core:login %}?next={{ request.path }}">Log in</a> or <a href="{% url core:register %}">register</a>!</p>
+        {% endif %}
+        <table class="views">
+            <thead>
                 <tr>
-                    <th><a href="{% url core:issues:show view.issue.pk view.issue.slug %}">{{ view.issue.name }}</a></th>
-                    <td class="{{ view.stance }}"><a href="{% url core:views:show view.pk view.slug %}">{{ view.get_stance_display }}</a></td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% page_links page %}
+            </thead>
+            <tbody>
+                {% for view in page.object_list %}
+                    <tr>
+                        <th><a href="{% url core:issues:show view.issue.pk view.issue.slug %}">{{ view.issue.name }}</a></th>
+                        <td class="{{ view.stance }}"><a href="{% url core:views:show view.pk view.slug %}">{{ view.get_stance_display }}</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% page_links page %}
+    </div>
 {% endblock %}

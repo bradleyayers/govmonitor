@@ -1,14 +1,15 @@
-{% extends "core/base_main_secondary.html" %}
+{% extends "core/parties/base.html" %}
 
-{% block html-class %}parties{% endblock %}
 {% block title %}New Party{% endblock %}
 
-{% block main %}
+{% block content %}
     {{ block.super }}
-    <h1>New Party</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <p><input type="submit" value="Create"/></p>
-    </form>
+    <div id="content-primary">
+        <h1>New Party</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <p><input type="submit" value="Create"/></p>
+        </form>
+    </div>
 {% endblock %}

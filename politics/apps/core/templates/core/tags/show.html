@@ -1,22 +1,21 @@
-{% extends "core/base_main_secondary.html" %}
+{% extends "core/tags/base.html" %}
 
 {% load core %}
 
-{% block html-class %}tags{% endblock %}
 {% block title %}{{ tag.name }}{% endblock %}
 
-{% block main %}
+{% block content %}
     {{ block.super }}
-    <h1>{{ tag.name }}</h1>
-    <p>Create a <a href="{% url core:issues:new %}">new issue</a> or a <a href="{% url core:parties:new %}">new party</a>.</p>
-    {% issue_table page.object_list 5 %}
-    {% page_links page %}
-{% endblock %}
-
-{% block secondary %}
-    {{ block.super }}
-    <div class="module">
-        <p class="count">{{ tag.issue_set.count }}</p>
-        issues
+    <div id="content-primary">
+        <h1>{{ tag.name }}</h1>
+        <p>Create a <a href="{% url core:issues:new %}">new issue</a> or a <a href="{% url core:parties:new %}">new party</a>.</p>
+        {% issue_table page.object_list 5 %}
+        {% page_links page %}
+    </div>
+    <div id="content-secondary">
+        <div class="module">
+            <p class="count">{{ tag.issue_set.count }}</p>
+            issues
+        </div>
     </div>
 {% endblock %}

@@ -1,27 +1,26 @@
-{% extends "core/base_main_secondary.html" %}
+{% extends "core/issues/base.html" %}
 
 {% load core %}
 
-{% block html-class %}issues{% endblock %}
-{% block title %}Active Issues{% endblock %}
-
-{% block main %}
-    <ol class="tabs">
-        <li><a href="{% url core:issues:popular %}">Popular</a></li>
-        <li class="selected"><a href="{% url core:issues:active %}">Active</a></li>
-    </ol>
-    <hr/>
-    <p>Create a <a href="{% url core:issues:new %}">new issue</a> or a <a href="{% url core:parties:new %}">new party</a>.</p>
-    {% issue_table page.object_list number_of_parties %}
-    {% page_links page %}
+{% block html-class %}
+    {{ block.super }}
+    active
 {% endblock %}
 
-{% block secondary %}
+{% block title %}Active Issues{% endblock %}
+
+{% block content %}
     {{ block.super }}
-    <h1>About Active Issues</h1>
-    <p>
-        These issues have recently been added, updated, or a party's stance on
-        them has changed.
-    </p>
-    <h1><a href="{% url core:tags:list %}">Active Tags</a></h1>
+    <div id="content-primary">
+        {% issue_table page.object_list number_of_parties %}
+        {% page_links page %}
+    </div>
+    <div id="content-secondary">
+        <h1>About Active Issues</h1>
+        <p>
+            These issues have recently been added, updated, or a party's stance
+            on them has changed.
+        </p>
+        <h1><a href="{% url core:tags:list %}">Active Tags</a></h1>
+    </div>
 {% endblock %}

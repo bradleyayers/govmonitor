@@ -1,32 +1,30 @@
-{% extends "core/base_main_secondary.html" %}
+{% extends "core/base.html" %}
 
-{% block title %}
-    Account
-{% endblock %}
+{% block title %}Account{% endblock %}
 
-{% block body_class %}settings{% endblock %}
-
-{% block main %}
+{% block content %}
     {{ block.super }}
-    <h1>Settings</h1>
-    <ul class="connect">
-        <li>
-            {% if "facebook" in social_auth.not_associated %}
-                <a href="{% url socialauth_associated_begin "facebook" %}">
-                    <img alt="Facebook" src="{{ STATIC_URL }}core/img/facebook-32.png"/>Connect with Facebook
-                </a>
-            {% else %}
-                <img alt="Facebook" src="{{ STATIC_URL }}core/img/facebook-32.png"/>Connected
-            {% endif %}
-        </li>
-        <li>
-            {% if "twitter" in social_auth.not_associated %}
-                <a href="{% url socialauth_associated_begin "twitter" %}">
-                    <img alt="Twitter" src="{{ STATIC_URL }}core/img/twitter-32.png"/>Connect with Twitter
-                </a>
-            {% else %}
-                <img alt="Twitter" src="{{ STATIC_URL }}core/img/twitter-32.png"/>Connected
-            {% endif %}
-        </li>
-    </ul>
+    <div id="content-primary">
+        <h1>Settings</h1>
+        <ul class="connect">
+            <li>
+                {% if "facebook" in social_auth.not_associated %}
+                    <a href="{% url socialauth_associated_begin "facebook" %}">
+                        <img alt="Facebook" src="{{ STATIC_URL }}core/img/facebook-32.png"/>Connect with Facebook
+                    </a>
+                {% else %}
+                    <img alt="Facebook" src="{{ STATIC_URL }}core/img/facebook-32.png"/>Connected
+                {% endif %}
+            </li>
+            <li>
+                {% if "twitter" in social_auth.not_associated %}
+                    <a href="{% url socialauth_associated_begin "twitter" %}">
+                        <img alt="Twitter" src="{{ STATIC_URL }}core/img/twitter-32.png"/>Connect with Twitter
+                    </a>
+                {% else %}
+                    <img alt="Twitter" src="{{ STATIC_URL }}core/img/twitter-32.png"/>Connected
+                {% endif %}
+            </li>
+        </ul>
+    </div>
 {% endblock %}

@@ -1,0 +1,15 @@
+{% extends "core/base.html" %}
+
+{% block html-class %}
+    {{ block.super }}
+    issues
+{% endblock %}
+
+{% block header-secondary %}
+    <div id="header-secondary">
+        <ol>
+          <li><a href="{% url core:issues:popular %}" id="header-issues-popular">Popular</a></li>
+          <li><a href="{% url core:issues:active %}" id="header-issues-active">Active</a></li>
+        </ol>
+    </div>
+{% endblock %}

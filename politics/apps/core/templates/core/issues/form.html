@@ -1,78 +1,74 @@
-{% extends "core/base_main_secondary.html" %}
+{% extends "core/issues/base.html" %}
 
-{% block title %}
-    {% if form.instance.pk %}
-        Edit Issue
-    {% else %}
-        New Issue
-    {% endif %}
-{% endblock %}
-
-{% block html-class %}issues issue-form{% endblock %}
-
-{% block main %}
+{% block html-class %}
     {{ block.super }}
-    <form class="issue" method="post">
-        <p>
-            <label for="name">Name</label>
-            <input autofocus id="name" name="name" type="text" value="{{ form.name.value|default:"" }}"/>
-        </p>
-        <textarea id="description" name="description">{{ form.description.value|default:"" }}</textarea>
-        <p>
-            <label for="tags">Tags</label>
-            <input id="tags" name="tags" placeholder="e.g. education, international-relations" type="text" value="{{ form.tags.value|default:"" }}"/>
-        </p>
-        {% if form.errors %}
-            <div class="errors">
-                <p>Oops! The issue couldn't be created because:</p>
-                <ul>
-                    {% for field, errors in form.errors.items %}
-                        {% for error in errors %}
-                            <li>{{ field }}: {{ error }}</li>
-                        {% endfor %}
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-        <p class="actions">
-            {% if form.instance.pk %}
-                <input type="submit" value="Save"/>
-                <a href="{% url core:issues:show form.instance.pk form.instance.slug %}">Cancel</a>
-            {% else %}
-                <input type="submit" value="Create"/>
-            {% endif %}
-        </p>
-        {% csrf_token %}
-    </form>
+    issue-form
 {% endblock %}
 
-{% block secondary %}
-    <div class="info module">
-        <h2>Formatting</h2>
-        <p>
-            <a href="http://daringfireball.net/projects/markdown/">Markdown</a>
-            can be used for formatting:
-        </p>
-        <ul>
-            <li><code># Heading</code>, <code>## Sub-heading</code>, etc.</li>
-            <li>separate paragraphs with a blank line</li>
-            <li>to quote, start lines with &gt;</li>
-            <li><code><em>_italic_</em></code> and <code><b>**bold**</b></code></li>
-            <li>to create a link: <p><code>[Text](http://example.com)</code></p></li>
-        </ul>
+{% block content %}
+    {{ block.super }}
+    <div id="content-primary">
+        <form class="issue" method="post">
+            <p>
+                <label for="name">Name</label>
+                <input autofocus id="name" name="name" type="text" value="{{ form.name.value|default:"" }}"/>
+            </p>
+            <textarea id="description" name="description">{{ form.description.value|default:"" }}</textarea>
+            <p>
+                <label for="tags">Tags</label>
+                <input id="tags" name="tags" placeholder="e.g. education, international-relations" type="text" value="{{ form.tags.value|default:"" }}"/>
+            </p>
+            {% if form.errors %}
+                <div class="errors">
+                    <p>Oops! The issue couldn't be created because:</p>
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ field }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <p class="actions">
+                {% if form.instance.pk %}
+                    <input type="submit" value="Save"/>
+                    <a href="{% url core:issues:show form.instance.pk form.instance.slug %}">Cancel</a>
+                {% else %}
+                    <input type="submit" value="Create"/>
+                {% endif %}
+            </p>
+            {% csrf_token %}
+        </form>
     </div>
-    <div class="info module">
-        <h2>Tagging</h2>
-        <p>
-            A tag describes an issue and groups it with other, similar issues.
-            When tagging, remember:
-        </p>
-        <ul>
-            <li>try to use <a href={% url core:tags:list %}>existing, popular tags</a></li>
-            <li>don't include synonyms</li>
-            <li>separate tags with spaces</li>
-            <li>separate words within a tag with hyphens (e.g. <code>international-relations</code>)</li>
-            <li>use common abbreviations, acronyms, and initialisms (e.g. <code>lgbt</code>)</li>
-        </ul>
+    <div id="content-secondary">
+        <div class="info module">
+            <h2>Formatting</h2>
+            <p>
+                <a href="http://daringfireball.net/projects/markdown/">Markdown</a>
+                can be used for formatting:
+            </p>
+            <ul>
+                <li><code># Heading</code>, <code>## Sub-heading</code>, etc.</li>
+                <li>separate paragraphs with a blank line</li>
+                <li>to quote, start lines with &gt;</li>
+                <li><code><em>_italic_</em></code> and <code><b>**bold**</b></code></li>
+                <li>to create a link: <p><code>[Text](http://example.com)</code></p></li>
+            </ul>
+        </div>
+        <div class="info module">
+            <h2>Tagging</h2>
+            <p>
+                A tag describes an issue and groups it with other, similar issues.
+                When tagging, remember:
+            </p>
+            <ul>
+                <li>try to use <a href={% url core:tags:list %}>existing, popular tags</a></li>
+                <li>don't include synonyms</li>
+                <li>separate tags with spaces</li>
+                <li>separate words within a tag with hyphens (e.g. <code>international-relations</code>)</li>
+                <li>use common abbreviations, acronyms, and initialisms (e.g. <code>lgbt</code>)</li>
+            </ul>
+        </div>
     </div>
 {% endblock %}

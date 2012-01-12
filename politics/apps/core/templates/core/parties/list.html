@@ -1,17 +1,18 @@
-{% extends "core/base_main_secondary.html" %}
+{% extends "core/parties/base.html" %}
 
 {% load core %}
 
-{% block html-class %}parties{% endblock %}
 {% block title %}Parties{% endblock %}
 
-{% block main %}
+{% block content %}
     {{ block.super }}
-    <p>Create a <a href="{% url core:parties:new %}">new party</a>.</p>
-    <ol>
-        {% for party in page.object_list %}
-            <li><a href="{% url core:parties:show party.pk party.slug %}">{{ party.name }}</a></li>
-        {% endfor %}
-    </ol>
-   {% page_links page %}
+    <div id="content-primary">
+        <p>Create a <a href="{% url core:parties:new %}">new party</a>.</p>
+        <ol>
+            {% for party in page.object_list %}
+                <li><a href="{% url core:parties:show party.pk party.slug %}">{{ party.name }}</a></li>
+            {% endfor %}
+        </ol>
+       {% page_links page %}
+   </div>
 {% endblock %}

@@ -1,30 +1,36 @@
-{% extends "core/base_main_secondary.html" %}
+{% extends "core/base.html" %}
 
-{% block html-class %}log-in{% endblock %}
+{% block html-class %}
+    {{ block.super }}
+    log-in
+{% endblock %}
+
 {% block title %}Log In{% endblock %}
 
-{% block main %}
+{% block content %}
     {{ block.super }}
-    {% if request.GET.error %}
-        <p class="error">Uh oh, we couldn't log you in. Give it another go.</p>
-    {% endif %}
-    <p>
-        <a href="{% url socialauth_begin "facebook" %}{{ next }}">
-            <img alt="Facebook" src="{{ STATIC_URL }}core/img/facebook.png"/>
-        </a>
-    </p>
-    <p>
-        <a href="{% url socialauth_begin "twitter" %}{{ next }}">
-            <img alt="Twitter" src="{{ STATIC_URL }}core/img/twitter.png"/>
-        </a>
-    </p>
-    <form method="post">
-        {% csrf_token %}
-        <p><input name="email" placeholder="Email" type="text"/></p>
-        <p><input name="password" placeholder="Password" type="password"/></p>
+    <div id="content-primary">
+        {% if request.GET.error %}
+            <p class="error">Uh oh, we couldn't log you in. Give it another go.</p>
+        {% endif %}
         <p>
-            <input type="submit" value="Log in"/>
-            <a href="{% url core:register %}">Register</a>
+            <a href="{% url socialauth_begin "facebook" %}{{ next }}">
+                <img alt="Facebook" src="{{ STATIC_URL }}core/img/facebook.png"/>
+            </a>
         </p>
-    </form>
+        <p>
+            <a href="{% url socialauth_begin "twitter" %}{{ next }}">
+                <img alt="Twitter" src="{{ STATIC_URL }}core/img/twitter.png"/>
+            </a>
+        </p>
+        <form method="post">
+            {% csrf_token %}
+            <p><input name="email" placeholder="Email" type="text"/></p>
+            <p><input name="password" placeholder="Password" type="password"/></p>
+            <p>
+                <input type="submit" value="Log in"/>
+                <a href="{% url core:register %}">Register</a>
+            </p>
+        </form>
+    </div>
 {% endblock %}

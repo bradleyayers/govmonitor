@@ -1,74 +1,74 @@
-{% extends "core/base_main_secondary.html" %}
+{% extends "core/base.html" %}
 
 {% load core %}
 
-{% block title %}
-    {{ view.issue.name }} – {{ view.party.name }}
-{% endblock %}
+{% block title %}{{ view.issue.name }} – {{ view.party.name }}{% endblock %}
 
-{% block main %}
+{% block content %}
     {{ block.super }}
 
-    <h1>
-        <a href="{% url core:parties:show view.party.pk view.party.slug %}">{{ view.party.name }}</a> ›
-        <a href="{% url core:issues:show view.issue.pk view.issue.slug %}">{{ view.issue.name }}</a>
-    </h1>
+    <div id="content-primary">
+        <h1>
+            <a href="{% url core:parties:show view.party.pk view.party.slug %}">{{ view.party.name }}</a> ›
+            <a href="{% url core:issues:show view.issue.pk view.issue.slug %}">{{ view.issue.name }}</a>
+        </h1>
 
-    {% if not request.user.is_authenticated %}
-        <p>{% login_link "Log in" %} to vote on these references or add your own.</p>
-    {% endif %}
+        {% if not request.user.is_authenticated %}
+            <p>{% login_link "Log in" %} to vote on these references or add your own.</p>
+        {% endif %}
 
-    <div class="references">
-        {% for reference in references %}
-            <div class="reference">
-                {# The vote widget. #}
-                <div class="vote-widget">
-                    <input type="hidden" value="{{ reference.pk }}"/>
-                    {% if reference == selected_reference %}
-                        <a class="selected" title="Deselect this reference."></a>
+        <div class="references">
+            {% for reference in references %}
+                <div class="reference">
+                    {# The vote widget. #}
+                    <div class="vote-widget">
+                        <input type="hidden" value="{{ reference.pk }}"/>
+                        {% if reference == selected_reference %}
+                            <a class="selected" title="Deselect this reference."></a>
+                        {% else %}
+                            <a title="Select this reference."></a>
+                        {% endif %}
+                    </div>
+
+                    <div class="stance {{ reference.stance }}">{{ reference.get_stance_display }}</div>
+
+                    {% if reference.text_html %}
+                        {{ reference.text_html|safe }}
                     {% else %}
-                        <a title="Select this reference."></a>
+                        <i>No text available, see source.</i>
                     {% endif %}
+
+                    <p><a href="{{ reference.url }}" target="_blank">{{ reference.url }}</a></p>
+
+                    <p>
+                        {% user_link reference.author %}
+                        <span title="{{ reference.created_at }}">{{ reference.created_at|interval_string }} ago</span>
+                    </p>
                 </div>
-
-                <div class="stance {{ reference.stance }}">{{ reference.get_stance_display }}</div>
-
-                {% if reference.text_html %}
-                    {{ reference.text_html|safe }}
-                {% else %}
-                    <i>No text available, see source.</i>
-                {% endif %}
-
-                <p><a href="{{ reference.url }}" target="_blank">{{ reference.url }}</a></p>
-
-                <p>
-                    {% user_link reference.author %}
-                    <span title="{{ reference.created_at }}">{{ reference.created_at|interval_string }} ago</span>
-                </p>
-            </div>
-        {% endfor %}
-    </div>
-
-    {% if request.user.is_authenticated %}
-        <div class="reference-form">
-            <h2>Add a Reference</h2>
-            <form class="reference" method="post">
-                {% csrf_token %}
-                <p>
-                    <label for="stance">Stance</label>
-                    <select id="stance" name="stance">
-                        <option value="support">Support</option>
-                        <option value="oppose">Oppose</option>
-                        <option value="unclear">Unclear</option>
-                    </select>
-                </p>
-                <p>
-                    <label for="url">URL</label>
-                    <input id="url" name="url" type="text" value="{{ form.url.value|default:"" }}"/>
-                </p>
-                <p><textarea id="text" name="text">{{ form.text.value|default:"" }}</textarea></p>
-                <p><input type="submit" value="Add"/></p>
-           </form>
+            {% endfor %}
         </div>
-    {% endif %}
+
+        {% if request.user.is_authenticated %}
+            <div class="reference-form">
+                <h2>Add a Reference</h2>
+                <form class="reference" method="post">
+                    {% csrf_token %}
+                    <p>
+                        <label for="stance">Stance</label>
+                        <select id="stance" name="stance">
+                            <option value="support">Support</option>
+                            <option value="oppose">Oppose</option>
+                            <option value="unclear">Unclear</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="url">URL</label>
+                        <input id="url" name="url" type="text" value="{{ form.url.value|default:"" }}"/>
+                    </p>
+                    <p><textarea id="text" name="text">{{ form.text.value|default:"" }}</textarea></p>
+                    <p><input type="submit" value="Add"/></p>
+               </form>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

@@ -1,31 +1,32 @@
-{% extends "core/base_main_full.html" %}
+{% extends "core/tags/base.html" %}
 
 {% load compress %}
 {% load core %}
 
-{% block html-class %}tags{% endblock %}
 {% block title %}Tags{% endblock %}
 
-{% block main %}
+{% block content %}
     {{ block.super }}
-    <h1>Tags</h1>
-    <p>
-        Tags are used to label and categorise issues. A tag is created when it
-        is first added to an issue; create a new issue or retag an existing one
-        to create a new tag.
-    </p>
-    <table class="tags">
-        <tbody>
-            {% for tag_group in tag_groups %}
-                <tr>
-                    {% for tag in tag_group %}
-                        <td>
-                            {% tag_link tag %}<span>&times; {{ tag.issue__count }}</span>
-                        </td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% page_links page %}
+    <div class="full" id="content-primary">
+        <h1>Tags</h1>
+        <p>
+            Tags are used to label and categorise issues. A tag is created when it
+            is first added to an issue; create a new issue or retag an existing one
+            to create a new tag.
+        </p>
+        <table class="tags">
+            <tbody>
+                {% for tag_group in tag_groups %}
+                    <tr>
+                        {% for tag in tag_group %}
+                            <td>
+                                {% tag_link tag %}<span>&times; {{ tag.issue__count }}</span>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% page_links page %}
+    </div>
 {% endblock %}
