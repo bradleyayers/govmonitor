@@ -34,7 +34,7 @@ def log_out(request):
     the same page. We define this "wrapper" view to simplify ``urls.py``.
     """
     from django.contrib.auth.views import logout as base_logout
-    return base_logout(request, next_page=request.get_full_path())
+    return base_logout(request, next_page="/")
 
 
 @render_to_template("core/register.html")
