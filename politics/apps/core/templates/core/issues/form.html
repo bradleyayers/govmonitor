@@ -5,6 +5,14 @@
     issue-form
 {% endblock %}
 
+{% block title %}
+    {% if form.instance.pk %}
+        Edit Issue
+    {% else %}
+        New Issue
+    {% endif %}
+{% endblock %}
+
 {% block content %}
     {{ block.super }}
     <div id="content-primary">

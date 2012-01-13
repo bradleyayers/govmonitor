@@ -1,5 +1,5 @@
 # coding=utf-8
-from haystack.query import SearchQuerySet
+from haystack.query import SearchQuerySet, SQ
 from politics.apps.core.models import Tag
 from politics.utils.decorators import render_json
 
@@ -10,6 +10,13 @@ def tags(request):
 
     Used for autocompletion in tag inputs.
     """
+    # Escape the query.
     query = request.GET.get("q", "*")
-    results = SearchQuerySet().models(Tag).filter(content=query).load_all()
+    query = SearchQuerySet().query.clean(query)
+
+    # Retrieve tags that match an autocomplete (ngram) search or a normal
+    # search so derivative words match (e.g. "immigrants" => "immigration").
+    results = SearchQuerySet().models(Tag).load_all()
+    results = results.filter(SQ(content=query) | SQ(name_autocomplete=query))
+
     return [result.object.name for result in results]
