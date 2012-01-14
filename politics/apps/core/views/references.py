@@ -19,18 +19,11 @@ def votes(request, reference):
     :param reference: The reference described by the primary key in the URL.
     :type  reference: :class:`Reference`
     """
-    try:
-        # Either way, we need to archive the user's current vote within the
-        # view (if it exists). We can't use update as it doesn't fire signals.
-        current_vote = ReferenceVote.objects.get_for_view(reference.view)
-        current_vote = current_vote.filter(author=request.user)[0]
-        current_vote.is_archived = True
-        current_vote.save()
-    except IndexError:
-        pass
+    # Either way, their vote is withdrawn.
+    reference.view.withdraw_vote(request.user)
 
     if request.method == "POST":
-        ReferenceVote(content_object=reference, author=request.user).save()
+        reference.view.cast_vote(reference, request.user)
 
     # Refresh the reference so its score is up to date.
     reference = Reference.objects.get(pk=reference.pk)

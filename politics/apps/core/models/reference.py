@@ -87,6 +87,22 @@ class Reference(models.Model):
         return self.url
 
     @staticmethod
+    def create_author_vote(instance, created, raw, **kwargs):
+        """Cast a vote on a newly created reference from its author.
+
+        :param instance: The reference that was saved.
+        :type  instance: ``politics.apps.core.models.Reference``
+        :param  created: Whether the reference is newly created.
+        :type   created: ``bool``
+        :param      raw: ``True`` if the reference was created as a result of
+                         loading a fixture; ``False`` for a normal save.
+        :type       raw: ``bool``
+        """
+        # Don't bother if we're loading a fixture as it will contain the votes.
+        if created and not raw:
+            instance.view.cast_vote(instance, instance.author)
+
+    @staticmethod
     def update_view(instance, **kwargs):
         """Update the :class:`View`'s stance.
 
@@ -101,6 +117,9 @@ class Reference(models.Model):
         except View.DoesNotExist:
             pass
 
+
+# Automatically cast a vote on new References from their author.
+models.signals.post_save.connect(Reference.create_author_vote, sender=Reference)
 
 # References will typically be archived instead of deleted, but hook it up
 # anyway just to avoid getting the database into an inconsistent state.

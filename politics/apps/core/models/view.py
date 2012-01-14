@@ -17,9 +17,14 @@ def _get_view_slug(view):
 class View(models.Model):
     """A political party's view on an issue.
 
-    At the core of a ``View`` is the party's ``stance`` on the issue: oppose or
-    support. For example, the Australian Labor Party supports the carbon tax;
-    the Liberal Party of Australia, on the other hand, does not.
+    At the core of a ``View`` lies the party's ``stance`` on the issue: oppose,
+    support, or unclear. This is calculated from :class:`Reference`s that have
+    been submitted to the view, acting as evidence for one stance or another.
+
+    Users vote on the submitted references, with the stance of the highest
+    scoring reference used as the party's stance. Users may only vote on a
+    single reference, but they may change their vote at any time. This ensures
+    that new, high-quality references have the potential to rise to the top.
     """
 
     # Stances a party might take on an issue.
@@ -51,9 +56,9 @@ class View(models.Model):
     slug = AutoSlugField(always_update=True, populate_from=_get_view_slug,
                          max_length=193)
 
-    # The party's apparent stance on the issue: the stance with the greatest
-    # total `Reference` score. While this value could just be calculated, we
-    # store it to make things nice and speed.
+    # The party's apparent stance on the issue: the stance of the
+    # :class:`Reference` with the greatest score. While this value could just
+    # be calculated when required, we store it to make things nice and speedy.
     stance = models.CharField(choices=_STANCE_CHOICES, default=UNKNOWN,
                               max_length=7)
 
@@ -66,10 +71,15 @@ class View(models.Model):
     def get_vote_for_user(self, user):
         """Retrieve a user's vote within the view.
 
-        :param user: The user whose vote is to be retrieved.
+        :param user: The user.
         :type  user: ``django.contrib.auth.models.User``
-        :returns: ``user``'s vote in the view or ``None``
+        :returns: ``user``'s vote or ``None`` if they haven't voted.
         :rtype: :class:`ReferenceVote` or ``None``
+
+        .. note::
+
+            Assumes that the user cannot cast more than one vote; if they have
+            somehow cast multiple, then the system is in an inconsistent state.
         """
         from . import ReferenceVote
 
@@ -79,15 +89,42 @@ class View(models.Model):
         except IndexError:
             return None
 
+    def withdraw_vote(self, user):
+        """Withdraw a user's vote within the view.
+
+        :param user: The user.
+        :type  user: ``django.contrib.auth.models.User``
+        """
+        vote = self.get_vote_for_user(user)
+
+        if vote:
+            vote.is_archived = True
+            vote.save()
+
+    def cast_vote(self, reference, user):
+        """Cast a vote on one of the view's references.
+
+        The user's existing vote (if any) is withdrawn.
+
+        :param reference: The reference to vote for.
+        :type  reference: ``politics.apps.core.models.Reference``
+        :param      user: The user casting the vote.
+        :type       user: ``django.contrib.auth.models.User``
+        """
+        from . import ReferenceVote
+
+        self.withdraw_vote(user)
+        ReferenceVote(content_object=reference, author=user).save()
+
     def refresh_stance(self):
         """Recalculate the view's ``stance``.
 
-        A view's stance is equal to that of its best :class:`Reference`: the
-        reference that currently has the greatest number of non-archived votes.
+        A view's stance is equal to that of the :class:`Reference` with the
+        greatest number of non-archived votes (the "best" reference).
 
-        Assumes that all the view's :class:`Reference`s are up to date (their
-        scores reflect the votes that have been cast). If the stance changes,
-        the :class:`Issue` is saved to touch its ``updated_at`` timestamp.
+        This method assumes that the view's :class:`Reference`s are up to date
+        (their scores reflect the votes cast). If the stance changes, the
+        :class:`Issue` is saved to touch its ``updated_at`` timestamp.
         """
         try:
             # Fetch the reference(s) with the greatest score.
@@ -108,5 +145,5 @@ class View(models.Model):
             self.save()
 
             # Save the issue to touch its updated_at timestamp. That way, when
-            # a party's stance changes, the issue appears in the active steam.
+            # a party's stance changes, the issue appears in the active stream.
             self.issue.save()
