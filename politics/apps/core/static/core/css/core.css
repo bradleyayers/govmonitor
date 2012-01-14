@@ -124,7 +124,7 @@ html.issues.popular #header-issues-popular {
 #content {
     background: #F9F4F3;
     overflow: hidden;
-    padding: 20px 0;
+    padding: 20px 0 25px 0;
     width: 100%;
 }
 
@@ -145,6 +145,11 @@ html.issues.popular #header-issues-popular {
 
 #content-primary.full {
     width: 960px;
+}
+
+html.contact #content-primary p {
+    font-size: 16px;
+    margin-bottom: 0;
 }
 
 #content-secondary {

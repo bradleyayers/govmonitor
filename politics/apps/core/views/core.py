@@ -9,9 +9,15 @@ from politics.utils.decorators import render_to_template
 from politics.utils.paginator import Paginator
 
 
+@render_to_template("core/contact.html")
+def contact(request):
+    """The contact page."""
+    return {}
+
+
 @render_to_template("core/log_in.html")
 def log_in(request):
-    """Displays log in options (Facebook, etc.), handles log in attempts."""
+    """The log in page."""
     form = LoginForm()
     if request.method == "POST":
         form = LoginForm(request.POST)
