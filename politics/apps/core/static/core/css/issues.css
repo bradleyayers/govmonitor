@@ -1,11 +1,3 @@
-body.issue-form #main {
-    width: 650px;
-}
-
-body.issue-form #secondary {
-    width: 295px;
-}
-
 form.issue * {
     font-size: 15px;
 }
@@ -17,14 +9,14 @@ form.issue label {
 
 form.issue input[type=text] {
     float: right;
-    width: 590px;
+    width: 645px;
 }
 
 form.issue textarea {
     font-family: monospace;
     height: 150px;
     padding: 0;
-    width: 648px;
+    width: 718px;
 }
 
 form.issue ol.tag_suggestions {
