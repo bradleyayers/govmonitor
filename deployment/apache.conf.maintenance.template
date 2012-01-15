@@ -24,4 +24,8 @@
 
     # The root of the project on the filesystem.
     DocumentRoot /srv/www/example/maintenance
+
+    # Serve the maintenance page for all requests.
+    RewriteEngine on
+    RewriteRule .* /srv/www/example/maintenance/index.html
 </VirtualHost>
