@@ -73,7 +73,7 @@ EMAIL_USE_TLS = True
 # -----------------------------------------------------------------------------
 
 ADMINS = (("NAME", "EMAIL"),)
-MANAGERS = ADMINS
+APPEND_SLASH = True
 
 INSTALLED_APPS = (
     "django.contrib.auth",
@@ -94,9 +94,34 @@ INSTALLED_APPS = (
     "politics.apps.south_libraries",
 )
 
-APPEND_SLASH = True
-INTERNAL_IPS = ("127.0.0.1",)
+INTERNAL_IPS = ["127.0.0.1"]
 LANGUAGE_CODE = "en-us"
+
+# Mail all errors to the admins.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": True,
+    "formatters": {
+        "default": {
+            "format": "%(asctime)s %(levelname)s %(filename)s:%(lineno)d %(message)s"
+        }
+    },
+    "handlers": {
+        "mail_admins": {
+            "class": "django.utils.log.AdminEmailHandler",
+            "formatter": "default",
+            "level": "ERROR"
+        },
+    },
+    "loggers": {
+        "": {
+            "handlers": ["mail_admins"],
+            "level": "ERROR"
+        }
+    }
+}
+
+MANAGERS = ADMINS
 ROOT_URLCONF = "politics.urls"
 SECRET_KEY = "SECRET_KEY"
 SITE_ID = 1
