@@ -9,6 +9,12 @@ from politics.utils.decorators import render_to_template
 from politics.utils.paginator import Paginator
 
 
+@render_to_template("core/about.html")
+def about(request):
+    """The about page."""
+    return {}
+
+
 @render_to_template("core/contact.html")
 def contact(request):
     """The contact page."""

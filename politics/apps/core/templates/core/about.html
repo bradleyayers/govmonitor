@@ -1,0 +1,54 @@
+{% extends "core/base.html" %}
+
+{% block html-class %}about{% endblock %}
+{% block title %}About{% endblock %}
+
+{% block content %}
+    <div id="content-primary">
+        <h2 class="section">Frequently Asked Questions</h2>
+        <ol class="questions">
+            <li id="question-stance">
+                <h3>How do you determine a party's stance on an issue?</h3>
+                <p>A party's stance on an issue—oppose, support, or unclear—is automatically calculated from user-submitted <a href="#question-reference">references</a> and the votes thereon. Users vote for the reference that they think is best, and the stance of the highest-scoring reference is assumed to be correct. If no references have been submitted, the party's stance is unknown.</p>
+                <p>This emphasis on referencing fosters a community that values evidence and ensures that information is highly accurate.</p>
+            </li>
+            <li id="question-reference">
+                <h3>What's a reference?</h3>
+                <p>A reference is a source of information about a party's stance on an issue—it "backs up" claims of their opposition, support, or uncertainty. References can be sourced from a wide range of places (e.g. the media or the party themselves), and can be in any number of formats (e.g. text, audio, or video); the important thing is that they provide information about the party's stance.</p>
+            </li>
+            <li id="question-good-reference">
+                <h3>What makes a good reference?</h3>
+                <p>Good references exhibit a number of qualities. They typically...</p>
+                <ul>
+                    <li>are sourced from reliable media outlets or the party themselves,</li>
+                    <li>have been published recently (to ensure they are still relevant),</li>
+                    <li>detail the stance of the entire party, not just a single member, and</li>
+                    <li>they do so explicitly: it should be clear which information is relevant.</li>
+                </ul>
+                <p>An ideal reference is thus an official party policy document, but these aren't always up-to-date and they don't detail the party's stance on every issue. This is where other sources like the media are helpful. Blog posts or opinion pieces are poor references unless they come from the party themselves; try following up on their references to find something useful.</p>
+            </li>
+            <li id="question-tie">
+                <h3>What happens if there's a tie between references?</h3>
+                <p>If the tied references all share the same stance, it is used; otherwise, the party's stance will be unclear.</p>
+            </li>
+        </ol>
+        <p>Still need help with something? <a href="{% url core:contact %}">Contact me</a> and I'll see what I can do.</p>
+    </div>
+    <div id="content-secondary">
+        <h2 class="section">Who</h2>
+        <a class="person" href="http://twitter.com/chrisdoble">
+            <img alt="Chris Doble" src="http://gravatar.com/avatar/8a9fd9669fc04f1ff2bc2001f68c047d?s=55"/>
+            Chris Doble
+            <span>I like to make things.</span>
+        </a>
+
+        <h2 class="section">Where</h2>
+        <p>Brisbane, Australia.</p>
+
+        <h2 class="section">Why</h2>
+        <p>To help people learn and make more informed decisions about politics.</p>
+
+        <h2 class="section">How</h2>
+        <p>Python, Django, jQuery, Apache, Solr, PostgreSQL. See the code on <a href="http://github.com/chrisdoble/politics">GitHub</a>.</p>
+    </div>
+{% endblock %}

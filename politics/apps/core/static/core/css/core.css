@@ -97,11 +97,11 @@ html.tags #header-tags {
     background-image: -webkit-linear-gradient(#8FDB69, #8AD466);
     background-image: -moz-linear-gradient(#8FDB69, #8AD466);
     border: 1px solid #7DBF5C;
-    border-radius: 3px;
+    border-radius: 12px;
     -moz-box-shadow: inset #94E36D 0 1px;
     -webkit-box-shadow: inset #94E36D 0 1px;
     margin: 3px 4px 0 0;
-    padding: 4px 6px 6px 6px;
+    padding: 4px 8px 6px 8px;
 }
 
 #header-secondary a.button:hover {
@@ -133,6 +133,10 @@ html.issues.popular #header-issues-popular {
     width: 960px;
 }
 
+#content-content > div.full {
+    width: 960px;
+}
+
 #content-primary > :first-child,
 #content-secondary > :first-child {
     margin-top: 0;
@@ -143,25 +147,9 @@ html.issues.popular #header-issues-popular {
     width: 720px;
 }
 
-#content-primary.full {
-    width: 960px;
-}
-
-html.contact #content-primary p {
-    font-size: 16px;
-    margin-bottom: 0;
-}
-
 #content-secondary {
     float: right;
     width: 220px;
-}
-
-#content-secondary h1 {
-    border-bottom: 2px solid #E5E5E5;
-    font-size: 14px;
-    margin-top: 18px;
-    padding-bottom: 6px;
 }
 
 #content-secondary p {
@@ -263,15 +251,25 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-    font-size: 150%;
+    font-size: 22px;
 }
 
 h2 {
-    font-size: 125%;
+    font-size: 14px;
+}
+
+h2.section {
+    border-bottom: 2px solid #E5E5E5;
+    margin-top: 18px;
+    padding-bottom: 6px;
 }
 
 i {
     font-style: italic;
+}
+
+li {
+    padding: 0;
 }
 
 p {
@@ -284,5 +282,5 @@ strong {
 
 ul {
     list-style: disc;
-    margin-left: 1.2em;
+    margin: 0 0 1em 1.2em;
 }

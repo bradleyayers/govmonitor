@@ -17,6 +17,8 @@
 {% block stylesheets %}
     {% compress css %}
         {{ block.super }}
+        <link href="{{ STATIC_URL }}core/css/about.css" rel="stylesheet" type="text/css"/>
+        <link href="{{ STATIC_URL }}core/css/contact.css" rel="stylesheet" type="text/css"/>
         <link href="{{ STATIC_URL }}core/css/core.css" rel="stylesheet" type="text/css"/>
         <link href="{{ STATIC_URL }}core/css/issues.css" rel="stylesheet" type="text/css"/>
         <link href="{{ STATIC_URL }}core/css/tags.css" rel="stylesheet" type="text/css"/>
@@ -43,7 +45,7 @@
                         {% else %}
                             <li><a href="{% url core:logout %}">Log Out</a></li>
                         {% endif %}
-                        <li><a href="#" id="header-about">About</a></li>
+                        <li><a href="{% url core:about %}" id="header-about">About</a></li>
                     </ol>
                     <form action="{% url core:search %}">
                         <input id="q" name="q" placeholder="Search" type="text" value="{{ request.GET.q }}"/>
@@ -66,7 +68,7 @@
         <div id="footer-content">
             <a class="right" href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license"><img alt="cc-by-sa" src="{{ STATIC_URL }}core/img/cc-by-sa.png"/></a>
             <ol>
-                <li><a href="#">About</a></li>
+                <li><a href="{% url core:about %}">About</a></li>
                 <li><a href="{% url core:contact %}">Contact</a></li>
             </ol>
             <p>Copyright &copy; Christopher Doble 2011–2012.</p>

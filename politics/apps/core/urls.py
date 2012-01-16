@@ -50,6 +50,7 @@ view_urlpatterns = patterns("",
 
 urlpatterns = patterns("",
     url(r"^$", issues.popular, name="home"),
+    url(r"^about/$", core.about, name="about"),
     url(r"^contact/$", core.contact, name="contact"),
     url(r"^login/$", core.log_in, name="login"),
     url(r"^logout/$", core.log_out, name="logout"),
