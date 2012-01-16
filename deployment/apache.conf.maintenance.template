@@ -25,6 +25,10 @@
     # The root of the project on the filesystem.
     DocumentRoot /srv/www/example/maintenance
 
+    # Log to the host's directory.
+    CustomLog /srv/www/example/access.log "%h %l %u %t \"%r\" %>s %b"
+    ErrorLog /srv/www/example/error.log
+
     # Serve the maintenance page for all requests.
     RewriteEngine on
     RewriteRule .* /srv/www/example/maintenance/index.html

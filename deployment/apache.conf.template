@@ -25,6 +25,10 @@
     # The root of the project on the filesystem.
     DocumentRoot /srv/www/example
 
+    # Log to the host's directory.
+    CustomLog /srv/www/example/access.log "%h %l %u %t \"%r\" %>s %b"
+    ErrorLog /srv/www/example/error.log
+
     # Hook up the media directories for Apache to serve.
     Alias /media/ /DocumentRoot/example/example/media/
     Alias /static/ /DocumentRoot/example/example/static/
