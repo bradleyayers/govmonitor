@@ -1,6 +1,6 @@
 # coding=utf-8
 from ..forms import LoginForm, UserForm
-from ..models import Issue
+from ..models import Issue, Tag
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
@@ -73,15 +73,28 @@ def register(request):
 
 @render_to_template("core/search.html")
 def search(request):
-    """Search issues."""
-    # Execute the search, preemptively loading objects from the database.
-    results = SearchQuerySet().models(Issue).auto_query(
-            request.GET.get("q", "*")).load_all()
+    """The search page."""
+    query = request.GET.get("q")
 
-    # Create a paginator and convert the page's objects to Issues.
-    page = Paginator(results, 25).page(request.GET.get("page", 1))
-    page.object_list = [result.object for result in page.object_list]
-    return {"page": page}
+    if not query:
+        return redirect("core:home")
+
+    # Search for Issue and Tags matching the query.
+    results = SearchQuerySet().auto_query(query).load_all()
+    issues = [result.object for result in results.models(Issue)]
+    tags = [result.object for result in results.models(Tag)]
+
+    # Extract the tags used by the issues in descending order of frequency.
+    # Ignore those in the search results as these are displayed below them.
+    related_tags = sum((list(issue.tags.all()) for issue in issues), [])
+    related_tags = sorted(set(related_tags) - set(tags), None,
+                          lambda tag: related_tags.count(tag), True)
+
+    return {
+        "issues": issues,
+        "page": Paginator(issues, 25).page(request.GET.get("page", 1)),
+        "tags": (tags + related_tags)[:20]
+    }
 
 
 @login_required

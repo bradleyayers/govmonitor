@@ -6,12 +6,24 @@
 
 {% block content %}
     <div id="content-primary">
-        <h1>Search Results</h1>
+        <h2 class="section">{{ issues|length }} Issues</h2>
         {% if page.object_list %}
             {% issue_table page.object_list 5 %}
             {% page_links page %}
         {% else %}
-            <i>No results.</i>
+            <i>No issues.</i>
+        {% endif %}
+    </div>
+    <div id="content-secondary">
+        <h2 class="section">{{ tags|length }} Tags</h2>
+        {% if tags %}
+            <ol>
+                {% for tag in tags %}
+                    <li>{% tag_link tag %}</li>
+                {% endfor %}
+            </ol>
+        {% else %}
+            <i>No tags.</i>
         {% endif %}
     </div>
 {% endblock %}
