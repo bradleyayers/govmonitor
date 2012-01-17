@@ -2,6 +2,7 @@
 from autoslug.fields import AutoSlugField
 from django.db import models
 from politics.utils.models import MarkdownField
+import reversion
 
 
 class Issue(models.Model):
@@ -86,3 +87,8 @@ class Issue(models.Model):
 
 models.signals.post_save.connect(Issue.create_views, sender=Issue)
 models.signals.post_save.connect(Issue.update_view_slugs, sender=Issue)
+
+
+# As tags are deleted when they become unused, we must store them alongside
+# issues; otherwise, the tags might not be available when we revert an issue.
+reversion.register(Issue, follow=["tags"])

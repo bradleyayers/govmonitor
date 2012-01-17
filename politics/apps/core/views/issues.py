@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from politics.utils.decorators import render_to_template, slug_url
 from politics.utils.paginator import Paginator
+import reversion
 
 
 # The number of parties that should be displayed in the view tables. The
@@ -30,7 +31,10 @@ def edit(request, pk):
         form = IssueForm(request.POST, instance=issue)
 
         if form.is_valid():
-            issue = form.save()
+            with reversion.create_revision():
+                issue = form.save()
+                reversion.set_user(request.user)
+
             return redirect("core:issues:show", pk=issue.pk, slug=issue.slug)
 
     return {"form": form}

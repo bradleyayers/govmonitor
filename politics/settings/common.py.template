@@ -87,6 +87,7 @@ INSTALLED_APPS = (
     "compressor",
     "debug_toolbar",
     "haystack",
+    "reversion",
     "social_auth",
     "south",
 

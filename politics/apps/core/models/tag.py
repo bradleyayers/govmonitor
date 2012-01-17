@@ -3,6 +3,7 @@ from . import Issue
 from autoslug.fields import AutoSlugField
 from django.db import models
 from django.db.models import Count
+import reversion
 
 
 class Tag(models.Model):
@@ -58,3 +59,8 @@ class Tag(models.Model):
 
 models.signals.m2m_changed.connect(Tag.delete_unused,
                                    sender=Issue.tags.through)
+
+
+# While changes to tags aren't versioned, we must register the model with
+# django-reversion so an issue's tags can be stored when it is versioned.
+reversion.register(Tag)
