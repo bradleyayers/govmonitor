@@ -94,6 +94,10 @@ class LoginForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput())
 
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
+        self._user = None
+
     def clean(self):
         email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password")
@@ -106,6 +110,9 @@ class LoginForm(forms.Form):
 
     def login(self, request):
         """Logs the user in. To be called when we know the form is valid."""
+        if not self._user:
+            raise Exception("_user has not been set.")
+
         auth.login(request, self._user)
 
 

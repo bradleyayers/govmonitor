@@ -72,6 +72,7 @@ class MarkdownField(models.TextField):
 # Add south introspection rules.
 try:
     from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^politics\.utils\.models\.fields\.MarkdownField$"])
+    pattern = "^politics\.utils\.models\.fields\.MarkdownField$"
+    add_introspection_rules([], [pattern])
 except ImportError:
     pass

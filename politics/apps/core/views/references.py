@@ -1,6 +1,6 @@
 # coding=utf-8
 from ..forms import ReferenceForm
-from ..models import Reference, Vote
+from ..models import Reference
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.views.decorators.http import require_http_methods

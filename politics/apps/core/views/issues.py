@@ -1,6 +1,6 @@
 # coding=utf-8
 from ..forms import IssueForm
-from ..models import Issue, View
+from ..models import Issue
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from politics.utils.decorators import pk_url, render_to_template, slug_url
@@ -65,7 +65,7 @@ def popular(request):
 
     # Extract the most frequently occurring tags in the issues.
     tags = sum((list(issue.tags.all()) for issue in issues), [])
-    tags = sorted(set(tags), key=lambda tag: tags.count(tag), reverse=True)
+    tags = sorted(set(tags), key=tags.count, reverse=True)
 
     return {"number_of_parties": NUMBER_OF_PARTIES, "page": page, "tags": tags}
 

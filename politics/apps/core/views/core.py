@@ -32,11 +32,11 @@ def log_in(request):
             form.login(request)
             return redirect(request.GET.get("next") or "core:home")
 
-    next = ""
+    next_page = ""
     if "next" in request.GET:
-        next = "?next=%s" % request.GET["next"]
+        next_page = "?next=%s" % request.GET["next"]
 
-    return {"form": form, "next": next}
+    return {"form": form, "next": next_page}
 
 
 def log_out(request):
@@ -88,7 +88,7 @@ def search(request):
     # Ignore those in the search results as these are displayed below them.
     related_tags = sum((list(issue.tags.all()) for issue in issues), [])
     related_tags = sorted(set(related_tags) - set(tags), None,
-                          lambda tag: related_tags.count(tag), True)
+                          related_tags.count, True)
 
     return {
         "issues": issues,

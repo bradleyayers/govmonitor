@@ -8,7 +8,7 @@ from django.db import IntegrityError, models
 class VotesManager(GenericManager):
     """The default :class:`Vote`s manager.
 
-    ``get_for_model()`` and ``get_for_object()`` both take an additional
+    ``get_for_model()`` and ``get_for_instance()`` both take an additional
     argument ``include_archived``. If it is ``True``, the result will include
     archived votes, if ``False`` (the default), they will be filtered out.
     """
@@ -17,8 +17,8 @@ class VotesManager(GenericManager):
         votes = super(VotesManager, self).get_for_model(model)
         return votes if include_archived else votes.filter(is_archived=False)
 
-    def get_for_object(self, object, include_archived=False):
-        votes = super(VotesManager, self).get_for_object(object)
+    def get_for_instance(self, instance, include_archived=False):
+        votes = super(VotesManager, self).get_for_instance(instance)
         return votes if include_archived else votes.filter(is_archived=False)
 
     def not_archived(self):
@@ -100,7 +100,7 @@ class Vote(models.Model):
         if subject is None:
             return
 
-        score = Vote.objects.get_for_object(subject).count()
+        score = Vote.objects.get_for_instance(subject).count()
 
         # Update all the subject's ScoreFields.
         for field in subject._meta.fields:
@@ -112,7 +112,7 @@ class Vote(models.Model):
     def save(self, *args, **kwargs):
         # Ensure that the user hasn't already voted on this object. It's the
         # caller's responsibility to archive votes before creating new ones.
-        votes = Vote.objects.get_for_object(self.content_object)
+        votes = Vote.objects.get_for_instance(self.content_object)
         votes = votes.filter(author=self.author).exclude(pk=self.pk)
 
         if votes.exists():

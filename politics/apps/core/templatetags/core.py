@@ -8,7 +8,6 @@ from politics.apps.core.models import Party, View
 from politics.utils import timestring
 import re
 from urllib import urlencode
-from urlparse import parse_qsl
 
 
 register = template.Library()
@@ -181,13 +180,13 @@ def issue_table(issues, number_of_parties=None):
     # Sort the views by issue (in the same order that they were given) and
     # party name, then group by issue. Take advantage of tuple comparisons.
     views = sorted(views, key=lambda v: (issues.index(v.issue), v.party.name))
-    views = [list(g) for k, g in groupby(views, key=lambda v: v.issue.pk)]
+    views = [list(i[1]) for i in groupby(views, key=lambda v: v.issue.pk)]
 
     return {"view_groups": views}
 
 
 @register.inclusion_tag("core/_page_links.html", takes_context=True)
-def page_links(context, page, near=2, key="page"):
+def page_links(context, page, near=2):
     """Renders links to pages of paginated content.
 
     Links to a number of pages near the current page and to the first and last
@@ -201,8 +200,6 @@ def page_links(context, page, near=2, key="page"):
     :param    near: The number of pages that should be linked to before and
                     after the current page (if that many pages are available).
     :type     near: ``int``
-    :param     key: The key for the page value in the query string.
-    :type      key: ``str``
 
     .. note::
 
@@ -225,6 +222,7 @@ class QueryStringNode(Node):
     """The node used in the ``query_string`` tag."""
 
     def __init__(self, kwargs):
+        super(QueryStringNode, self).__init__()
         self.kwargs = kwargs
 
     def render(self, context):

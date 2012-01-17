@@ -39,8 +39,8 @@ class Markdown(object):
         """
 
         # Pass the markdown back.
-        def handleMatch(self, m):
-            return m.group()
+        def handleMatch(self, match):
+            return match.group()
 
     def __init__(self, disable=None, enable=None):
         if None not in (disable, enable):

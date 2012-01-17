@@ -42,23 +42,24 @@ class VoteTestCase(TestCase):
         self.assertTrue(any(v.is_archived for v in actual))
         self.assertTrue(all(isinstance(v.content_object, User) for v in actual))
 
-    def test_manager_get_for_object(self):
-        """The default manager's ``get_for_object()`` method should return all
-            votes that have been cast on a particular model instance."""
+    def test_manager_get_for_instance(self):
+        """The default manager's ``get_for_instance()`` method should return
+            all votes that have been cast on a particular model instance."""
         user = User.objects.get(pk=1)
         content_type = ContentType.objects.get_for_model(User)
-        object_votes = Vote.objects.filter(content_type=content_type, object_id=user.pk)
+        object_votes = Vote.objects.filter(content_type=content_type,
+                                           object_id=user.pk)
         self.assertTrue(object_votes.exists())
 
         # First test without archived votes...
-        actual = Vote.objects.get_for_object(user)
+        actual = Vote.objects.get_for_instance(user)
         expected = object_votes.filter(is_archived=False)
         self.assertEqual(len(actual), len(expected))
         self.assertFalse(any(v.is_archived for v in actual))
         self.assertTrue(all(v.content_object == user for v in actual))
 
         # ...and again with archived votes.
-        actual = Vote.objects.get_for_object(user, True)
+        actual = Vote.objects.get_for_instance(user, True)
         expected = object_votes
         self.assertEqual(len(actual), len(expected))
         self.assertTrue(any(v.is_archived for v in actual))

@@ -1,8 +1,8 @@
 # coding: utf-8
 from ..forms import PartyForm
-from ..models import Party, Tag
+from ..models import Party
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import redirect
 from politics.utils.decorators import render_to_template, slug_url
 from politics.utils.paginator import Paginator
 

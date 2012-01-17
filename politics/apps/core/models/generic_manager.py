@@ -31,7 +31,7 @@ class GenericManager(models.Manager):
     use_for_related_fields = True
 
     # We must extract this functionality into its own method, otherwise
-    # overriding get_for_model() would always affect get_for_object().
+    # overriding get_for_model() would always affect get_for_instance().
     def _get_for_model(self, model):
         content_type = ContentType.objects.get_for_model(model)
         kwargs = {self.content_type_field_name: content_type}
@@ -47,15 +47,15 @@ class GenericManager(models.Manager):
         """
         return self._get_for_model(model)
 
-    def get_for_object(self, object):
+    def get_for_instance(self, instance):
         """Returns instances that reference a particular model instance.
 
-        :param object: The model instance in question.
-        :type  object: ``django.db.models.Model``
-        :returns: Instances that reference ``object``.
+        :param instance: The model instance in question.
+        :type  instance: ``django.db.models.Model``
+        :returns: Instances that reference ``instance``.
         :rtype: ``django.db.models.query.QuerySet``
         """
-        # We can just pass object through to get_for_model because
+        # We can just pass instance through to get_for_model because
         # ContentType's get_for_model accepts both models and instances.
-        kwargs = {self.object_id_field_name: object.pk}
-        return self._get_for_model(object).filter(**kwargs)
+        kwargs = {self.object_id_field_name: instance.pk}
+        return self._get_for_model(instance).filter(**kwargs)

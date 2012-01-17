@@ -1,6 +1,6 @@
 # coding=utf-8
 from ..forms import ReferenceForm
-from ..models import Reference, ReferenceVote, View
+from ..models import Reference, View
 from politics.utils.decorators import render_to_template, slug_url
 from random import random
 

@@ -39,5 +39,5 @@ class ReferenceTestCase(TestCase):
     def test_score_archived_votes(self):
         """The reference's score shouldn't include archived votes."""
         reference = Reference.objects.get(pk=1)
-        expected = ReferenceVote.objects.get_for_object(reference).count()
+        expected = ReferenceVote.objects.get_for_instance(reference).count()
         self.assertEqual(reference.score, expected)

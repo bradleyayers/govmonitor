@@ -18,7 +18,7 @@ def pk_url(model):
     .. code-block:: python
 
         @pk_url(MyModel)
-        def view(request, object):
+        def view(request, instance):
             # ...
 
     The primary key must be captured in the ``pk`` capture group.
@@ -35,8 +35,8 @@ def pk_url(model):
     def inner(function):
         @wraps(function)
         def wrapper(request, pk, *args, **kwargs):
-            object = get_object_or_404(model, pk=pk)
-            return function(request, object, *args, **kwargs)
+            instance = get_object_or_404(model, pk=pk)
+            return function(request, instance, *args, **kwargs)
 
         return wrapper
 
@@ -118,7 +118,7 @@ def slug_url(model):
     .. code-block:: python
 
         @slug_url(MyModel)
-        def view(request, object):
+        def view(request, instance):
             # ...
 
     The primary key must be captured in the ``pk`` capture group, the slug in
@@ -136,15 +136,15 @@ def slug_url(model):
     def inner(function):
         @wraps(function)
         def wrapper(request, pk, slug, *args, **kwargs):
-            object = get_object_or_404(model, pk=pk)
+            instance = get_object_or_404(model, pk=pk)
 
             # Is the slug right?
-            if slug != object.slug:
+            if slug != instance.slug:
                 match = resolve(request.get_full_path())
-                kwargs = {"pk": object.pk, "slug": object.slug}
+                kwargs = {"pk": instance.pk, "slug": instance.slug}
                 return redirect(match.view_name, **kwargs)
 
-            return function(request, object, *args, **kwargs)
+            return function(request, instance, *args, **kwargs)
 
         return wrapper
 
