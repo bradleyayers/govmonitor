@@ -150,16 +150,17 @@ class ReferenceForm(forms.ModelForm):
 
     def clean(self):
         """Ensure that ``url`` is unique within the stance."""
-        if not self.instance.pk:
-            raise Exception("ReferenceForm must be passed a Reference.")
-
         stance = self.cleaned_data.get("stance")
         url = self.cleaned_data.get("url")
 
         if stance and url:
-            # Retrieve duplicate references (excluding this one).
-            duplicates = self.instance.view.reference_set.filter(
-                    stance=stance, url=url).exclude(pk=self.instance.pk)
+            try:
+                # Retrieve duplicate references (excluding this one). An
+                # exception will be raised if the instance doesn't have a view.
+                duplicates = self.instance.view.reference_set.filter(
+                        stance=stance, url=url).exclude(pk=self.instance.pk)
+            except View.DoesNotExist:
+                raise Exception("ReferenceForm must be passed a Reference.")
 
             if len(duplicates) > 0:
                 message = self._ERROR_MESSAGES["DUPLICATE_URL"]
