@@ -29,6 +29,7 @@ party_urlpatterns = patterns("",
 
 # /references/
 reference_urlpatterns = patterns("",
+    url(r"^(?P<pk>\d+)/edit/$", references.edit, name="edit"),
     url(r"^(?P<pk>\d+)/votes/$", references.votes, name="votes"),
 )
 

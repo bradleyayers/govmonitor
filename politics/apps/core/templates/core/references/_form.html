@@ -1,0 +1,23 @@
+{% csrf_token %}
+<p>
+    <label for="id_stance">Stance</label>
+    {{ form.stance }}
+</p>
+<p>
+    <label for="id_url">URL</label>
+    {{ form.url }}
+</p>
+<p>{{ form.text }}</p>
+
+{% if form.errors %}
+    <div class="errors">
+        <p>Oops! The reference couldn't be saved because:</p>
+        <ul>
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li>{{ field }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}

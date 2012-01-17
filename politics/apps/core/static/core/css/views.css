@@ -46,33 +46,3 @@ div.reference div.stance.oppose {
 div.reference div.stance.unclear {
     background-color: #FFDA00;
 }
-
-div.reference-form {
-    border-top: 1px solid #DDD;
-}
-
-form.reference input, form.reference label {
-    font-size: 15px;
-}
-
-form.reference label {
-    font-weight: bold;
-    line-height: 23px;
-}
-
-form.reference input[type=text] {
-    float: right;
-    width: 640px;
-}
-
-form.reference select {
-    position: relative;
-    top: -1px;
-}
-
-form.reference textarea {
-    font-family: monospace;
-    height: 150px;
-    padding: 0;
-    width: 698px;
-}

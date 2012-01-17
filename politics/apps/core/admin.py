@@ -8,9 +8,14 @@ class IssueAdmin(VersionAdmin):
     pass
 
 
+class ReferenceAdmin(VersionAdmin):
+    pass
+
+
 # Register versioned models.
 admin.site.register(Issue, IssueAdmin)
+admin.site.register(Reference, ReferenceAdmin)
 
 # Register other models.
-models = (Party, Reference, Tag, UserProfile, View, Vote)
+models = (Party, Tag, UserProfile, View, Vote)
 map(admin.site.register, models)

@@ -1,0 +1,15 @@
+{% extends "core/base.html" %}
+
+{% block title %}Edit Reference{% endblock %}
+
+{% block content %}
+    <div id="content-primary">
+        <form class="reference" method="post">
+            {% include "core/references/_form.html" %}
+            <p>
+                <input type="submit" value="Save"/>
+                <a href="{% url core:views:show reference.view.pk reference.view.slug %}">Cancel</a>
+            </p>
+        </form>
+    </div>
+{% endblock %}

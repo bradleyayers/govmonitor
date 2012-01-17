@@ -2,8 +2,8 @@
 from ..forms import IssueForm
 from ..models import Issue, View
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect
-from politics.utils.decorators import render_to_template, slug_url
+from django.shortcuts import redirect
+from politics.utils.decorators import pk_url, render_to_template, slug_url
 from politics.utils.paginator import Paginator
 import reversion
 
@@ -22,9 +22,9 @@ def active(request):
 
 
 @login_required
+@pk_url(Issue)
 @render_to_template("core/issues/form.html")
-def edit(request, pk):
-    issue = get_object_or_404(Issue, pk=pk)
+def edit(request, issue):
     form = IssueForm(instance=issue)
 
     if request.method == "POST":

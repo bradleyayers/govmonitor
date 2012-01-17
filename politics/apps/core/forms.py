@@ -133,8 +133,7 @@ class ReferenceForm(forms.ModelForm):
     }
 
     # Use a text area for `text` and don't show the empty label in stance.
-    text = forms.CharField(help_text="Max. 500 characters.", required=False,
-                           widget=forms.Textarea)
+    text = forms.CharField(required=False, widget=forms.Textarea)
     stance = forms.ChoiceField(choices=Reference.STANCE_CHOICES,
                                initial=View.SUPPORT)
 
@@ -144,19 +143,21 @@ class ReferenceForm(forms.ModelForm):
 
     def clean(self):
         """Ensure that ``url`` is unique within the stance."""
+        if not self.instance.pk:
+            raise Exception("ReferenceForm must be passed a Reference.")
+
         stance = self.cleaned_data.get("stance")
         url = self.cleaned_data.get("url")
 
         if stance and url:
-            try:
-                # Are there any existing References with that URL?
-                if len(self.instance.view.reference_set.filter(
-                        stance=stance, url=url)) > 0:
-                    message = self._ERROR_MESSAGES["DUPLICATE_URL"]
-                    self._errors["url"] = self.error_class([message])
-                    del self.cleaned_data["url"]
-            except View.DoesNotExist:
-                raise Exception("ReferenceForm must be passed a Reference.")
+            # Retrieve duplicate references (excluding this one).
+            duplicates = self.instance.view.reference_set.filter(
+                    stance=stance, url=url).exclude(pk=self.instance.pk)
+
+            if len(duplicates) > 0:
+                message = self._ERROR_MESSAGES["DUPLICATE_URL"]
+                self._errors["url"] = self.error_class([message])
+                del self.cleaned_data["url"]
 
         return self.cleaned_data
 
