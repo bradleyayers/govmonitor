@@ -2,7 +2,7 @@
 from ..forms import IssueForm
 from ..models import Issue
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from politics.utils.decorators import pk_url, render_to_template, slug_url
 from politics.utils.paginator import Paginator
 import reversion
@@ -22,9 +22,13 @@ def active(request):
 
 
 @login_required
-@pk_url(Issue)
 @render_to_template("core/issues/form.html")
-def edit(request, issue):
+def form(request, pk=None):
+    # If we're editing an Issue, pk will be set.
+    issue = None
+    if pk is not None:
+        issue = get_object_or_404(Issue, pk=pk)
+
     form = IssueForm(instance=issue)
 
     if request.method == "POST":
@@ -32,25 +36,14 @@ def edit(request, issue):
 
         if form.is_valid():
             with reversion.create_revision():
-                issue = form.save()
                 reversion.set_user(request.user)
+                issue = form.save()
 
-            return redirect("core:issues:show", pk=issue.pk, slug=issue.slug)
+                # django-reversion detects changes by listening for post_save
+                # signals; thus it doesn't get up-to-date tags as they're saved
+                # after the Issue. Call save to fire a signal and fix this.
+                issue.save()
 
-    return {"form": form}
-
-
-@login_required
-@render_to_template("core/issues/form.html")
-def new(request):
-    """Create a new issue."""
-    form = IssueForm()
-
-    if request.method == "POST":
-        form = IssueForm(request.POST)
-
-        if form.is_valid():
-            issue = form.save()
             return redirect("core:issues:show", pk=issue.pk, slug=issue.slug)
 
     return {"form": form}

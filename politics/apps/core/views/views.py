@@ -3,6 +3,7 @@ from ..forms import ReferenceForm
 from ..models import Reference, View
 from politics.utils.decorators import render_to_template, slug_url
 from random import random
+import reversion
 
 
 @slug_url(View)
@@ -19,7 +20,10 @@ def show(request, view):
             form = ReferenceForm(request.POST, instance=instance)
 
             if form.is_valid():
-                form.save()
+                with reversion.create_revision():
+                    reversion.set_user(request.user)
+                    form.save()
+
                 form = ReferenceForm()
 
     # Retrieve the view's non-archived references in descending order of score.

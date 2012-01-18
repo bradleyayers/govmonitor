@@ -14,8 +14,8 @@ ajax_patterns = patterns("",
 # /issues/
 issue_patterns = patterns("",
     url(r"^active/$", issues.active, name="active"),
-    url(r"^(?P<pk>\d+)/edit/$", issues.edit, name="edit"),
-    url(r"^new/$", issues.new, name="new"),
+    url(r"^(?P<pk>\d+)/edit/$", issues.form, name="edit"),
+    url(r"^new/$", issues.form, name="new"),
     url(r"^popular/$", issues.popular, name="popular"),
     url(slug_pattern, issues.show, name="show"),
 )
