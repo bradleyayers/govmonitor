@@ -9,6 +9,7 @@ html {
     background: #F9F4F3 url("../img/header-background.png") repeat-x scroll top;
     font-size: 0;
     height: 50px;
+    min-width: 960px;
     padding-bottom: 2px;
     width: 100%;
 }
@@ -123,13 +124,14 @@ html.issues.popular #header-issues-popular {
 
 #content {
     background: #F9F4F3;
-    overflow: hidden;
+    min-width: 960px;
     padding: 20px 0 25px 0;
     width: 100%;
 }
 
 #content-content {
     margin: 0 auto;
+    overflow: hidden;
     width: 960px;
 }
 
