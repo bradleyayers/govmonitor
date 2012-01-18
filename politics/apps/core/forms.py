@@ -66,7 +66,7 @@ class IssueForm(forms.ModelForm):
 
     class Meta:
         model = Issue
-        exclude = ("description_html",)
+        fields = ("description", "name", "tags")
 
     def clean(self):
         # The name cannot be "edit" as that conflicts with the edit URL.
