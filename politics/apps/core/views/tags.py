@@ -15,9 +15,11 @@ def list(request):
     tags = Tag.objects.annotate(Count("issue")).order_by("-issue__count")
     page = Paginator(tags, 32).page(request.GET.get("page", 1))
 
-    # Split the tags into groups of 4 to be displayed as rows in the table.
-    tag_groups = [page.object_list[i:i+4] for i in range(0, len(tags), 4)]
-    return {"page": page, "tag_groups": tag_groups}
+    # Split the tags into rows of length 4.
+    indices = range(0, len(page.object_list), 4)
+    tag_rows = [page.object_list[i:i+4] for i in indices]
+
+    return {"page": page, "tag_rows": tag_rows}
 
 
 @slug_url(Tag)
