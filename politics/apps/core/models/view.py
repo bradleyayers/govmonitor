@@ -126,6 +126,8 @@ class View(models.Model):
         (their scores reflect the votes cast). If the stance changes, the
         :class:`Issue` is saved to touch its ``updated_at`` timestamp.
         """
+        from . import Issue
+
         try:
             # Fetch the reference(s) with the greatest score.
             references = self.reference_set.order_by("-score")
@@ -146,4 +148,8 @@ class View(models.Model):
 
             # Save the issue to touch its updated_at timestamp. That way, when
             # a party's stance changes, the issue appears in the active stream.
-            self.issue.save()
+            # In cascading deletes, the issue may not exist anymore.
+            try:
+                self.issue.save()
+            except Issue.DoesNotExist:
+                pass
