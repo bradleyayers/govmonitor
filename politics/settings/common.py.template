@@ -112,12 +112,15 @@ LOGGING = {
             "class": "django.utils.log.AdminEmailHandler",
             "formatter": "default",
             "level": "ERROR"
-        },
+        }
     },
     "loggers": {
         "": {
             "handlers": ["mail_admins"],
             "level": "ERROR"
+        },
+        "django.request": {
+            "propagate": True
         }
     }
 }
