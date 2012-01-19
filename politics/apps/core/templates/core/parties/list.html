@@ -7,11 +7,28 @@
 {% block content %}
     {{ block.super }}
     <div id="content-primary">
-        <ol>
-            {% for party in page.object_list %}
-                <li><a href="{% url core:parties:show party.pk party.slug %}">{{ party.name }}</a></li>
+        <ol class="parties">
+            {% for party in parties %}
+                <li>
+                    <a href="{% url core:parties:show party.pk party.slug %}">{{ party.name }}</a>
+                    <ol>
+                        {% for tag in party.tags|slice:":3" %}
+                            <li>{% tag_link tag %}</li>
+                        {% endfor %}
+                    </ol>
+                    <span>{{ party.view_percentage|floatformat:0 }}% of issues available</span>
+                </li>
             {% endfor %}
         </ol>
-       {% page_links page %}
+   </div>
+   <div id="content-secondary">
+       <h2 class="section">About Parties</h2>
+       <p>Shown are each party's "favourite" tags and the percentage of issues where we have information about their view.</p>
+
+       <h2 class="section">Statistics</h2>
+       <ol>
+           <li><strong>{{ parties|length }}</strong> parties</li>
+           <li><strong>{{ average_view_percentage|floatformat:0 }}%</strong> of issues available on average</li>
+       </ol>
    </div>
 {% endblock %}

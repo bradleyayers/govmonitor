@@ -1,17 +1,40 @@
 # coding: utf-8
 from ..forms import PartyForm
-from ..models import Party
+from ..models import Issue, Party, View
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from politics.utils.decorators import render_to_template, slug_url
 from politics.utils.paginator import Paginator
+import re
 
 
 @render_to_template("core/parties/list.html")
 def list(request):
     """Show a list of all parties."""
-    parties = Party.objects.order_by("name")
-    return {"page": Paginator(parties, 25).page(request.GET.get("page", 1))}
+    # Returns the key by which a party is to be sorted.
+    def _party_key(party):
+        return re.sub("^the", "", party.name.lower()).strip()
+
+    parties = Party.objects.all()
+    parties = sorted(parties, key=_party_key)
+    average_view_percentage = 0
+
+    for party in parties:
+        # Retrieve all information that we have on the party.
+        views = party.view_set.exclude(stance=View.UNKNOWN).select_related()
+
+        # Calculate the party's "favourite" tags.
+        party.tags = Issue.common_tags(set(view.issue for view in views))
+
+        # Calculate the view percentage.
+        issue_count = Issue.objects.count()
+        party.view_percentage = float(len(views)) / issue_count * 100
+        average_view_percentage += party.view_percentage
+
+    return {
+        "average_view_percentage": average_view_percentage / len(parties),
+        "parties": parties
+    }
 
 
 @login_required

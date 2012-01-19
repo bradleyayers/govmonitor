@@ -84,11 +84,10 @@ def search(request):
     issues = [result.object for result in results.models(Issue)]
     tags = [result.object for result in results.models(Tag)]
 
-    # Extract the tags used by the issues in descending order of frequency.
-    # Ignore those in the search results as these are displayed below them.
-    related_tags = sum((list(issue.tags.all()) for issue in issues), [])
-    related_tags = sorted(set(related_tags) - set(tags), None,
-                          related_tags.count, True)
+    # Extract commons tags that may not be in the search results. Remove
+    # duplicates as this is shown below the results (but preserve ordering).
+    related_tags = Issue.common_tags(issues)
+    related_tags = [tag for tag in related_tags if tag not in tags]
 
     return {
         "issues": issues,

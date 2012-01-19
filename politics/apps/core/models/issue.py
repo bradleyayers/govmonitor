@@ -45,6 +45,19 @@ class Issue(models.Model):
         return self.name
 
     @staticmethod
+    def common_tags(issues):
+        """Extract tags from a set of issues, ordering them by frequency.
+
+        :param issues: The issues from which tags will be extracted.
+        :type  issues: *iterable* of :class:`Issue`s
+        :returns: A list of unique tags referenced by elements of ``issues``,
+                  in descending order of how many times they were referenced.
+        :rtype: ``list`` of :class:`Tag`s
+        """
+        tags = sum((list(issue.tags.all()) for issue in issues), [])
+        return sorted(set(tags), key=tags.count, reverse=True)
+
+    @staticmethod
     def create_views(instance, created, raw, **kwargs):
         """Create initial views for an issue.
 

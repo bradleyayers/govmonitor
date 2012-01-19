@@ -56,11 +56,11 @@ def popular(request):
     issues = Issue.objects.filter(is_popular=True).order_by("name")
     page = Paginator(issues, 25).page(request.GET.get("page", 1))
 
-    # Extract the most frequently occurring tags in the issues.
-    tags = sum((list(issue.tags.all()) for issue in issues), [])
-    tags = sorted(set(tags), key=tags.count, reverse=True)
-
-    return {"number_of_parties": NUMBER_OF_PARTIES, "page": page, "tags": tags}
+    return {
+        "number_of_parties": NUMBER_OF_PARTIES,
+        "page": page,
+        "tags": Issue.common_tags(page.object_list)
+    }
 
 
 @slug_url(Issue)

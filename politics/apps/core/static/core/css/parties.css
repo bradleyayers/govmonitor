@@ -1,0 +1,23 @@
+html.parties #content-primary ol.parties > li {
+    float: left;
+    margin-bottom: 16px;
+    width: 360px;
+}
+
+html.parties #content-primary ol.parties > li > a {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+html.parties #content-primary ol.parties li li {
+    display: inline;
+}
+
+html.parties #content-primary ol.parties li ol {
+    margin: 5px 0 2px 0;
+}
+
+html.parties #content-primary ol.parties li span {
+    color: #AAA;
+}
