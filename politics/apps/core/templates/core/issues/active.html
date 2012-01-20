@@ -22,5 +22,8 @@
             added, updated, or a party's stance on them has changed.
         </p>
         <h2 class="section"><a href="{% url core:tags:list %}">Active Tags</a></h2>
+        {% for tag in tags|slice:":15" %}
+            {% tag_link tag %}
+        {% endfor %}
     </div>
 {% endblock %}
