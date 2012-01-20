@@ -193,7 +193,7 @@ html.issues.popular #header-issues-popular {
 }
 
 a, a:visited {
-    color: #3E3EC6;
+    color: #4183C4;
     text-decoration: none;
 }
 
@@ -272,6 +272,30 @@ i {
 
 li {
     padding: 0;
+}
+
+ol.tabs {
+    border-bottom: 2px solid #E5E5E5;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+}
+
+ol.tabs li {
+    display: inline;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 7px;
+}
+
+ol.tabs li a {
+    color: #555;
+    padding-bottom: 7px;
+}
+
+ol.tabs li a:hover, ol.tabs li.selected a {
+    border-bottom: 2px solid #AAA;
+    color: #777;
+    text-decoration: none;
 }
 
 p {

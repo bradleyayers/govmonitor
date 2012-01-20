@@ -8,9 +8,10 @@
     {{ block.super }}
     <div id="content-primary">
         <h1>{{ party.name }}</h1>
-        {% if not request.user.is_authenticated %}
-            <p>Think you could help with this data? <a href="{% url core:login %}?next={{ request.path }}">Log in</a> or <a href="{% url core:register %}">register</a>!</p>
-        {% endif %}
+        <ol class="tabs">
+            <li {% if request.GET.issues != "unknown" %}class="selected"{% endif %}><a href="{% query_string issues="known" %}" id="tab-known">Known</a></li>
+            <li {% if request.GET.issues == "unknown" %}class="selected"{% endif %}><a href="{% query_string issues="unknown" %}" id="tab-unknown">Unknown</a></li>
+        </ol>
         <table class="views">
             <thead>
                 <tr>
@@ -19,7 +20,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for view in page.object_list %}
+                {% for view in views %}
                     <tr>
                         <th><a href="{% url core:issues:show view.issue.pk view.issue.slug %}">{{ view.issue.name }}</a></th>
                         <td class="{{ view.stance }}"><a href="{% url core:views:show view.pk view.slug %}">{{ view.get_stance_display }}</a></td>
@@ -27,6 +28,5 @@
                 {% endfor %}
             </tbody>
         </table>
-        {% page_links page %}
     </div>
 {% endblock %}

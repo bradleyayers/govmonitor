@@ -58,5 +58,9 @@ def new(request):
 def show(request, party):
     """Show information about a ``Party``."""
     views = party.view_set.order_by("issue__name")
-    page = Paginator(views, 25).page(request.GET.get("page", 1))
-    return {"page": page, "party": party}
+    if request.GET.get("issues") != "unknown":
+        views = views.exclude(stance=View.UNKNOWN)
+    else:
+        views = views.filter(stance=View.UNKNOWN)
+
+    return {"party": party, "views": views}
