@@ -50,6 +50,16 @@ env.solr_core_name = "SOLR_CORE_NAME"
 
 
 @task
+def access_log(lines=100):
+    """Retrieve recent lines from the Apache access log.
+
+    :param lines: The number of lines to retrieve.
+    :type  lines: ``int``
+    """
+    print run("tail -n %d \"%s/access.log\"" % (lines, env.root_path))
+
+
+@task
 def deploy():
     """Deploy to the server.
 
