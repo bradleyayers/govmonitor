@@ -21,6 +21,7 @@ Several assumptions are made about both the host and repository layout:
 """
 from fabric.api import *
 from fabric.colors import green, red, yellow
+from fabric.contrib.console import confirm
 from fabric.contrib.files import exists
 import os.path
 import sys
@@ -32,6 +33,9 @@ env.host = "HOST"
 env.user = "USER"
 env.password = "PASSWORD"
 
+# The path to the site's root directory. Do not include a tailing slash.
+env.root_path = "ROOT_PATH"
+
 # The paths of files or directories that must be preserved across deployments,
 # relative to the repository's root. Prints a message if a file doesn't exist.
 env.preserved_files = (
@@ -39,11 +43,12 @@ env.preserved_files = (
     "deployment/apache.conf.maintenance",
 )
 
+# The prefix common to the site's celerycam and celeryd upstart jobs:
+# "site-celerycam" and "site-celeryd" if this is "site-", for example.
+env.celery_jobs_prefix = "CELERY_JOBS_PREFIX"
+
 # The name of the site's root python module.
 env.root_module_name = "ROOT_MODULE_NAME"
-
-# The path to the site's root directory. Do not include a tailing slash.
-env.root_path = "ROOT_PATH"
 
 # The name of the site's Solr core or None if the host isn't running Solr.
 env.solr_core_name = "SOLR_CORE_NAME"
@@ -57,6 +62,52 @@ def access_log(lines=100):
     :type  lines: ``int``
     """
     print run("tail -n %d \"%s/access.log\"" % (lines, env.root_path))
+
+
+@task
+@with_settings(warn_only=True)
+def celery(state="", quiet=False):
+    """Turn Celery on or off.
+
+    Requires confirmation if maintenance mode is off.
+
+    :param state: The state to transition to: "on" or "off".
+    :type  state: ``str``
+    :param quiet: If ``False`` a status message will be output.
+    :type  quiet: ``boolean``
+    """
+    if state == "":
+        print "Usage:\n"
+        print "  fab celery:on"
+        print "  fab celery:off"
+        sys.exit()
+
+    if state not in ("on", "off"):
+        _abort("Invalid argument \"%s\": must be \"on\" or \"off\"." % state)
+
+    if not env.celery_jobs_prefix:
+        _abort("env.celery_jobs_prefix isn't set.")
+
+    # Request confirmation if maintenance mode isn't on.
+    if state == "off" and not _maintenance_mode_on():
+        message = "Maintenance mode isn't on. Continue?"
+        if not confirm(message, default=False):
+            return
+
+    if state == "on":
+        # celeryd starts when celerycam's "started" event is emitted, but this
+        # won't happen if the latter is already running; start both to be sure.
+        sudo("start %scelerycam" % env.celery_jobs_prefix)
+        sudo("start %sceleryd" % env.celery_jobs_prefix)
+    else:
+        # celeryd waits for all currently executing tasks to complete before it
+        # terminates; stop it separately from celerycam so this function won't
+        # return until celery really has stopped and no tasks are executing.
+        sudo("stop %sceleryd" % env.celery_jobs_prefix)
+        sudo("stop %scelerycam" % env.celery_jobs_prefix)
+
+    if not quiet:
+        print green("Celery %s." % state)
 
 
 @task
@@ -77,11 +128,16 @@ def deploy():
     _check_directories()
 
     # Is maintenance mode on? If not, turn it on.
-    maintenance_was_on = exists(os.path.join(env.root_path, "maintenance"))
+    maintenance_was_on = _maintenance_mode_on()
 
     if not maintenance_was_on:
         print "> Turning maintenance mode on."
         maintenance("on", quiet=True)
+
+    # Turn celery off. This function doesn't return until all currently
+    # executing tasks have finished—this way, we can safely update task code.
+    print "> Turning Celery off."
+    celery("off", quiet=True)
 
     try:
         # Create a backup.
@@ -134,6 +190,10 @@ def deploy():
         # Something failed; restore the backup. Catching any old exception
         # isn't good practice, but we really don't want the site to go down.
         run("rm -fr repository && mv repository_old repository")
+
+    # Turn Celery back on.
+    print "> Turning Celery on."
+    celery("on", quiet=True)
 
     # This reloads Apache for us; how convenient. If maintenance mode is
     # staying on, we don't need to reload it anyway!
@@ -229,6 +289,11 @@ def _check_directories():
             _abort("The directory \"%s\" doesn't exist." % path)
 
 
+def _maintenance_mode_on():
+    """Returns ``True`` if maintenance mode seems to be on, else ``False``."""
+    return exists(os.path.join(env.root_path, "maintenance"))
+
+
 def _refresh_solr_core():
     """Refreshes the site's Solr core.
 
@@ -241,7 +306,7 @@ def _refresh_solr_core():
 
     .. warning::
 
-        This method doesn't rebuild the index.
+        This function doesn't rebuild the index.
     """
     filenames = ("schema.xml", "solrconfig.xml")
     core_path = "/etc/opt/solr/%s/conf" % env.solr_core_name

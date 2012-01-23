@@ -1,5 +1,6 @@
 *.pyc
 *.sqlite3
+celerybeat-schedule
 /*/settings/common.py
 /*/settings/production.py
 /*/static/*
