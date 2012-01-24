@@ -38,6 +38,13 @@
         }
     },
     {
+        "model": "core.Party",
+        "pk": 2,
+        "fields": {
+            "name": "Liberal Party of Australia"
+        }
+    },
+    {
         "model": "core.View",
         "pk": 1,
         "fields": {

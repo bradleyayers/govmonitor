@@ -1,23 +1,9 @@
 # coding=utf-8
-from . import View, Vote
-from ..fields import ScoreField
 from django.contrib.contenttypes import generic
 from django.db import models
+from politics.apps.core.fields import ScoreField
+from politics.apps.core.models import ArchiveManager, View, Vote
 from politics.utils.models import MarkdownField
-
-
-class ReferencesManager(models.Manager):
-    """The default :class:`Reference` manager."""
-
-    # Use this manager everywhere.
-    use_for_related_fields = True
-
-    def not_archived(self):
-        """Returns references that aren't archived.
-
-        :returns: References where ``is_archived`` is ``False``.
-        """
-        return self.get_query_set().filter(is_archived=False)
 
 
 class Reference(models.Model):
@@ -77,7 +63,7 @@ class Reference(models.Model):
     votes = generic.GenericRelation(Vote)
 
     # Override the default manager.
-    objects = ReferencesManager()
+    objects = ArchiveManager()
 
     class Meta:
         app_label = "core"

@@ -29,4 +29,19 @@
             </tbody>
         </table>
     </div>
+    <div id="content-secondary">
+        {% if party_similarities %}
+            <h2 class="section">Similar Parties</h2>
+            <ol class="similar-parties">
+                {% for party_similarity in party_similarities|slice:":3" %}
+                    {% with other_party=party_similarity.second_party %}
+                        <li>
+                            <span>{{ party_similarity.percentage_similarity|floatformat:0 }}%</span>
+                            <a href="{% url core:parties:show other_party.pk other_party.slug %}">{{ other_party.name }}</a>
+                        </li>
+                    {% endwith %}
+                {% endfor %}
+            </ol>
+        {% endif %}
+    </div>
 {% endblock %}

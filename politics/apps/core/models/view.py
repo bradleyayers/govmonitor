@@ -1,6 +1,6 @@
 # coding=utf-8
 from autoslug.fields import AutoSlugField
-from django.db import models
+from django.db import models, transaction
 from itertools import groupby
 
 
@@ -116,6 +116,7 @@ class View(models.Model):
         self.withdraw_vote(user)
         ReferenceVote(content_object=reference, author=user).save()
 
+    @transaction.commit_manually()
     def refresh_stance(self):
         """Recalculate the view's ``stance``.
 
@@ -126,7 +127,8 @@ class View(models.Model):
         (their scores reflect the votes cast). If the stance changes, the
         :class:`Issue` is saved to touch its ``updated_at`` timestamp.
         """
-        from . import Issue
+        from politics.apps.core.models import Issue
+        from politics.apps.core.tasks import calculate_party_similarities
 
         try:
             # Fetch the reference(s) with the greatest score.
@@ -153,3 +155,9 @@ class View(models.Model):
                 self.issue.save()
             except Issue.DoesNotExist:
                 pass
+
+            transaction.commit()
+            calculate_party_similarities.delay(self.party.pk)
+
+        # We're managing transactions.
+        transaction.rollback()
