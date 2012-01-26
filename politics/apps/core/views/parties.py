@@ -63,11 +63,4 @@ def show(request, party):
     else:
         views = views.filter(stance=View.UNKNOWN)
 
-    party_similarities = party.partysimilarity_set.not_archived()
-    party_similarities = party_similarities.order_by("-similarity")
-
-    return {
-        "party": party,
-        "party_similarities": party_similarities,
-        "views": views
-    }
+    return {"party": party, "views": views}
