@@ -1,9 +1,11 @@
 # coding=utf-8
-from celery.task import task
+from django.db import transaction
+from djcelery_transactions import task
 from politics.apps.core.models import Party, PartySimilarity, View
 
 
 @task(ignore_result=True)
+@transaction.commit_on_success
 def calculate_party_similarities(party_pk):
     """Calculate a party's similarity with every other party.
 

@@ -127,6 +127,7 @@ class View(models.Model):
         :class:`Issue` is saved to touch its ``updated_at`` timestamp.
         """
         from politics.apps.core.models import Issue
+        from politics.apps.core.tasks import calculate_party_similarities
 
         try:
             # Fetch the reference(s) with the greatest score.
@@ -153,3 +154,5 @@ class View(models.Model):
                 self.issue.save()
             except Issue.DoesNotExist:
                 pass
+
+            calculate_party_similarities.delay(self.party.pk)
