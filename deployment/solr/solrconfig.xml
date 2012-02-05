@@ -5,14 +5,25 @@
   </admin>
 
   <directoryFactory name="DirectoryFactory" class="solr.StandardDirectoryFactory"/>
-  <luceneMatchVersion>LUCENE_35</luceneMatchVersion>
+  <luceneMatchVersion>LUCENE_33</luceneMatchVersion>
 
   <requestDispatcher handleSelect="true" >
-    <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="2048" />
+    <requestParsers enableRemoteStreaming="false" multipartUploadLimitInKB="2048"/>
   </requestDispatcher>
 
-  <requestHandler name="/admin/" class="org.apache.solr.handler.admin.AdminHandlers" />
-  <requestHandler name="/update" class="solr.XmlUpdateRequestHandler" />
-  <requestHandler name="standard" class="solr.StandardRequestHandler" default="true" />
+  <!-- The trailing slash is required. -->
+  <requestHandler name="/admin/" class="org.apache.solr.handler.admin.AdminHandlers"/>
+  <requestHandler name="/mlt" class="solr.MoreLikeThisHandler">
+      <lst name="defaults">
+          <bool name="mlt.match.include">false</bool>
+          <int name="mlt.maxqt">20</int>
+          <int name="mlt.maxwl">15</int>
+          <int name="mlt.mindf">3</int>
+          <int name="mlt.mintf">1</int>
+          <int name="mlt.minwl">4</int>
+      </lst>
+  </requestHandler>
+  <requestHandler name="/update" class="solr.XmlUpdateRequestHandler"/>
+  <requestHandler name="standard" class="solr.StandardRequestHandler" default="true"/>
   <updateHandler class="solr.DirectUpdateHandler2"/>
 </config>

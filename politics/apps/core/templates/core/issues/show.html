@@ -36,4 +36,14 @@
             </tbody>
         </table>
     </div>
+    <div id="content-secondary">
+        {% if related_issues %}
+            <h2 class="section">Related Issues</h2>
+            <ol class="related">
+                {% for related_issue in related_issues|slice:":20" %}
+                    <li><a href="{% url core:issues:show related_issue.pk related_issue.slug %}">{{ related_issue.name }}</a></li>
+                {% endfor %}
+            </ol>
+        {% endif %}
+    </div>
 {% endblock %}

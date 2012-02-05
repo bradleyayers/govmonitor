@@ -3,6 +3,7 @@ from ..forms import IssueForm
 from ..models import Issue
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
+from haystack.query import SearchQuerySet
 from politics.utils.decorators import pk_url, render_to_template, slug_url
 from politics.utils.paginator import Paginator
 import reversion
@@ -72,7 +73,11 @@ def popular(request):
 @render_to_template("core/issues/show.html")
 def show(request, issue):
     """Display information about an issue."""
+    related_issues = SearchQuerySet().models(Issue).more_like_this(issue)
+    related_issues = [result.object for result in related_issues]
+
     return {
         "issue": issue,
+        "related_issues": related_issues,
         "views": issue.view_set.select_related().order_by("party__name")
     }
