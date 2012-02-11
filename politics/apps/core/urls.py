@@ -13,6 +13,7 @@ ajax_patterns = patterns("",
 
 # /issues/
 issue_patterns = patterns("",
+    url(r"^$", issues.popular),
     url(r"^active/$", issues.active, name="active"),
     url(r"^(?P<pk>\d+)/edit/$", issues.form, name="edit"),
     url(r"^new/$", issues.form, name="new"),
