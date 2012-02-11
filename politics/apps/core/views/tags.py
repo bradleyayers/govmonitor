@@ -12,7 +12,8 @@ def list(request):
     The tags are displayed in descending order of popularity. A tag's
     popularity is the number of issues that have been assigned to it.
     """
-    tags = Tag.objects.annotate(Count("issue")).order_by("-issue__count")
+    tags = Tag.objects.annotate(issue_count=Count("issue"))
+    tags = tags.filter(issue_count__gt=0).order_by("-issue_count")
     page = Paginator(tags, 32).page(request.GET.get("page", 1))
 
     # Split the tags into rows of length 4.

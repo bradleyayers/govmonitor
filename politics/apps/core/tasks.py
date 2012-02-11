@@ -1,7 +1,10 @@
 # coding=utf-8
+from celery.schedules import crontab
+from celery.task import periodic_task
 from django.db import transaction
+from django.db.models import Count
 from djcelery_transactions import task
-from politics.apps.core.models import Party, PartySimilarity, View
+from politics.apps.core.models import Party, PartySimilarity, Tag, View
 
 
 @task(ignore_result=True)
@@ -41,3 +44,14 @@ def calculate_party_similarities(party_pk):
             similarity = len(common_views) / float(maximum_similarity)
             PartySimilarity(first_party=party, second_party=other_party,
                             similarity=similarity).save()
+
+
+@periodic_task(run_every=crontab(hour=0, minute=0))
+@transaction.commit_on_success
+def delete_unused_issues():
+    """Deletes unused tags from the database.
+
+    Run at midnight every day.
+    """
+    tags = Tag.objects.annotate(issue_count=Count("issue"))
+    tags.filter(issue_count=0).delete()

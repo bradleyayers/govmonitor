@@ -4,7 +4,7 @@ from ..models import Issue
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from haystack.query import SearchQuerySet
-from politics.utils.decorators import pk_url, render_to_template, slug_url
+from politics.utils.decorators import render_to_template, slug_url
 from politics.utils.paginator import Paginator
 import reversion
 

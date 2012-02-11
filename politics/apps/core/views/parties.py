@@ -4,7 +4,6 @@ from ..models import Issue, Party, View
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from politics.utils.decorators import render_to_template, slug_url
-from politics.utils.paginator import Paginator
 import re
 
 
