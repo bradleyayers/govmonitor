@@ -6,9 +6,7 @@
 
 {% block content %}
     {{ block.super }}
-    <div class="full" id="content-primary">
-        <h1>Tags</h1>
-        <p>Tags are used to label and categorise issues. A tag is created when it is first added to an issue; create a new issue or retag an existing one to create a new tag.</p>
+    <div id="content-primary">
         <table class="tags">
             <tbody>
                 {% for tag_row in tag_rows %}
@@ -23,5 +21,17 @@
             </tbody>
         </table>
         {% page_links page %}
+    </div>
+    <div id="content-secondary">
+        <h2 class="section">About Tags</h2>
+        <p>
+            Tags label and categorise issues. Tag are created when they are
+            added to issues; create or retag issues to create tags.
+        </p>
+        <h2 class="section">Statistics</h2>
+        <ol>
+            <li><strong>{{ tags|length }}</strong> tags</li>
+            <li><strong>{{ average_issues }}</strong> issues on average</li>
+        </ol>
     </div>
 {% endblock %}
