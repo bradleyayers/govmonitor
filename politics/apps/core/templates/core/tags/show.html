@@ -7,9 +7,14 @@
 {% block content %}
     {{ block.super }}
     <div id="content-primary">
-        <h1>{{ tag.name }}</h1>
-        <p>Create a <a href="{% url core:issues:new %}">new issue</a> or a <a href="{% url core:parties:new %}">new party</a>.</p>
+        <p>{% tag_link tag %}</p>
         {% issue_table page.object_list 5 %}
         {% page_links page %}
+    </div>
+    <div id="content-secondary">
+        <h2 class="section">Related Tags</h2>
+        {% for related_tag in related_tags|slice:":5" %}
+            {% tag_link related_tag %}
+        {% endfor %}
     </div>
 {% endblock %}

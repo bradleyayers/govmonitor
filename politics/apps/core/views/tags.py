@@ -34,4 +34,9 @@ def show(request, tag):
     """Shows information about a tag."""
     issues = Issue.objects.filter(tags=tag).order_by("name")
     page = Paginator(issues, 25).page(request.GET.get("page", 1))
-    return {"page": page, "tag": tag}
+
+    # Retrieve the tags that occur most frequently with this one.
+    related_tags = Issue.common_tags(tag.issue_set.all())
+    related_tags.remove(tag)
+
+    return {"page": page, "related_tags": related_tags, "tag": tag}
