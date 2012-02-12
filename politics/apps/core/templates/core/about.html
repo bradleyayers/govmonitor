@@ -33,7 +33,7 @@
             </li>
             <li id="question-party-similarity">
                 <h3>How do you calculate party similarity?</h3>
-                <p>The similarity of two parties is calculated from those issues where we have information about both. If their views are the same for all of these issues, they are 100% similar; if their views differ for all of them, it is 0%.</p>
+                <p>The similarity of two parties is calculated from their views. If they share the same view for every issue, their similarity is 100%; if their views differ for every issue, it is 0%. If either party's view is unknown for an issue, it will not be included in the calculation.</p>
             </li>
         </ol>
         <p>Still need help with something? <a href="{% url core:contact %}">Contact me</a> and I'll see what I can do.</p>
