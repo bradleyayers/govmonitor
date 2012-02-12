@@ -4,7 +4,11 @@
 
 {% block html-class %}
     {{ block.super }}
-    popular
+
+    {# The home page is distinct from the popular issues page. #}
+    {% if request.path != "/" %}
+        popular
+    {% endif %}
 {% endblock %}
 
 {% block title %}Popular Issues{% endblock %}
@@ -12,6 +16,16 @@
 {% block content %}
     {{ block.super }}
     <div id="content-primary">
+        {# Show a call to action on the home page. #}
+        {% if request.path == "/" %}
+            <div id="call-to-action">
+                <p>What do you care about? Find out how the parties feel.</p>
+                <form action="{% url core:search %}">
+                    <input name="q" placeholder="e.g. animals, environment, international relations, …" type="text"/>
+                    <input type="submit" value="Search"/>
+                </form>
+            </div>
+        {% endif %}
         {% issue_table page.object_list number_of_parties %}
         {% page_links page %}
     </div>
