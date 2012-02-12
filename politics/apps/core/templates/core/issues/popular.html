@@ -19,7 +19,7 @@
         {# Show a call to action on the home page. #}
         {% if request.path == "/" %}
             <div id="call-to-action">
-                <p>What do you care about? Find out how the parties feel.</p>
+                <p>What do you care about? Find out which parties share your views.</p>
                 <form action="{% url core:search %}">
                     <input name="q" placeholder="e.g. animals, environment, international relations, …" type="text"/>
                     <input type="submit" value="Search"/>

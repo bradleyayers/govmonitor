@@ -12,6 +12,10 @@ html.about #content-primary ol.questions > li {
     padding: 13px 15px 0 15px;
 }
 
+html.about #content-primary ol.questions > li.highlighted {
+    background-color: #FFF5CC;
+}
+
 html.about #content-primary ol.questions > li:last-child {
     margin-bottom: 0;
 }
