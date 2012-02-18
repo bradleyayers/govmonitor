@@ -10,36 +10,40 @@ import reversion
 @render_to_template("core/views/show.html")
 def show(request, view):
     """Shows information about a :class:`View`."""
-    form = None
-    if request.user.is_authenticated():
-        form = ReferenceForm()
+    form = ReferenceForm()
+    if request.method == "POST" and request.user.is_authenticated():
+        instance = Reference(author=request.user, view=view)
+        form = ReferenceForm(request.POST, instance=instance)
 
-        # Are they trying to add a reference?
-        if request.method == "POST":
-            instance = Reference(author=request.user, view=view)
-            form = ReferenceForm(request.POST, instance=instance)
+        if form.is_valid():
+            # Version the reference.
+            with reversion.create_revision():
+                reversion.set_user(request.user)
+                form.save()
 
-            if form.is_valid():
-                with reversion.create_revision():
-                    reversion.set_user(request.user)
-                    form.save()
+            form = ReferenceForm()
 
-                form = ReferenceForm()
+    # Should we show current or archived references?
+    show_current = request.GET.get("archived") != "1"
 
-    # Retrieve the view's non-archived references in descending order of score.
-    # Break ties between references with the same score by ordering randomly.
-    references = view.reference_set.not_archived()
+    if show_current:
+        references = view.reference_set.not_archived()
+
+        # Retrieve the reference selected by the user.
+        reference_vote = view.get_vote_for_user(request.user)
+        selected_reference = getattr(reference_vote, "content_object", None)
+    else:
+        references = view.reference_set.filter(is_archived=True)
+        selected_reference = None
+
+    # Sort the references in descending order of score. Break ties between
+    # references by ordering randomly (taking advantage of tuple comparisons).
     references = sorted(references, None, lambda r: (r.score, random()), True)
-
-    # Pass their vote through.
-    selected_reference = None
-    if request.user.is_authenticated():
-        vote = view.get_vote_for_user(request.user)
-        selected_reference = vote.content_object if vote else None
 
     return {
         "form": form,
         "references": references,
         "selected_reference": selected_reference,
+        "show_current": show_current,
         "view": view
     }

@@ -30,8 +30,10 @@ party_patterns = patterns("",
 
 # /references/
 reference_patterns = patterns("",
+    url(r"^(?P<pk>\d+)/archive/$", references.archive, name="archive"),
     url(r"^(?P<pk>\d+)/edit/$", references.edit, name="edit"),
     url(r"^(?P<pk>\d+)/votes/$", references.votes, name="votes"),
+    url(r"^(?P<pk>\d+)/unarchive/$", references.archive, kwargs={"archive": False}, name="unarchive"),
 )
 
 # /tags/

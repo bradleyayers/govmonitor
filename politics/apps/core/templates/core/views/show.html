@@ -2,53 +2,35 @@
 
 {% load core %}
 
+{% block html-class %}
+    {{ block.super }}
+    view
+{% endblock %}
+
 {% block title %}{{ view.issue.name }} – {{ view.party.name }}{% endblock %}
 
 {% block content %}
     {{ block.super }}
-
     <div id="content-primary">
         <h1>
             <a href="{% url core:parties:show view.party.pk view.party.slug %}">{{ view.party.name }}</a> ›
             <a href="{% url core:issues:show view.issue.pk view.issue.slug %}">{{ view.issue.name }}</a>
         </h1>
 
-        {% if not request.user.is_authenticated %}
-            <p>{% login_link "Log in" %} to vote on these references or add your own.</p>
-        {% endif %}
+        <ol class="tabs">
+            <li {% if show_current %}class="selected"{% endif %}><a href="{% query_string archived=0 %}">Current</a></li>
+            <li {% if not show_current %}class="selected"{% endif %}><a href="{% query_string archived=1 %}">Archived</a></li>
+        </ol>
 
         <div class="references">
             {% for reference in references %}
-                <div class="reference">
-                    {# The vote widget. #}
-                    <div class="vote-widget">
-                        <input type="hidden" value="{{ reference.pk }}"/>
-                        {% if reference == selected_reference %}
-                            <a class="selected" title="Deselect this reference."></a>
-                        {% else %}
-                            <a title="Select this reference."></a>
-                        {% endif %}
-                    </div>
-
-                    <div class="stance {{ reference.stance }}">{{ reference.get_stance_display }}</div>
-
-                    {% if reference.text_html %}
-                        {{ reference.text_html|safe }}
-                    {% else %}
-                        <i>No text available, see source.</i>
-                    {% endif %}
-
-                    <p><a href="{{ reference.url }}" target="_blank">{{ reference.url }}</a></p>
-
-                    <p>
-                        {% user_link reference.author %}
-                        <span title="{{ reference.created_at }}">{{ reference.created_at|interval_string }} ago</span>
-                    </p>
-
-                    {% if request.user.is_authenticated %}
-                        <p><a href="{% url core:references:edit reference.pk %}">Edit</a></p>
-                    {% endif %}
-                </div>
+                {% include "core/views/_reference.html" %}
+            {% empty %}
+                {% if show_current %}
+                    <i>There aren't any references. Why not submit one?</i>
+                {% else %}
+                    <i>There are no archived references for this view.</i>
+                {% endif %}
             {% endfor %}
         </div>
 

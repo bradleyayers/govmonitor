@@ -1,0 +1,44 @@
+{% load core %}
+
+<div class="reference">
+    <div class="vote-widget">
+        <input type="hidden" value="{{ reference.pk }}"/>
+        {% if reference == selected_reference %}
+            <a class="selected" title="Deselect this reference."></a>
+        {% else %}
+            <a title="Select this reference."></a>
+        {% endif %}
+    </div>
+
+    <div class="stance {{ reference.stance }}">{{ reference.get_stance_display }}</div>
+
+    {% if reference.text_html %}
+        {{ reference.text_html|safe }}
+    {% else %}
+        <i>No text available, see source.</i>
+    {% endif %}
+
+    <p><a href="{{ reference.url }}" target="_blank">{{ reference.url }}</a></p>
+
+    <p>
+        {% user_link reference.author %}
+        <span title="{{ reference.created_at }}">{{ reference.created_at|interval_string }} ago</span>
+    </p>
+
+    {% if request.user.is_authenticated %}
+        <p>
+            {% if show_current %}
+                <form action="{% url core:references:archive reference.pk %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Archive"/>
+                </form>
+            {% else %}
+                <form action="{% url core:references:unarchive reference.pk %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Unarchive"/>
+                </form>
+            {% endif %}
+            <a href="{% url core:references:edit reference.pk %}">Edit</a>
+        </p>
+    {% endif %}
+</div>

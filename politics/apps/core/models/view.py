@@ -132,7 +132,7 @@ class View(models.Model):
 
         try:
             # Fetch the reference(s) with the greatest score.
-            references = self.reference_set.order_by("-score")
+            references = self.reference_set.not_archived().order_by("-score")
             references = list(groupby(references, lambda r: r.score).next()[1])
 
             # Calculate the winning stance. If there was a tie, we can only

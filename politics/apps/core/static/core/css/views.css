@@ -1,3 +1,7 @@
+html.view #content-primary div.references form {
+    display: inline;
+}
+
 div.reference {
     border-bottom: 1px solid #DDD;
     margin-bottom: 1em;
