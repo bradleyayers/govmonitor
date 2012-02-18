@@ -1,3 +1,12 @@
+html.tags p.pages {
+    text-align: right;
+}
+
+html.tags h1 {
+    font-size: 12px;
+    font-weight: normal;
+}
+
 table.tags {
     width: 100%;
 }
@@ -23,8 +32,4 @@ table.tags td a {
 table.tags td span {
     font-weight: bold;
     white-space: nowrap;
-}
-
-body.tags p.pages {
-    text-align: right;
 }

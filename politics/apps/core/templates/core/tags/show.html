@@ -7,7 +7,7 @@
 {% block content %}
     {{ block.super }}
     <div id="content-primary">
-        <p>{% tag_link tag %}</p>
+        <h1>{% tag_link tag %}</h1>
         {% issue_table page.object_list 5 %}
         {% page_links page %}
     </div>
