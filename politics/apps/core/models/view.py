@@ -2,6 +2,7 @@
 from autoslug.fields import AutoSlugField
 from django.db import models
 from itertools import groupby
+import reversion
 
 
 def _get_view_slug(view):
@@ -144,8 +145,10 @@ class View(models.Model):
             stance = self.UNKNOWN
 
         if stance != self.stance:
-            self.stance = stance
-            self.save()
+            # Create a version so we have a history of the party's views.
+            with reversion.create_revision():
+                self.stance = stance
+                self.save()
 
             # Save the issue to touch its updated_at timestamp. That way, when
             # a party's stance changes, the issue appears in the active stream.

@@ -4,18 +4,12 @@ from django.contrib import admin
 from reversion.admin import VersionAdmin
 
 
-class IssueAdmin(VersionAdmin):
-    pass
-
-
-class ReferenceAdmin(VersionAdmin):
-    pass
-
-
-# Register versioned models.
-admin.site.register(Issue, IssueAdmin)
-admin.site.register(Reference, ReferenceAdmin)
+# Register versioned models whose history is to be shown in the administration
+# interface. ``reversion.register`` is enough if you don't want to see history.
+admin.site.register(Issue, VersionAdmin)
+admin.site.register(Reference, VersionAdmin)
+admin.site.register(View, VersionAdmin)
 
 # Register other models.
-models = (Party, Tag, UserProfile, View, Vote)
+models = (Party, Tag, UserProfile, Vote)
 map(admin.site.register, models)

@@ -27,6 +27,7 @@ class Tag(models.Model):
         return self.name
 
 
-# While changes to tags aren't versioned, we must register the model with
-# django-reversion so an issue's tags can be stored when it is versioned.
+# Register the model with django-reversion so issues' tags can be stored when
+# they are versioned. We do it here to avoid creating a VersionAdmin subclass
+# in admin.py—its history doesn't need to be shown in the admin interface.
 reversion.register(Tag)
