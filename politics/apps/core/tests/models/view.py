@@ -1,5 +1,5 @@
 # coding=utf-8
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AnonymousUser, User
 from django.test import TestCase
 from politics.apps.core.models import Reference, View, Vote
 
@@ -16,6 +16,11 @@ class ViewTestCase(TestCase):
         """``get_vote_for_user()`` should return a user's vote in the view."""
         vote = self.view.get_vote_for_user(User.objects.get(pk=1))
         self.assertEqual(Reference.objects.get(pk=1), vote.content_object)
+
+    def test_get_vote_for_user_anonymous(self):
+        """``get_vote_for_user()`` should return ``None`` if the user is
+           anonymous."""
+        self.assertIsNone(self.view.get_vote_for_user(AnonymousUser()))
 
     def test_get_vote_for_user_none(self):
         """``get_vote_for_user()`` should return ``None`` if the user hasn't

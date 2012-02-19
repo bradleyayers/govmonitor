@@ -72,6 +72,8 @@ class View(models.Model):
     def get_vote_for_user(self, user):
         """Retrieve a user's vote within the view.
 
+        Returns ``None`` if ``user`` is anonymous.
+
         :param user: The user.
         :type  user: ``django.contrib.auth.models.User``
         :returns: ``user``'s vote or ``None`` if they haven't voted.
@@ -83,6 +85,9 @@ class View(models.Model):
             somehow cast multiple, then the system is in an inconsistent state.
         """
         from . import ReferenceVote
+
+        if user.is_anonymous():
+            return None
 
         try:
             votes = ReferenceVote.objects.get_for_view(self)
