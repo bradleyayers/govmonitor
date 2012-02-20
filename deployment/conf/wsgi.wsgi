@@ -6,7 +6,7 @@ import sys
 
 
 # The root of the project.
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT = os.path.abspath(os.path.join(__file__, "../../.."))
 
 # Use our virtual environment.
 site.addsitedir(os.path.join(ROOT, "environment/lib/python2.7/site-packages"))

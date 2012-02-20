@@ -1,0 +1,27 @@
+description "celeryd"
+author "Chris Doble <chris@chrisdoble.com>"
+
+# celeryd depends on celerycam.
+start on started politics-celerycam
+stop on stopping politics-celerycam
+respawn
+
+# The job's kill signal must be INT instead of the default TERM as celeryd only
+# waits for currently executing tasks to complete if it receives the former.
+kill signal INT
+
+# As mentioned above, celeryd waits for currently executing tasks to complete
+# before terminating. This might take too long for upstart—by default it only
+# waits 5 seconds before sending SIGKILL. Make it wait a bit longer.
+kill timeout 300
+
+# Change the `name` argument to something less general (e.g. project-celeryd)
+# and (optionally) change the log file argument to the desired location.
+exec start-stop-daemon \
+    --chdir PROJECT_PATH \
+    --chuid CELERYD_USER \
+    --exec PYTHON_EXECUTABLE_PATH \
+    --name celeryd \
+    --oknodo \
+    --start \
+    -- manage.py celeryd -BEf celeryd.log

@@ -1,0 +1,9 @@
+description "memcached"
+author "Chris Doble <chris@chrisdoble.com>"
+
+start on runlevel [2345]
+stop on runlevel [016]
+respawn
+
+# Bind to the loopback IP for security.
+exec memcached -l 127.0.0.1 -u MEMCACHED_USER

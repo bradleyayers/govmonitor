@@ -39,19 +39,19 @@ env.root_path = "ROOT_PATH"
 # The paths of files or directories that must be preserved across deployments,
 # relative to the repository's root. Prints a message if a file doesn't exist.
 env.preserved_files = (
-    "deployment/apache.conf",
-    "deployment/apache.conf.maintenance",
+    "deployment/conf/apache/apache.conf",
+    "deployment/conf/apache/apache.conf.maintenance",
 )
-
-# The prefix common to the site's celerycam and celeryd upstart jobs:
-# "site-celerycam" and "site-celeryd" if this is "site-", for example.
-env.celery_jobs_prefix = "CELERY_JOBS_PREFIX"
 
 # The name of the site's root python module.
 env.root_module_name = "ROOT_MODULE_NAME"
 
 # The name of the site's Solr core or None if the host isn't running Solr.
 env.solr_core_name = "SOLR_CORE_NAME"
+
+# The prefix common to all the site's upstart jobs: celerycam, celeryd,
+# memcached, etc. For example, "site-celerycam" if this is set to "site-".
+env.upstart_jobs_prefix = "UPSTART_JOBS_PREFIX"
 
 
 @task
@@ -85,8 +85,8 @@ def celery(state="", quiet=False):
     if state not in ("on", "off"):
         _abort("Invalid argument \"%s\": must be \"on\" or \"off\"." % state)
 
-    if not env.celery_jobs_prefix:
-        _abort("env.celery_jobs_prefix isn't set.")
+    if not env.upstart_jobs_prefix:
+        _abort("env.upstart_jobs_prefix isn't set.")
 
     # Request confirmation if maintenance mode isn't on.
     if state == "off" and not _maintenance_mode_on():
@@ -97,14 +97,14 @@ def celery(state="", quiet=False):
     if state == "on":
         # celeryd starts when celerycam's "started" event is emitted, but this
         # won't happen if the latter is already running; start both to be sure.
-        sudo("start %scelerycam" % env.celery_jobs_prefix)
-        sudo("start %sceleryd" % env.celery_jobs_prefix)
+        sudo("start %scelerycam" % env.upstart_jobs_prefix)
+        sudo("start %sceleryd" % env.upstart_jobs_prefix)
     else:
         # celeryd waits for all currently executing tasks to complete before it
         # terminates; stop it separately from celerycam so this function won't
         # return until celery really has stopped and no tasks are executing.
-        sudo("stop %sceleryd" % env.celery_jobs_prefix)
-        sudo("stop %scelerycam" % env.celery_jobs_prefix)
+        sudo("stop %sceleryd" % env.upstart_jobs_prefix)
+        sudo("stop %scelerycam" % env.upstart_jobs_prefix)
 
     if not quiet:
         print green("Celery %s." % state)
@@ -195,6 +195,10 @@ def deploy():
     print "> Turning Celery on."
     celery("on", quiet=True)
 
+    # Restart memcached.
+    print "> Restarting memcached."
+    restart_memcached(quiet=True)
+
     # This reloads Apache for us; how convenient. If maintenance mode is
     # staying on, we don't need to reload it anyway!
     if not maintenance_was_on:
@@ -210,7 +214,7 @@ def maintenance(state="", quiet=False):
 
     :param state: The state to transition to: "on" or "off".
     :type  state: ``str``
-    :param quiet: If ``False`` a status message will be output.
+    :param quiet: If ``False`` a status message will be printed.
     :type  quiet: ``boolean``
     """
     if state == "":
@@ -225,7 +229,8 @@ def maintenance(state="", quiet=False):
     _check_directories()
 
     # Does the required Apache configuration file exist?
-    apache_file = "apache.conf%s" % (".maintenance" if state == "on" else "")
+    extension = ".maintenance" if state == "on" else ""
+    apache_file = "conf/apache/apache.conf" + extension
     apache_path = os.path.join(env.deployment_path, apache_file)
 
     if not exists(apache_path):
@@ -261,6 +266,31 @@ def rebuild_search_index():
     with cd(env.repository_path):
         with prefix("source environment/bin/activate"):
             run("%s/manage.py rebuild_index --no-input" % env.root_module_name)
+
+
+@task
+def restart_memcached(quiet=False):
+    """Restart memcached.
+
+    If memcached wasn't running, it is started.
+
+    :param quiet: If ``False``, a status message will be printed.
+    :type  quiet: ``bool``
+    """
+    if not env.upstart_jobs_prefix:
+        _abort("env.upstart_jobs_prefix isn't set.")
+
+    with settings(warn_only=True):
+        job_name = env.upstart_jobs_prefix + "memcached"
+        result = sudo("restart " + job_name)
+
+    # The above will fail if the job isn't already running, so here we start
+    # it. This is outside the warn_only block because, if this fails, we abort.
+    if result.failed:
+        sudo("start " + job_name)
+
+    if not quiet:
+        print green("Restarted memcached.")
 
 
 def _abort(message):
@@ -311,7 +341,7 @@ def _refresh_solr_core():
     filenames = ("schema.xml", "solrconfig.xml")
     core_path = "/etc/opt/solr/%s/conf" % env.solr_core_name
 
-    with cd(os.path.join(env.deployment_path, "solr")):
+    with cd(os.path.join(env.deployment_path, "conf/solr")):
         # Ensure that the files exist.
         for filename in filenames:
             if not exists(filename):

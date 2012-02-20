@@ -36,5 +36,5 @@
     # Configure mod_wsgi to run in daemon mode.
     WSGIDaemonProcess example processes=2 threads=15 user=example
     WSGIProcessGroup example
-    WSGIScriptAlias / /DocumentRoot/example/deployment/wsgi.wsgi
+    WSGIScriptAlias / /DocumentRoot/example/deployment/conf/wsgi.wsgi
 </VirtualHost>

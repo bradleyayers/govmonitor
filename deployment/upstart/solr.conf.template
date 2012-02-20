@@ -1,0 +1,9 @@
+description "Solr"
+author "Chris Doble <chris@chrisdoble.com>"
+
+start on runlevel [2345]
+stop on runlevel [016]
+respawn
+
+# Change the root or home directories if necessary.
+exec su SOLR_USER -l -c "cd /opt/solr/example && java -Dsolr.solr.home=/etc/opt/solr -jar start.jar > logs/solr.log 2>&1"

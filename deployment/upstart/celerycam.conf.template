@@ -1,0 +1,19 @@
+description "celerycam"
+author "Chris Doble <chris@chrisdoble.com>"
+
+# celerycam depends on RabbitMQ and PostgreSQL. We can't (reliably) specify
+# multiple dependencies, so we depend on RabbitMQ which depends on PostgreSQL.
+start on started rabbitmq
+stop on stopping rabbitmq
+respawn
+
+# Change the `name` argument to something less general (e.g. project-celerycam)
+# and (optionally) change the log file argument to the desired location.
+exec start-stop-daemon \
+    --chdir PROJECT_PATH \
+    --chuid CELERYCAM_USER \
+    --exec PYTHON_EXECUTABLE_PATH \
+    --name celerycam \
+    --oknodo \
+    --start \
+    -- manage.py celerycam -f celerycam.log

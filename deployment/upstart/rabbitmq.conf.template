@@ -1,0 +1,16 @@
+description "RabbitMQ"
+author "Chris Doble <chris@chrisdoble.com>"
+
+# RabbitMQ doesn't really depend on PostgreSQL, but Celery depends on both;
+# there's no good way to do multiple dependencies, to just make it a chain.
+start on started postgresql
+stop on stopping postgresql
+respawn
+
+# The rabbitmq-server script executes as the correct user.
+exec /usr/sbin/rabbitmq-server > /var/log/rabbitmq/startup_log \
+                              2> /var/log/rabbitmq/startup_err
+
+# Don't enter the "started" state until rabbitmq is actually up and running.
+# If, for some reason, it fails to start, the job's goal will change to "stop".
+post-start exec /usr/sbin/rabbitmqctl wait >/dev/null 2>&1

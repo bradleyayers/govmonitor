@@ -6,8 +6,5 @@ celeryev.pid
 /*/settings/production.py
 /*/static/*
 !/*/static/.gitignore
-/deployment/apache.conf
-/deployment/apache.conf.maintenance
-/deployment/fabfile.py
 /environment
 /requirements_cache
