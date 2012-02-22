@@ -1,13 +1,8 @@
 # coding=utf-8
-from datetime import datetime
+from __builtin__ import max as builtin_max
 from django import template
 from django.core.urlresolvers import reverse
-from django.template import Node, TemplateSyntaxError
-from itertools import groupby
-from politics.apps.core.models import Party, View
-from politics.utils import timestring
-import re
-from urllib import urlencode
+from django.template import Node
 
 
 register = template.Library()
@@ -44,6 +39,8 @@ def _parse_token_kwargs(bits, parser):
 
         Positional arguments aren't currently supported.
     """
+    import re
+
     if not bits:
         return {}
 
@@ -64,6 +61,24 @@ def _parse_token_kwargs(bits, parser):
 
 
 @register.filter
+def getattr_iterable(iterable, name):
+    """Calls ``getattr`` on each item in an iterable and returns the results.
+
+    .. code-block:: python
+
+        >>> models = Model.objects.all()
+        >>> getattr_iterable(models, "pk")
+        [1, 2, 3, ...]
+
+    :param iterable: The items.
+    :type  iterable: ``Iterable``
+    :param     name: The name of the attribute to be retrieved.
+    :type      name: ``str``
+    """
+    return [getattr(item, name) for item in iterable]
+
+
+@register.filter
 def interval_string(value, reference=None):
     """Returns a string representing the interval between two points in time.
 
@@ -78,6 +93,8 @@ def interval_string(value, reference=None):
               ``reference`` or ``datetime.now()``.
     :rtype: ``str``
     """
+    from datetime import datetime
+    from politics.utils import timestring
     return timestring.interval_string(value, reference or datetime.now())
 
 
@@ -106,6 +123,16 @@ def login_link(context, text):
     """
     return "<a href=\"%s?next=%s\">%s</a>" % (reverse("core:login"),
                                               context["request"].path, text)
+
+
+@register.filter
+def max(values):
+    """Returns the maximum item in an iterable.
+
+    :param values: The items.
+    :type  values: ``Iterable``
+    """
+    return builtin_max(values)
 
 
 @register.simple_tag
@@ -162,6 +189,9 @@ def issue_table(issues, number_of_parties=None):
                               all are to be displayed (see explanation above).
     :type  number_of_parties: ``int`` or ``None``
     """
+    from itertools import groupby
+    from politics.apps.core.models import Party, View
+
     # Calculates and returns the given party's "score" for these issues: the
     # number of those issues where we have information about their stance.
     def _party_score(party):
@@ -207,9 +237,9 @@ def page_links(context, page, near=2):
         will happen if ``django.core.context_processors.request`` is enabled.
     """
     # Calculate the range of near pages.
-    minimum = max(page.number - near, 1)
+    minimum = builtin_max(page.number - near, 1)
     maximum = min(minimum + near * 2, page.paginator.num_pages)
-    minimum = max(maximum - near * 2, 1)
+    minimum = builtin_max(maximum - near * 2, 1)
 
     return {
         "current_page": page,
@@ -226,6 +256,8 @@ class QueryStringNode(Node):
         self.kwargs = kwargs
 
     def render(self, context):
+        from urllib import urlencode
+
         kwargs = dict(context["request"].GET)
         for key, value in self.kwargs.iteritems():
             if key not in ("", None):
@@ -252,6 +284,8 @@ def query_string(parser, token):
         The current request must be available in the context as "request"; this
         will happen if ``django.core.context_processors.request`` is enabled.
     """
+    from django.template import TemplateSyntaxError
+
     bits = token.split_contents()
     name = bits.pop(0)
 

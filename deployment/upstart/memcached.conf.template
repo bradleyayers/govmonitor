@@ -5,5 +5,9 @@ start on runlevel [2345]
 stop on runlevel [016]
 respawn
 
+# Upstart trickery to allow multiple instances.
+instance $INSTANCE
+env INSTANCE=
+
 # Bind to the loopback IP for security.
-exec memcached -l 127.0.0.1 -u MEMCACHED_USER
+exec memcached -l127.0.0.1:11211 -umemcache

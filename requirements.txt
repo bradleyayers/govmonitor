@@ -5,6 +5,7 @@ django-haystack==1.2.5
 django-reversion==1.5.1
 Markdown==2.1.0
 psycopg2==2.4.2
+pylibmc==1.2.2
 pysolr==2.1.0-beta
 recaptcha-client==1.0.6
 South==0.7.3

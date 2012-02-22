@@ -1,5 +1,6 @@
 {% extends "core/issues/base.html" %}
 
+{% load cache %}
 {% load core %}
 
 {% block html-class %}
@@ -26,8 +27,14 @@
                 </form>
             </div>
         {% endif %}
-        {% issue_table page.object_list number_of_parties %}
-        {% page_links page %}
+
+        {# Cache on the most recent updated timestamp and the number of issues. #}
+        {% with last_updated=page.object_list|getattr_iterable:"updated_at"|max number_of_issues=page.object_list|length %}
+            {% cache 3600 popular_issues last_updated number_of_issues %}
+                {% issue_table page.object_list number_of_parties %}
+                {% page_links page %}
+            {% endcache %}
+        {% endwith %}
     </div>
     <div id="content-secondary">
         <h2 class="section">About Popular Issues</h2>
