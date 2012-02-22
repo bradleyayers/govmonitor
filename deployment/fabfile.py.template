@@ -155,7 +155,7 @@ def deploy():
                 # Install requirements. We're working in the original
                 # repository so we've got the requirements cache!
                 print "> Installing requirements."
-                run("pip install -E environment -r requirements.txt "
+                run("pip install -r requirements.txt "
                     "--download-cache=requirements_cache")
 
                 # Collect static files.
