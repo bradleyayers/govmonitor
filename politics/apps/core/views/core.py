@@ -30,7 +30,7 @@ def log_in(request):
 
         if form.is_valid():
             form.login(request)
-            return redirect(request.GET.get("next") or "core:home")
+            return redirect(request.GET.get("next", "core:home"))
 
     next_page = ""
     if "next" in request.GET:

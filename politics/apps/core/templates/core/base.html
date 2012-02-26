@@ -44,9 +44,9 @@
                 <div class="right">
                     <ol>
                         {% if not request.user.is_authenticated %}
-                            <li><a href="{% url core:login %}" id="header-log-in">Log In</a></li>
+                            <li><a href="{% url core:login %}?next={{ request.path }}" id="header-log-in">Log In</a></li>
                         {% else %}
-                            <li><a href="{% url core:logout %}">Log Out</a></li>
+                            <li><a href="{% url core:logout %}?next={{ request.path }}">Log Out</a></li>
                         {% endif %}
                         <li><a href="{% url core:about %}" id="header-about">About</a></li>
                     </ol>
