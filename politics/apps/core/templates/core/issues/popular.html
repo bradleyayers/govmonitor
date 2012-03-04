@@ -28,13 +28,11 @@
             </div>
         {% endif %}
 
-        {# Cache on the most recent updated timestamp and the number of issues. #}
-        {% with last_updated=page.object_list|getattr_iterable:"updated_at"|max number_of_issues=page.object_list|length %}
-            {% cache 3600 popular_issues last_updated number_of_issues %}
-                {% issue_table page.object_list number_of_parties %}
-                {% page_links page %}
-            {% endcache %}
-        {% endwith %}
+        {% for issue in page.object_list %}
+            {% issue_summary issue %}
+        {% endfor %}
+
+        {% page_links page %}
     </div>
     <div id="content-secondary">
         <h2 class="section">About Popular Issues</h2>

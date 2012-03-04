@@ -85,3 +85,74 @@ html.issues #call-to-action input[type=submit] {
     top: 0;
     width: 100px;
 }
+
+div.issue-summary {
+    background-color: #FFF;
+    border: 1px solid #DDD;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    margin-bottom: 1em;
+}
+
+div.issue-summary > h3 {
+    background: -moz-linear-gradient(top, #FAFAFA 0%, #F0F0F0 100%);
+    background: -webkit-gradient(linear, left top, left bottom, from(#FAFAFA), to(#F0F0F0));
+    border-bottom: 1px solid #DDD;
+    border-radius: 5px 5px 0 0;
+    font-size: 18px;
+    line-height: 35px;
+    margin: 0;
+    padding-left: 10px;
+}
+
+div.issue-summary > h3 > a {
+    color: #333;
+}
+
+div.issue-summary > ul {
+    font-size: 0;
+    margin: 0;
+    padding: 5px 5px 2px 5px;
+}
+
+div.issue-summary > ul > li {
+    display: inline;
+}
+
+div.issue-summary > ul > li > a {
+    background-position: 4px center;
+    background-repeat: no-repeat;
+    border: 1px solid;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0 3px 3px 0;
+    padding: 3px 6px 4px 17px;
+    text-shadow: rgba(255, 255, 255, 0.75) 0px 1px 2px;
+    white-space: nowrap;
+}
+
+div.issue-summary > ul > li > a.oppose {
+    background-color: #FFA6A6;
+    background-image: url("../img/issues/cross.png");
+    border-color: #DC7B7B;
+    color: #9D1515;
+}
+
+div.issue-summary > ul > li > a.support {
+    background-color: #B1F0AF;
+    background-image: url("../img/issues/tick.png");
+    border-color: #96CD94;
+    color: #2D742B;
+}
+
+div.issue-summary > ul > li > a.unclear {
+    background-color: #FFED93;
+    background-image: url("../img/issues/circle.png");
+    border-color: #F9E053;
+    color: #AC841A;
+}

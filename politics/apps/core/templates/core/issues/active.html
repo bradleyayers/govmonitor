@@ -12,7 +12,10 @@
 {% block content %}
     {{ block.super }}
     <div id="content-primary">
-        {% issue_table page.object_list number_of_parties %}
+        {% for issue in page.object_list %}
+            {% issue_summary issue %}
+        {% endfor %}
+
         {% page_links page %}
     </div>
     <div id="content-secondary">

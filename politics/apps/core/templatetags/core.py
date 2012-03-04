@@ -95,7 +95,22 @@ def interval_string(value, reference=None):
     """
     from datetime import datetime
     from politics.utils import timestring
+
     return timestring.interval_string(value, reference or datetime.now())
+
+
+@register.inclusion_tag("core/issues/_summary.html")
+def issue_summary(issue):
+    """Renders a summary of an issue suitable for display in a list of issues.
+
+    :param issue: The issue.
+    :type  issue: :class:`Issue`
+    """
+    from politics.apps.core.models import View
+
+    views = View.objects.exclude(stance=View.UNKNOWN).filter(issue=issue)
+    views = views.order_by("party__name").select_related("party")
+    return {"issue": issue, "views": views}
 
 
 @register.simple_tag(takes_context=True)
@@ -174,45 +189,6 @@ def user_link(user, text=None):
     """
     path = reverse("core:users:show", args=[user.pk])
     return "<a href=\"%s\">%s</a>" % (path, text or user.get_full_name())
-
-
-@register.inclusion_tag("core/_issue_table.html")
-def issue_table(issues, number_of_parties=None):
-    """Renders a table of issues and parties' stances thereon.
-
-    If given, only ``number_of_parties`` parties will be shown. We show those
-    that have the most information about the given issues: the "best" parties.
-
-    :param            issues: The issues to render.
-    :type             issues: ``QuerySet`` of :class:`Issue`s
-    :param number_of_parties: The number of parties to display or ``None`` if
-                              all are to be displayed (see explanation above).
-    :type  number_of_parties: ``int`` or ``None``
-    """
-    from itertools import groupby
-    from politics.apps.core.models import Party, View
-
-    # Calculates and returns the given party's "score" for these issues: the
-    # number of those issues where we have information about their stance.
-    def _party_score(party):
-        views = View.objects.filter(issue__in=issues, party=party)
-        return views.exclude(stance=View.UNKNOWN).count()
-
-    issues = list(issues)
-    views = View.objects.filter(issue__in=issues).select_related()
-
-    if number_of_parties:
-        # Determine which are the "best" parties to be displayed for these
-        # issues by sorting them in descending order of score (_party_score).
-        parties = sorted(Party.objects.all(), key=_party_score, reverse=True)
-        views = views.filter(party__in=parties[:number_of_parties])
-
-    # Sort the views by issue (in the same order that they were given) and
-    # party name, then group by issue. Take advantage of tuple comparisons.
-    views = sorted(views, key=lambda v: (issues.index(v.issue), v.party.name))
-    views = [list(i[1]) for i in groupby(views, key=lambda v: v.issue.pk)]
-
-    return {"view_groups": views}
 
 
 @register.inclusion_tag("core/_page_links.html", takes_context=True)
