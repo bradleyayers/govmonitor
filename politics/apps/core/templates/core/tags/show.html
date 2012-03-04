@@ -8,7 +8,10 @@
     {{ block.super }}
     <div id="content-primary">
         <h1>{% tag_link tag %}</h1>
-        {% issue_table page.object_list 5 %}
+        {% for issue in page.object_list %}
+            {% issue_summary issue %}
+        {% endfor %}
+
         {% page_links page %}
     </div>
     <div id="content-secondary">

@@ -8,7 +8,10 @@
     <div id="content-primary">
         <h2 class="section">{{ issues|length }} Issues</h2>
         {% if page.object_list %}
-            {% issue_table page.object_list 5 %}
+            {% for issue in page.object_list %}
+                {% issue_summary issue %}
+            {% endfor %}
+
             {% page_links page %}
         {% else %}
             <i>No issues.</i>
