@@ -1,5 +1,4 @@
 # coding=utf-8
-from __builtin__ import max as builtin_max
 from django import template
 from django.core.urlresolvers import reverse
 from django.template import Node
@@ -58,24 +57,6 @@ def _parse_token_kwargs(bits, parser):
         kwargs[key] = parser.compile_filter(value)
 
     return kwargs
-
-
-@register.filter
-def getattr_iterable(iterable, name):
-    """Calls ``getattr`` on each item in an iterable and returns the results.
-
-    .. code-block:: python
-
-        >>> models = Model.objects.all()
-        >>> getattr_iterable(models, "pk")
-        [1, 2, 3, ...]
-
-    :param iterable: The items.
-    :type  iterable: ``Iterable``
-    :param     name: The name of the attribute to be retrieved.
-    :type      name: ``str``
-    """
-    return [getattr(item, name) for item in iterable]
 
 
 @register.filter
@@ -140,57 +121,6 @@ def login_link(context, text):
                                               context["request"].path, text)
 
 
-@register.filter
-def max(values):
-    """Returns the maximum item in an iterable.
-
-    :param values: The items.
-    :type  values: ``Iterable``
-    """
-    return builtin_max(values)
-
-
-@register.simple_tag
-def tag_link(tag):
-    """Renders a link to a tag.
-
-    :param tag: The tag to link to.
-    :type  tag: :class:`Tag`
-    :returns: An HTML link to ``tag``.
-    :rtype: ``str``
-    """
-    return "<a class=\"tag\" href=\"{0}\">{1}</a>".format(
-        reverse("core:tags:show", kwargs={"pk": tag.pk, "slug": tag.slug}),
-        tag.name
-    )
-
-
-@register.simple_tag
-def user_link(user, text=None):
-    """Renders a link to a user's profile.
-
-    The link text defaults to the user's full name. For example, if the context
-    variable ``user`` refers to a user with ID 1 and name "Chris Doble", this::
-
-        {% user_link user %}
-        {% user_link user "Chris Doble's Profile" %}
-
-    would be rendered as this::
-
-        <a href="/users/1">Chris Doble</a>
-        <a href="/users/1">Chris Doble's Profile</a>
-
-    :param user: The user whose profile will be linked to.
-    :type user: ``django.contrib.auth.models.User``
-    :param text: The link text to display. Defaults to the user's full name.
-    :type text: ``None`` or ``str``
-    :returns: An HTML link to ``user``'s profile.
-    :rtype: ``str``
-    """
-    path = reverse("core:users:show", args=[user.pk])
-    return "<a href=\"%s\">%s</a>" % (path, text or user.get_full_name())
-
-
 @register.inclusion_tag("core/_page_links.html", takes_context=True)
 def page_links(context, page, near=2):
     """Renders links to pages of paginated content.
@@ -213,9 +143,9 @@ def page_links(context, page, near=2):
         will happen if ``django.core.context_processors.request`` is enabled.
     """
     # Calculate the range of near pages.
-    minimum = builtin_max(page.number - near, 1)
+    minimum = max(page.number - near, 1)
     maximum = min(minimum + near * 2, page.paginator.num_pages)
-    minimum = builtin_max(maximum - near * 2, 1)
+    minimum = max(maximum - near * 2, 1)
 
     return {
         "current_page": page,
@@ -271,3 +201,44 @@ def query_string(parser, token):
         # If bits isn't empty, the arguments couldn't be parsed.
         if bits:
             raise TemplateSyntaxError("Malformed arguments to %s tag." % name)
+
+
+@register.simple_tag
+def tag_link(tag):
+    """Renders a link to a tag.
+
+    :param tag: The tag to link to.
+    :type  tag: :class:`Tag`
+    :returns: An HTML link to ``tag``.
+    :rtype: ``str``
+    """
+    return "<a class=\"tag\" href=\"{0}\">{1}</a>".format(
+        reverse("core:tags:show", kwargs={"pk": tag.pk, "slug": tag.slug}),
+        tag.name
+    )
+
+
+@register.simple_tag
+def user_link(user, text=None):
+    """Renders a link to a user's profile.
+
+    The link text defaults to the user's full name. For example, if the context
+    variable ``user`` refers to a user with ID 1 and name "Chris Doble", this::
+
+        {% user_link user %}
+        {% user_link user "Chris Doble's Profile" %}
+
+    would be rendered as this::
+
+        <a href="/users/1">Chris Doble</a>
+        <a href="/users/1">Chris Doble's Profile</a>
+
+    :param user: The user whose profile will be linked to.
+    :type user: ``django.contrib.auth.models.User``
+    :param text: The link text to display. Defaults to the user's full name.
+    :type text: ``None`` or ``str``
+    :returns: An HTML link to ``user``'s profile.
+    :rtype: ``str``
+    """
+    path = reverse("core:users:show", args=[user.pk])
+    return "<a href=\"%s\">%s</a>" % (path, text or user.get_full_name())
