@@ -84,6 +84,15 @@ class Issue(models.Model):
         self.tags.remove(*list(self.tags.all()))
         return super(Issue, self).delete(*args, **kwargs)
 
+    @property
+    def percentage_views_known(self):
+        """Returns the percentage of views that are known for this issue."""
+        from politics.apps.core.models import View
+
+        views = self.view_set.all()
+        known_views = views.exclude(stance=View.UNKNOWN)
+        return float(known_views.count()) / views.count() * 100
+
     @staticmethod
     def update_view_slugs(instance, **kwargs):
         """Update a issue's views' slugs.

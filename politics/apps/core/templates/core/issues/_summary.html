@@ -1,6 +1,12 @@
+{% load core %}
+
 <div class="issue-summary">
     <h3><a href="{% url core:issues:show issue.pk issue.slug %}">{{ issue.name }}</a></h3>
-    <ul>
+    <ul class="stats">
+        <li class="available"><strong>{{ issue.percentage_views_known|floatformat:0 }}%</strong> of views known</li>
+        <li class="updated" title="{{ issue.updated_at }}">Last updated <strong>{{ issue.updated_at|interval_string }} ago</strong></li>
+    </ul>
+    <ul class="views">
         {% for view in views %}
             <li><a class="{{ view.stance }}" href="{% url core:views:show view.pk view.slug %}" title="{{ view.get_stance_display }}">{{ view.party.name }}</a></li>
         {% endfor %}
