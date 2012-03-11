@@ -17,6 +17,11 @@
 {% block content %}
     {{ block.super }}
     <div id="content-primary">
+        <h1>
+            <a href="{% url core:issues:popular %}">Issues</a> /
+            <strong><a href="{% url core:issues:popular %}">Popular</a></strong>
+        </h1>
+
         {# Show a call to action on the home page. #}
         {% if request.path == "/" %}
             <div id="call-to-action">

@@ -63,6 +63,8 @@ class View(models.Model):
     stance = models.CharField(choices=_STANCE_CHOICES, default=UNKNOWN,
                               max_length=7)
 
+    updated_at = models.DateTimeField(auto_now=True)
+
     class Meta:
         app_label = "core"
 
