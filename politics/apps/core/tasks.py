@@ -48,7 +48,7 @@ def calculate_party_similarities(party_pk):
 
 @periodic_task(run_every=crontab(hour=0, minute=0))
 @transaction.commit_on_success
-def delete_unused_issues():
+def delete_unused_tags():
     """Deletes unused tags from the database.
 
     Run at midnight every day.
