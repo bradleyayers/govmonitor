@@ -95,7 +95,11 @@ div.view-summary.right {
 
 div.view-summary > h3 {
     font-size: 18px;
-    margin: 9px 0 9px 10px;
+    margin: 0;
+    overflow: hidden;
+    padding: 9px 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 div.view-summary > h3 > a {

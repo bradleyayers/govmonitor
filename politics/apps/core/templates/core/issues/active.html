@@ -12,10 +12,7 @@
 {% block content %}
     {{ block.super }}
     <div id="content-primary">
-        <h1>
-            <a href="{% url core:issues:popular %}">Issues</a> /
-            <strong><a href="{% url core:issues:active %}">Active</a></strong>
-        </h1>
+        <h1><a href="{% url core:issues:popular %}">Issues</a> / <strong>Active</strong></h1>
 
         {% for issue in page.object_list %}
             {% issue_summary issue %}
