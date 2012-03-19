@@ -9,19 +9,31 @@
     <div id="content-primary">
         <h1><a href="{% url core:issues:popular %}">Issues</a> / <strong>{{ issue.name }}</strong></h1>
 
-        {% if issue.description_html %}
-            {{ issue.description_html|safe }}
-        {% else %}
-            <p><em>No description available.</em></p>
-        {% endif %}
-        <p>
-            {% for tag in issue.tags.all %}
-                {% tag_link tag %}
-            {% endfor %}
-        </p>
-        {% if request.user.is_authenticated %}
-            <p><a href="{% url core:issues:edit issue.pk %}">Edit</a></p>
-        {% endif %}
+        <div class="issue">
+            <div class="description">
+                {% if issue.description_html %}
+                    {{ issue.description_html|safe }}
+                {% else %}
+                    <p><em>No description available.</em></p>
+                {% endif %}
+                <ul class="tags">
+                    {% for tag in issue.tags.all %}
+                        <li>{% tag_link tag %}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <footer>
+                <ul class="stats">
+                    <li class="available"><strong>{{ issue.percentage_views_known|floatformat:0 }}%</strong> of views known</li>
+                    <li class="updated" title="{{ issue.updated_at }}">Last updated <strong>{{ issue.updated_at|interval_string }}</strong> ago</li>
+                </ul>
+                <ul class="actions">
+                    {% if request.user.is_authenticated %}
+                        <li class="edit"><a href="{% url core:issues:edit issue.pk %}">Edit</a></li>
+                    {% endif %}
+                </ul>
+            </footer>
+        </div>
 
         {% for view in views %}
             <div class="view-summary{% cycle "" " right" %}">

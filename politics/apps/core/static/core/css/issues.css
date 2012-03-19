@@ -86,13 +86,72 @@ html.issues #call-to-action input[type=submit] {
     width: 100px;
 }
 
-div.issue-summary {
+div.issue, div.issue-summary {
     background-color: #F5F5F5;
     border: 1px solid #DDD;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     margin-bottom: 1.5em;
+}
+
+div.issue > div.description {
+    background-color: #FFF;
+    border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    -webkit-border-radius: 5px 5px 0 0;
+    padding: 10px;
+}
+
+div.issue > div.description > :first-child {
+    margin-top: 0;
+}
+
+div.issue > div.description > ul.tags {
+    list-style-type: none;
+    margin: 0;
+}
+
+div.issue > div.description > ul.tags > li {
+    display: inline;
+}
+
+div.issue > footer {
+    border-top: 1px solid #DDD;
+    border-radius: 0 0 5px 5px;
+    -moz-border-radius: 0 0 5px 5px;
+    -webkit-border-radius: 0 0 5px 5px;
+    box-sizing: border-box;
+    overflow: auto;
+    padding: 8px 10px;
+    width: 100%;
+}
+
+div.issue > footer > ul.stats {
+    color: #B2B2B2;
+    float: left;
+    font-size: 11px;
+    list-style-type: none;
+    margin: 0;
+}
+
+div.issue > footer > ul.actions {
+    float: right;
+    list-style-type: none;
+    margin: 0;
+}
+
+div.issue > footer > ul.stats > li {
+    background-image: url("../img/issues/icons.png");
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 11px;
+    margin-right: 5px;
+    padding-left: 15px;
+}
+
+div.issue > footer > ul.stats > li.updated {
+    background-position: 0 -11px;
 }
 
 div.issue-summary:last-child {
