@@ -1,6 +1,6 @@
-com.chrisdoble.addInitialiser(function() {
+jQuery(function($) {
     if (!$("html").hasClass("about")) {
-        return false;
+        return;
     }
 
     function highlightQuestion(id) {

@@ -4,6 +4,14 @@
 
 {% block title %}{{ issue.name }}{% endblock %}
 
+{% block javascript %}
+    {{ block.super }}
+    <script type="text/javascript">
+    google.load("visualization", "1", {packages: ["corechart"]});
+    stances = {{ stances|json|safe }};
+    </script>
+{% endblock %}
+
 {% block content %}
     {{ block.super }}
     <div id="content-primary">
@@ -46,6 +54,9 @@
         {% endfor %}
     </div>
     <div id="content-secondary">
+        <h2 class="section">Distribution</h2>
+        <div id="stances-chart"></div>
+
         {% if related_issues %}
             <h2 class="section">Related Issues</h2>
             <ol class="related">

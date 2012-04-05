@@ -94,6 +94,23 @@ def issue_summary(issue):
     return {"issue": issue, "views": views}
 
 
+@register.filter
+def json(value):
+    """Converts the given value to JSON.
+
+    .. note::
+
+        Doesn't escape the resulting string.
+
+    :param value: The value that is to be converted to JSON.
+    :returns: ``value`` as JSON.
+    :rtype: ``str``
+    """
+    import json
+
+    return json.dumps(value)
+
+
 @register.simple_tag(takes_context=True)
 def login_link(context, text):
     """Returns a link to the login view.

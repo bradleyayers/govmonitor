@@ -1,4 +1,4 @@
-com.chrisdoble.addInitialiser(function() {
+jQuery(function($) {
     $("div.reference div.vote-widget a").click(function() {
         var link = $(this);
         var path = "/references/" + link.siblings("input").val() + "/votes/";

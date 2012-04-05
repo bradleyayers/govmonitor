@@ -1,9 +1,9 @@
 # coding=utf-8
-from ..forms import IssueForm
-from ..models import Issue
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from haystack.query import SearchQuerySet
+from politics.apps.core.forms import IssueForm
+from politics.apps.core.models import Issue, View
 from politics.utils.decorators import render_to_template, slug_url
 from politics.utils.paginator import Paginator
 import reversion
@@ -76,8 +76,13 @@ def show(request, issue):
     related_issues = SearchQuerySet().models(Issue).more_like_this(issue)
     related_issues = [result.object for result in related_issues]
 
+    # Pass stance counts through for the pie chart.
+    views = issue.view_set.select_related().order_by("party__name")
+    stances = [(s[1], views.filter(stance=s[0]).count()) for s in View.STANCE_CHOICES]
+
     return {
         "issue": issue,
         "related_issues": related_issues,
-        "views": issue.view_set.select_related().order_by("party__name")
+        "stances": stances,
+        "views": views,
     }

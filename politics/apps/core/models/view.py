@@ -30,21 +30,24 @@ class View(models.Model):
 
     # Stances a party might take on an issue.
     # XXX: If you change these, update the `max_length` of fields.
-    SUPPORT = "support"
     OPPOSE = "oppose"
+    SUPPORT = "support"
     UNCLEAR = "unclear"
     UNKNOWN = "unknown"
 
+    # All possible stance values.
+    STANCES = (OPPOSE, SUPPORT, UNCLEAR, UNKNOWN)
+
     # Stance choices to be passed to model/form fields.
-    SUPPORT_CHOICE = (SUPPORT, "Support")
     OPPOSE_CHOICE = (OPPOSE, "Oppose")
+    SUPPORT_CHOICE = (SUPPORT, "Support")
     UNCLEAR_CHOICE = (UNCLEAR, "Unclear")
     UNKNOWN_CHOICE = (UNKNOWN, "Unknown")
 
     # View stance choices.
-    _STANCE_CHOICES = (
-      SUPPORT_CHOICE,
+    STANCE_CHOICES = (
       OPPOSE_CHOICE,
+      SUPPORT_CHOICE,
       UNCLEAR_CHOICE,
       UNKNOWN_CHOICE,
     )
@@ -60,7 +63,7 @@ class View(models.Model):
     # The party's apparent stance on the issue: the stance of the
     # :class:`Reference` with the greatest score. While this value could just
     # be calculated when required, we store it to make things nice and speedy.
-    stance = models.CharField(choices=_STANCE_CHOICES, default=UNKNOWN,
+    stance = models.CharField(choices=STANCE_CHOICES, default=UNKNOWN,
                               max_length=7)
 
     updated_at = models.DateTimeField(auto_now=True)
