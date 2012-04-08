@@ -156,6 +156,10 @@ USE_L10N = True
 # -----------------------------------------------------------------------------
 
 COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = True
+COMPRESS_PRECOMPILERS = (
+    ("text/less", "lessc {infile} {outfile}"),
+)
 
 # The absolute path to the directory that is to hold user-uploaded files and
 # the URL path from which those files should be served.

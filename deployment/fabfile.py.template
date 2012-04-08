@@ -163,6 +163,10 @@ def deploy():
                 run("\"%s/manage.py\" collectstatic --noinput"
                     % env.root_module_name)
 
+                # Compress static files.
+                print "> Compressing static files."
+                run("\"%s/manage.py\" compress" % env.root_module_name)
+
         with cd(env.root_path):
             with settings(warn_only=True):
                 # Copy preserved files from the backup.
