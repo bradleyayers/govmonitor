@@ -14,7 +14,7 @@
     <div id="content-primary">
         <h1>
             <a href="{% url core:parties:show view.party.pk view.party.slug %}">{{ view.party.name }}</a> /
-            <strong>{{ view.issue.name }}</strong>
+            <strong><a href="{% url core:issues:show view.issue.pk view.issue.slug %}">{{ view.issue.name }}</a></strong>
         </h1>
 
         <p class="stance">

@@ -1,3 +1,7 @@
+html.view #content-primary > h1 > strong > a {
+    color: #000;
+}
+
 html.view #content-primary div.references form {
     display: inline;
 }
