@@ -140,6 +140,12 @@ class View(models.Model):
         from politics.apps.core.models import Issue
         from politics.apps.core.tasks import calculate_party_similarities
 
+        # In cascading deletes, the view's issue may not exist anymore.
+        try:
+            self.issue
+        except Issue.DoesNotExist:
+            return
+
         try:
             # Fetch the reference(s) with the greatest score.
             references = self.reference_set.not_archived().order_by("-score")
@@ -162,10 +168,8 @@ class View(models.Model):
 
             # Save the issue to touch its updated_at timestamp. That way, when
             # a party's stance changes, the issue appears in the active stream.
-            # In cascading deletes, the issue may not exist anymore.
-            try:
-                self.issue.save()
-            except Issue.DoesNotExist:
-                pass
+            # The issue is guaranteed to exist because we checked above.
+            self.issue.save()
 
+            # The party's stance changed, so recalculate its similarities.
             calculate_party_similarities.delay(self.party.pk)
