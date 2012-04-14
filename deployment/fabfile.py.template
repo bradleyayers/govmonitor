@@ -23,7 +23,9 @@ from fabric.api import *
 from fabric.colors import green, red, yellow
 from fabric.contrib.console import confirm
 from fabric.contrib.files import exists
+import os
 import os.path
+import tempfile
 import sys
 
 
@@ -209,6 +211,54 @@ def deploy():
         print "> Turning maintenance mode off."
         maintenance("off", quiet=True)
 
+    print green("Done!")
+
+
+@task
+def download_data():
+    """Download data from the server and install it locally.
+
+    .. note::
+
+        Assumes that you're running the fabfile from the deployment directory.
+    """
+    print yellow("Make sure celeryd is running!")
+
+    with cd(env.repository_path):
+        with prefix("source environment/bin/activate"):
+            # Some models need to be excluded for the data to load properly
+            # (e.g. contenttypes), others just aren't necessary.
+            command = ("%s/manage.py dumpdata "
+                "--natural "
+                "--exclude admin "
+                "--exclude auth.Permission "
+                "--exclude contenttypes "
+                "--exclude core.UserProfile "
+                "--exclude reversion "
+                "--exclude sessions "
+                "--exclude social_auth")
+
+            print "> Downloading data."
+            data = run(command % env.root_module_name)
+
+            # loaddata only loads from disk, so save the data locally.
+            print "> Saving data locally."
+            fixture_fd, fixture_path = tempfile.mkstemp(suffix=".json")
+            fixture = os.fdopen(fixture_fd, "w")
+            fixture.write(data)
+            fixture.close()
+
+            print green("Data saved to \"%s\"" % fixture_path)
+
+    print "> Loading data."
+    with lcd("../%s" % env.root_module_name):
+        with prefix("source ../environment/bin/activate"):
+            local("rm database.sqlite3")
+            local("./manage.py syncdb --migrate --noinput")
+            local("./manage.py loaddata '%s'" % fixture_path)
+
+    # Remove the fixture.
+    local("rm '%s'" % fixture_path)
     print green("Done!")
 
 
