@@ -53,6 +53,11 @@ class View(models.Model):
     )
 
     issue = models.ForeignKey("Issue")
+
+    # How notable/interesting this view is; higer values are more notable. This
+    # is used to draw attention to views that users may find interesting.
+    notability = models.FloatField(default=0)
+
     party = models.ForeignKey("Party")
 
     # Issue.name has a maximum length of 128 characters, while Party.name is
@@ -138,7 +143,8 @@ class View(models.Model):
         :class:`Issue` is saved to touch its ``updated_at`` timestamp.
         """
         from politics.apps.core.models import Issue
-        from politics.apps.core.tasks import calculate_party_similarities
+        from politics.apps.core.tasks import (calculate_party_similarities,
+                                              calculate_view_notability)
 
         # In cascading deletes, the view's issue may not exist anymore.
         try:
@@ -173,3 +179,8 @@ class View(models.Model):
 
             # The party's stance changed, so recalculate its similarities.
             calculate_party_similarities.delay(self.party.pk)
+
+            # A view's notability is calculated, in part, from other parties'
+            # stances on the issue; recalculate all notabilities for the issue.
+            for view in self.issue.view_set.all():
+                calculate_view_notability.delay(view.pk)

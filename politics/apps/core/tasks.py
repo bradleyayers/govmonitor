@@ -46,7 +46,64 @@ def calculate_party_similarities(party_pk):
                             similarity=similarity).save()
 
 
-@periodic_task(run_every=crontab(hour=0, minute=0))
+@task(ignore_result=True)
+@transaction.commit_on_success
+def calculate_view_notability(view_pk):
+    """Calculate a view's notability.
+
+    .. note::
+
+        If the party's stance is unknown, the view's notability will be 0.
+
+    :param view_pk: The view's primary key.
+    :type  view_pk: ``int``
+    """
+    def _calculate_stance_rarity(view):
+        """Calculate the rarity of a party's stance on an issue.
+
+        This identifies cases where we have little/no information about other
+        parties' stances on an issue: a sign that it's specific to one party.
+
+        :returns: 1 if the stance is rare, 0 if it's not.
+        """
+        is_rare = view.issue.view_set.exclude(stance=View.UNKNOWN).count() == 1
+        return 0.6 if is_rare else 0
+
+    def _calculate_stance_uniqueness(view):
+        """Calculate the uniqueness of a party's stance on an issue.
+
+        This identifies stances that differ from the prevailing stance of other
+        parties (e.g. all parties but this one support the issue in question).
+
+        :returns: A value in the range 0-1 describing the stance's uniqueness;
+                  a larger value indicates that the stance is "more unique."
+        """
+        views = view.issue.view_set.exclude(stance=View.UNKNOWN)
+        views = views.values("stance").annotate(count=Count("stance"))
+
+        equal_count = views.filter(stance=view.stance)[0]["count"]
+        prevailing_count = views.order_by("-count")[0]["count"]
+        return 1 - equal_count / float(prevailing_count)
+
+    view = View.objects.get(pk=view_pk)
+    if view.stance == View.UNKNOWN:
+        view.notability = 0
+        view.save()
+        return
+
+    # These functions take a View and return a score for some metric of
+    # notability. These scores are combined to arrive at the total notability.
+    score_calculators = [
+        _calculate_stance_rarity,
+        _calculate_stance_uniqueness
+    ]
+
+    scores = [calculator(view) for calculator in score_calculators]
+    view.notability = max(scores)
+    view.save()
+
+
+@periodic_task(ignore_result=True, run_every=crontab(hour=0, minute=0))
 @transaction.commit_on_success
 def delete_unused_tags():
     """Deletes unused tags from the database.

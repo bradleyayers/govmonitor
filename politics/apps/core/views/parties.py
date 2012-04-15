@@ -58,7 +58,7 @@ def new(request):
 @render_to_template("core/parties/show.html")
 def show(request, party):
     """Show information about a ``Party``."""
-    views = party.view_set.order_by("issue__name")
+    views = party.view_set.order_by("-notability", "issue__name")
     if request.GET.get("issues") != "unknown":
         views = views.exclude(stance=View.UNKNOWN)
     else:
