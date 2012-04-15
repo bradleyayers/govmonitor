@@ -316,6 +316,16 @@ def maintenance(state="", quiet=False):
 
 
 @task
+def migrate():
+    """Runs all South migrations on the server."""
+    with cd(env.repository_path):
+        with prefix("source environment/bin/activate"):
+            run("%s/manage.py migrate --noinput" % env.root_module_name)
+
+    print green("Done!")
+
+
+@task
 def rebuild_search_index():
     """Rebuild the search index (run ``manage.py rebuild_index``)."""
     with cd(env.repository_path):
