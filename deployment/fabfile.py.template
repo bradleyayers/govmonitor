@@ -236,7 +236,8 @@ def download_data():
                 "--exclude core.UserProfile "
                 "--exclude reversion "
                 "--exclude sessions "
-                "--exclude social_auth")
+                "--exclude social_auth "
+                "--exclude view_counts.View")
 
             print "> Downloading data."
             data = run(command % env.root_module_name)

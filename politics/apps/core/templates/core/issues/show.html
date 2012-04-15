@@ -1,6 +1,7 @@
 {% extends "core/issues/base.html" %}
 
 {% load core %}
+{% load view_counts %}
 
 {% block title %}{{ issue.name }}{% endblock %}
 
@@ -34,6 +35,7 @@
                 <ul class="stats">
                     <li class="available"><strong>{{ issue.percentage_views_known|floatformat:0 }}%</strong> of views known</li>
                     <li class="updated" title="{{ issue.updated_at }}">Last updated <strong>{{ issue.updated_at|interval_string }}</strong> ago</li>
+                    <li class="views"><strong>{{ issue|view_count }}</strong> views</li>
                 </ul>
                 <ul class="actions">
                     {% if request.user.is_authenticated %}

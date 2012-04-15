@@ -1,12 +1,14 @@
 # coding=utf-8
-from ..forms import ReferenceForm
-from ..models import Reference, View
+from politics.apps.core.forms import ReferenceForm
+from politics.apps.core.models import Reference, View
+from politics.apps.view_counts.decorators import record_view
 from politics.utils.decorators import render_to_template, slug_url
 from random import random
 import reversion
 
 
 @slug_url(View)
+@record_view
 @render_to_template("core/views/show.html")
 def show(request, view):
     """Shows information about a :class:`View`."""

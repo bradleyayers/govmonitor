@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, redirect
 from haystack.query import SearchQuerySet
 from politics.apps.core.forms import IssueForm
 from politics.apps.core.models import Issue, View
+from politics.apps.view_counts.decorators import record_view
 from politics.utils.decorators import render_to_template, slug_url
 from politics.utils.paginator import Paginator
 import reversion
@@ -70,6 +71,7 @@ def popular(request):
 
 
 @slug_url(Issue)
+@record_view
 @render_to_template("core/issues/show.html")
 def show(request, issue):
     """Display information about an issue."""

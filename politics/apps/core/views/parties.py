@@ -1,8 +1,9 @@
 # coding: utf-8
-from ..forms import PartyForm
-from ..models import Issue, Party, View
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
+from politics.apps.core.forms import PartyForm
+from politics.apps.core.models import Issue, Party, View
+from politics.apps.view_counts.decorators import record_view
 from politics.utils.decorators import render_to_template, slug_url
 import re
 
@@ -53,6 +54,7 @@ def new(request):
 
 
 @slug_url(Party)
+@record_view
 @render_to_template("core/parties/show.html")
 def show(request, party):
     """Show information about a ``Party``."""

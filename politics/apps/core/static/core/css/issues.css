@@ -154,6 +154,10 @@ div.issue > footer > ul.stats > li.updated {
     background-position: 0 -11px;
 }
 
+div.issue > footer > ul.stats > li.views {
+    background-image: url("../img/issues/eye.png");
+}
+
 div.issue-summary:last-child {
     margin-bottom: 0;
 }
