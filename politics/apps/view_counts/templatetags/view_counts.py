@@ -16,5 +16,5 @@ def view_count(instance):
     :returns: The view count of ``instance``.
     :rtype: ``int``
     """
-    views = View.objects.get_for_model(instance)
+    views = View.objects.get_for_instance(instance)
     return views.values("ip_address").annotate(Count("ip_address")).count()

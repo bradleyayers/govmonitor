@@ -156,6 +156,7 @@ div.issue > footer > ul.stats > li.updated {
 
 div.issue > footer > ul.stats > li.views {
     background-image: url("../img/issues/eye.png");
+    padding-left: 17px;
 }
 
 div.issue-summary:last-child {
@@ -193,6 +194,11 @@ div.issue-summary > ul.stats > li {
 
 div.issue-summary > ul.stats > li.updated {
     background-position: 0 -11px;
+}
+
+div.issue-summary > ul.stats > li.views {
+    background-image: url("../img/issues/eye.png");
+    padding-left: 17px;
 }
 
 div.issue-summary > div.views {
