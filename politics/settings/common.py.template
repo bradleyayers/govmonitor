@@ -109,7 +109,9 @@ INSTALLED_APPS = (
     "social_auth",
     "south",
 
+    "politics.apps.comments",
     "politics.apps.core",
+    "politics.apps.view_counts",
     "politics.apps.south_libraries",
 )
 
