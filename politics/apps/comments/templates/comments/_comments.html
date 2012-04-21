@@ -1,0 +1,12 @@
+{% load core %}
+
+<div class="comment-thread">
+    <ol class="comments">
+        {% for comment in comments %}
+            <li>
+                {{ comment.body }} — {% user_link comment.author %}
+            </li>
+        {% endfor %}
+    </ol>
+    <a class="add-comment" href="#">Add comment</a>
+</div>

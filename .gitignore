@@ -4,7 +4,6 @@ celerybeat-schedule
 celeryev.pid
 /*/settings/common.py
 /*/settings/production.py
-/*/static/*
-!/*/static/.gitignore
+/*/static/CACHE
 /environment
 /requirements_cache

@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.views.decorators.http import require_http_methods, require_POST
+from politics.apps.comments.views import comments as base_comments
 from politics.utils.decorators import (pk_url, render_json, render_to_template,
                                        require_authenticated)
 import reversion
@@ -31,6 +32,18 @@ def archive(request, reference, archive=True):
     kwargs = {"pk": reference.view.pk, "slug": reference.view.slug}
     return HttpResponseRedirect(reverse("core:views:show", kwargs=kwargs) +
                                 ("" if archive else "?archived=1"))
+
+
+@pk_url(Reference)
+def comments(request, reference):
+    """Create/read reference comments.
+
+    :param   request: The HTTP request that was made.
+    :type    request: ``django.http.HttpRequest``
+    :param reference: The reference described by the primary key in the URL.
+    :type  reference: :class:`Reference`
+    """
+    return base_comments(request, reference)
 
 
 @login_required

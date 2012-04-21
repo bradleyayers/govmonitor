@@ -1,15 +1,15 @@
-jQuery(function($) {
+/**
+ * Highlights the selected question on the about page.
+ */
+$(function() {
+    // Don't bother if we're not on the about page.
     if (!$("html").hasClass("about")) {
         return;
     }
 
-    function highlightQuestion(id) {
-        var question = $("ol.questions " + id);
-
-        if (question.length) {
-            $("ol.questions li").removeClass("highlighted");
-            question.addClass("highlighted");
-        }
+    var highlightQuestion = function(id) {
+        $("ol.questions li").removeClass("highlighted");
+        $("ol.questions " + id).addClass("highlighted");
     }
 
     $("a").click(function() {

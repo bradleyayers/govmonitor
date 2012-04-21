@@ -2,7 +2,7 @@ html.view #content-primary > h1 > strong > a {
     color: #000;
 }
 
-html.view #content-primary div.references form {
+html.view #content-primary div.references form.archive {
     display: inline;
 }
 
@@ -36,6 +36,7 @@ div.reference {
     border-bottom: 1px solid #DDD;
     margin-bottom: 1em;
     padding-left: 60px;
+    padding-bottom: 1em;
     position: relative;
 }
 

@@ -1,6 +1,6 @@
-{% load core %}
+{% load comments core %}
 
-<div class="reference">
+<div class="reference" data-comment-path="{% url core:references:comments reference.pk %}">
     <div class="vote-widget">
         <input type="hidden" value="{{ reference.pk }}"/>
         {% if reference == selected_reference %}
@@ -28,12 +28,12 @@
     {% if request.user.is_authenticated %}
         <p>
             {% if show_current %}
-                <form action="{% url core:references:archive reference.pk %}" method="post">
+                <form action="{% url core:references:archive reference.pk %}" class="archive" method="post">
                     {% csrf_token %}
                     <input type="submit" value="Archive"/>
                 </form>
             {% else %}
-                <form action="{% url core:references:unarchive reference.pk %}" method="post">
+                <form action="{% url core:references:unarchive reference.pk %}" class="archive" method="post">
                     {% csrf_token %}
                     <input type="submit" value="Unarchive"/>
                 </form>
@@ -41,4 +41,6 @@
             <a href="{% url core:references:edit reference.pk %}">Edit</a>
         </p>
     {% endif %}
+
+    {% comments reference %}
 </div>

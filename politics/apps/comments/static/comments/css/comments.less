@@ -1,0 +1,53 @@
+div.comment-thread {
+  @border: 1px dotted #AAA;
+  @indent: 15px;
+  @vertical-spacing: 10px;
+
+  a.add-comment {
+    display: block;
+    margin: @vertical-spacing 0 0 0;
+  }
+
+  form {
+    margin: @vertical-spacing 0 0 @indent;
+    overflow: auto;
+
+    div {
+      float: right;
+      margin-top: 2px;
+
+      a {
+        margin-left: 2px;
+      }
+    }
+
+    p.error {
+      color: red;
+      float: left;
+      font-weight: bold;
+      margin: 6px 0 0 0;
+    }
+
+    textarea {
+      box-sizing: border-box;
+      display: block;
+      height: 50px;
+      width: 100%;
+    }
+
+    &.disabled > div > a:hover {
+      cursor: default;
+      text-decoration: none;
+    }
+  }
+
+  ol.comments > li {
+    border-bottom: @border;
+    line-height: 140%;
+    padding: @vertical-spacing 0 @vertical-spacing @indent;
+
+    &:first-child {
+      border-top: @border;
+    }
+  }
+}
