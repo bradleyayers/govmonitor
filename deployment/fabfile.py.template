@@ -195,7 +195,9 @@ def deploy():
     except (Exception, SystemExit):
         # Something failed; restore the backup. Catching any old exception
         # isn't good practice, but we really don't want the site to go down.
-        run("rm -fr repository && mv repository_old repository")
+        with cd(env.root_path):
+            if exists("old_repository"):
+                run("rm -fr repository && mv repository_old repository")
 
     # Turn Celery back on.
     print "> Turning Celery on."
