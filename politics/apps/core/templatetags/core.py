@@ -60,6 +60,18 @@ def _parse_token_kwargs(bits, parser):
 
 
 @register.filter
+def indent(value, amount):
+    """Indent each line of the given text by some number of spaces.
+
+    :param  value: The text to indent.
+    :type   value: ``str``
+    :param amount: The number of spaces to indent by.
+    :type  amount: ``int``
+    """
+    return "\n".join(" " * amount + line for line in value.split("\n"))
+
+
+@register.filter
 def interval_string(value, reference=None):
     """Returns a string representing the interval between two points in time.
 

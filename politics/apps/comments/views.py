@@ -1,11 +1,14 @@
 # coding=utf-8
+from django.db import transaction
 from django.http import HttpResponse
 import json
 from politics.apps.comments.models import Comment
 from politics.apps.comments.forms import CommentForm
+from politics.apps.comments.tasks import send_reply_notification_emails
 from politics.utils.decorators import render_json
 
 
+@transaction.commit_on_success
 def comments(request, instance):
     """A generic, RESTful view for creating/reading comments on an object.
 
@@ -33,6 +36,7 @@ def comments(request, instance):
 
         if form.is_valid():
             comment = form.save()
+            send_reply_notification_emails.delay(comment.pk)
             return HttpResponse(json.dumps(comment.to_json()), status=201)
         else:
             return HttpResponse(status=400)

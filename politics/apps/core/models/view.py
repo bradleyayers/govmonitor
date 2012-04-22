@@ -1,5 +1,6 @@
 # coding=utf-8
 from autoslug.fields import AutoSlugField
+from django.core.urlresolvers import reverse
 from django.db import models
 from itertools import groupby
 import reversion
@@ -78,6 +79,10 @@ class View(models.Model):
 
     def __unicode__(self):
         return "%s, %s" % (self.party.name, self.issue.name)
+
+    def get_absolute_url(self):
+        """Returns the view's absolute URL."""
+        return reverse("core:views:show", args=(self.pk, self.slug))
 
     def get_vote_for_user(self, user):
         """Retrieve a user's vote within the view.

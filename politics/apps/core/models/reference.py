@@ -88,6 +88,15 @@ class Reference(models.Model):
         if created and not raw:
             instance.view.cast_vote(instance, instance.author)
 
+    def get_comments_url(self):
+        """Returns the absolute URL to the reference's comment thread.
+
+        .. note::
+
+            This is the user-facing comments URL, not the internal API.
+        """
+        return self.view.get_absolute_url()
+
     @staticmethod
     def update_view(instance, **kwargs):
         """Update the :class:`View`'s stance.

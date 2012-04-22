@@ -41,13 +41,17 @@ div.comment-thread {
     }
   }
 
-  ol.comments > li {
+  ol > li {
     border-bottom: @border;
     line-height: 140%;
     padding: @vertical-spacing 0 @vertical-spacing @indent;
 
     &:first-child {
       border-top: @border;
+    }
+
+    &.highlighted {
+      background-color: #FFF5CC;
     }
   }
 }

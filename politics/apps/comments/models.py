@@ -31,6 +31,15 @@ class Comment(models.Model):
     # Override the default manager.
     objects = GenericManager()
 
+    def get_absolute_url(self):
+        """Returns the comment's absolute URL.
+
+        This is based on the value returned from the content object's
+        ``get_comments_url`` (a hash is appended to identify the comment).
+        """
+        comments_url = self.content_object.get_comments_url()
+        return "%s#comment-%d" % (comments_url, self.pk)
+
     def to_json(self):
         """Returns the comment as a dictionary, suitable to be encoded to JSON.
 

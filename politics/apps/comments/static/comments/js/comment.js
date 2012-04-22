@@ -17,7 +17,7 @@ AP.Comments.Comment = function(element) {
  */
 AP.Comments.Comment.fromData = function(data, thread) {
     var template = _.template([
-      "<li>",
+      "<li id='comment-<%- id %>'>",
         "<%- body %> — ",
         "<a href='/users/<%- author.id %>/'>",
             "<%- author.first_name %> <%- author.last_name %>",
@@ -25,7 +25,6 @@ AP.Comments.Comment.fromData = function(data, thread) {
       "</li>"
     ].join(""));
 
-    var $element = $(template(data));
-    var $comments = $("ol.comments", thread);
-    return new AP.Comments.Comment($element.appendTo($comments));
+    var $element = $(template(data)).appendTo($("ol", thread));
+    return new AP.Comments.Comment($element);
 };
