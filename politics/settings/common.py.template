@@ -17,17 +17,13 @@ AUTH_PROFILE_MODULE = "core.UserProfile"
 
 AUTHENTICATION_BACKENDS = (
     "social_auth.backends.facebook.FacebookBackend",
-    "social_auth.backends.twitter.TwitterBackend",
     "django.contrib.auth.backends.ModelBackend",
 )
 
 # Required for Facebook authentication.
 FACEBOOK_APP_ID = "FACEBOOK_APP_ID"
 FACEBOOK_API_SECRET = "FACEBOOK_API_SECRET"
-
-# If you don't request the offline_access permission, access tokens expire
-# after a relatively short period of time; logging in frequently is annoying.
-FACEBOOK_EXTENDED_PERMISSIONS = ("offline_access",)
+FACEBOOK_EXTENDED_PERMISSIONS = ("email",)
 
 # The absolute path to the page that users are shown when login fails.
 LOGIN_ERROR_URL = "/login/?error=1"
@@ -39,12 +35,8 @@ LOGIN_REDIRECT_URL = "/"
 # links to the Facebook authentication procedure, etc.).
 LOGIN_URL = "/login/"
 
-SOCIAL_AUTH_ENABLED_BACKENDS = ("facebook", "twitter")
+SOCIAL_AUTH_ENABLED_BACKENDS = ("facebook",)
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/"
-
-# Required for Twitter authentication.
-TWITTER_CONSUMER_KEY = "TWITTER_CONSUMER_KEY"
-TWITTER_CONSUMER_SECRET = "TWITTER_CONSUMER_SECRET"
 
 # -----------------------------------------------------------------------------
 # Celery

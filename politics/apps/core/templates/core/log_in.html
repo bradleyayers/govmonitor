@@ -18,11 +18,6 @@
                 <img alt="Facebook" src="{{ STATIC_URL }}core/img/facebook.png"/>
             </a>
         </p>
-        <p>
-            <a href="{% url socialauth_begin "twitter" %}{{ next }}">
-                <img alt="Twitter" src="{{ STATIC_URL }}core/img/twitter.png"/>
-            </a>
-        </p>
         <form method="post">
             {% csrf_token %}
             <p><input name="email" placeholder="Email" type="text"/></p>
