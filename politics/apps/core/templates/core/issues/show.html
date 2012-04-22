@@ -3,6 +3,11 @@
 {% load core %}
 {% load view_counts %}
 
+{% block html-class %}
+    {{ block.super }}
+    issue
+{% endblock %}
+
 {% block title %}{{ issue.name }}{% endblock %}
 
 {% block javascript %}
