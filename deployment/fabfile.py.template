@@ -153,6 +153,17 @@ def deploy():
             run("git fetch && git reset --hard origin/`%s`"
                 % "git branch | grep '^\*' | cut -c 3-")
 
+            with settings(warn_only=True):
+                # Copy preserved files from the backup.
+                print "> Copying preserved files."
+                for path in env.preserved_files:
+                    # Recursive so directories are copied.
+                    command = "cp -R '../repository_old/{0}' './{0}'"
+                    result = run(command.format(path))
+
+                    if result.failed:
+                        print yellow("Couldn't preserve the file '%s'." % path)
+
             with prefix("source environment/bin/activate"):
                 # Install requirements. We're working in the original
                 # repository so we've got the requirements cache!
@@ -169,18 +180,6 @@ def deploy():
                 print "> Compressing static files."
                 run("\"%s/manage.py\" compress" % env.root_module_name)
 
-        with cd(env.root_path):
-            with settings(warn_only=True):
-                # Copy preserved files from the backup.
-                print "> Copying preserved files."
-                for path in env.preserved_files:
-                    # Recursive so directories are copied.
-                    result = run("cp -R \"{0}/{2}\" \"{1}/{2}\"".format(
-                            "repository_old", "repository", path))
-
-                    if result.failed:
-                        print yellow("Couldn't preserve the file \"%s\"." % path)
-
         # Refresh the Solr core.
         if env.solr_core_name:
             print "> Refreshing Solr core."
@@ -196,7 +195,7 @@ def deploy():
         # Something failed; restore the backup. Catching any old exception
         # isn't good practice, but we really don't want the site to go down.
         with cd(env.root_path):
-            if exists("old_repository"):
+            if exists("repository_old"):
                 run("rm -fr repository && mv repository_old repository")
 
     # Turn Celery back on.
