@@ -35,19 +35,10 @@ class CommentsViewTestCase(TestCase):
         self.assertEqual(self.user, comment.author)
         self.assertEqual("A comment!", comment.body)
         self.assertEqual(self.user, comment.content_object)
+        self.assertFalse(comment.is_deleted)
 
         # Was the response the comment as JSON?
-        self.assertEqual(json.loads(response.content), {
-            "author": {
-                "first_name": self.user.first_name,
-                "id": self.user.pk,
-                "last_name": self.user.last_name,
-            },
-            "body": comment.body,
-            "created_at": str(comment.created_at),
-            "id": comment.pk,
-            "object_id": self.user.pk,
-        })
+        self.assertEqual(json.loads(response.content), comment.to_json())
 
     def test_create_invalid(self):
         """Attempting to create a comment with invalid data should fail,

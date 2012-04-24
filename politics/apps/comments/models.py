@@ -17,6 +17,8 @@ class Comment(models.Model):
     :type content_object: ``django.db.models.Model``
     :ivar   content_type: The type of the object that was viewed.
     :type   content_type: ``django.contrib.contenttypes.models.ContentType``
+    :ivar     is_deleted: Whether the comment has been deleted.
+    :type     is_deleted: ``bool``
     :ivar      object_id: The ID of the object that was viewed.
     :type      object_id: ``int``
     """
@@ -26,6 +28,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     content_object = generic.GenericForeignKey("content_type", "object_id")
     content_type = models.ForeignKey("contenttypes.ContentType")
+    is_deleted = models.BooleanField(default=False)
     object_id = models.PositiveIntegerField()
 
     # Override the default manager.
@@ -55,5 +58,6 @@ class Comment(models.Model):
             "body": self.body,
             "created_at": str(self.created_at),
             "id": self.pk,
+            "is_deleted": self.is_deleted,
             "object_id": self.object_id,
         }
