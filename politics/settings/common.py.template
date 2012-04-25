@@ -141,6 +141,7 @@ MANAGERS = ADMINS
 ROOT_URLCONF = "politics.urls"
 SECRET_KEY = "SECRET_KEY"
 SITE_ID = 1
+TEST_RUNNER = "djcelery.contrib.test_runner.CeleryTestSuiteRunner"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_L10N = True

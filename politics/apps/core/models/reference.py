@@ -88,14 +88,39 @@ class Reference(models.Model):
         if created and not raw:
             instance.view.cast_vote(instance, instance.author)
 
-    def get_comments_url(self):
-        """Returns the absolute URL to the reference's comment thread.
+    def get_comment_thread_url(self):
+        """Returns the absolute path to the reference's comment thread.
 
         .. note::
 
-            This is the user-facing comments URL, not the internal API.
+            This is the user-facing view's path, not the internal API.
+
+        :returns: The absolute path to the reference's comment thread.
+        :rtype: ``str``
         """
         return self.view.get_absolute_url()
+
+    def handle_comment_created(self, comment):
+        """Send comment notification emails as necessary.
+
+        Called when a new comment is made on the reference.
+
+        :param comment: The comment that was posted.
+        :type  comment: ``politics.apps.comments.models.Comment``
+        """
+        from politics.apps.comments.tasks import send_comment_notification_emails
+
+        # Email the author of the reference.
+        if self.author != comment.author:
+            subject = "{author_name} commented on your reference on AusPolitics!"
+            send_comment_notification_emails.delay(comment.pk, subject,
+                    "core/references/mail/comment.txt", (self.author,))
+
+        # Email participants in the comment thread.
+        authors = comment.get_earlier_authors() - {comment.author, self.author}
+        subject = "{author_name} replied to your comment on AusPolitics!"
+        send_comment_notification_emails.delay(comment.pk, subject,
+                "core/references/mail/reply.txt", authors)
 
     @staticmethod
     def update_view(instance, **kwargs):

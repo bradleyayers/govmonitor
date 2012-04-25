@@ -4,7 +4,6 @@ from django.http import HttpResponse, HttpResponseBadRequest
 import json
 from politics.apps.comments.models import Comment
 from politics.apps.comments.forms import CommentForm
-from politics.apps.comments.tasks import send_reply_notification_emails
 from politics.utils.decorators import pk_url, render_json, require_authenticated
 import reversion
 
@@ -20,7 +19,7 @@ def comment(request, instance):
     :param instance: The comment that is to be operated on.
     :type  instance: ``politics.apps.comments.models.Comment``
     """
-    # They must be the author of the comment.
+    # The client must be the author of the comment.
     if request.user != instance.author:
         return HttpResponse(status=403)
 
@@ -77,7 +76,6 @@ def comments(request, instance):
 
         if form.is_valid():
             comment = form.save()
-            send_reply_notification_emails.delay(comment.pk)
             return HttpResponse(json.dumps(comment.to_json()), status=201)
         else:
             return HttpResponseBadRequest()

@@ -1,32 +1,37 @@
 # coding=utf-8
 from django.conf import settings
 from django.core.mail import send_mail
-from django.template import Context, Template
+from django.template import Context
 from django.template.loader import get_template
 from djcelery_transactions import task
 from politics.apps.comments.models import Comment
 
 
 @task(ignore_result=True)
-def send_reply_notification_emails(reply_pk):
-    """Emails participants in a comment thread, notifying them of a new reply.
+def send_comment_notification_emails(comment_pk, subject, template, users):
+    """Sends comment notification emails to a set of users using a template.
 
-    :param reply_pk: The ID of the comment that was posted.
-    :type  reply_pk: ``int``
+    ``subject`` may contain a number of format specifiers into which variables
+    will be substituted. The following list details those that are available:
+
+    * ``author_name``: The full name of the comment's author.
+
+    Similarly, several context variables are available within the template:
+
+    * ``comment``: The comment that was posted—the subject of the email.
+
+    :param comment_pk: The ID of the comment that was posted.
+    :type  comment_pk: ``int``
+    :param    subject: The subject template to use for the emails.
+    :type     subject: ``str``
+    :param   template: The message template to use for the emails.
+    :type    template: ``str``
+    :param      users: The users who are to be emailed.
+    :type       users: *iterable*
     """
-    reply = Comment.objects.get(pk=reply_pk)
+    comment = Comment.objects.get(pk=comment_pk)
+    message = get_template(template).render(Context({"comment": comment}))
+    subject = subject.format(author_name=comment.author.get_full_name())
 
-    # Fetch the users who participated in the thread before the reply; we only
-    # want to email these users to avoid the race condition with newer comments.
-    earlier_comments = Comment.objects.get_for_instance(reply.content_object)
-    earlier_comments = earlier_comments.exclude(pk__gte=reply.pk)
-    earlier_authors = {c.author for c in earlier_comments} - {reply.author}
-
-    # Render the email template.
-    context = Context({"reply": reply})
-    message = get_template("comments/mail/reply.txt").render(context)
-    subject = "{0} replied to your comment on AusPolitics!".format(
-            reply.author.get_full_name())
-
-    for author in earlier_authors:
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [author.email])
+    for user in users:
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, (user.email,))

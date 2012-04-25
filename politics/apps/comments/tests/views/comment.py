@@ -71,10 +71,10 @@ class CommentViewTestCase(TestCase):
     def test_edit_deleted(self):
         """Attempting to edit a deleted comment should fail, resulting in a 400
             Bad Request response."""
-        old_comment = Comment.objects.get(pk=3)
-        response = self.client.put("/comments/3/", {"body": "New body!"})
+        old_comment = Comment.objects.get(pk=4)
+        response = self.client.put("/comments/4/", {"body": "New body!"})
 
-        comment = Comment.objects.get(pk=3)
+        comment = Comment.objects.get(pk=4)
         self.assertEqual(400, response.status_code)
         self.assertEqual(old_comment.body, comment.body)
         self.assertEqual(0, len(reversion.get_for_object(comment)))

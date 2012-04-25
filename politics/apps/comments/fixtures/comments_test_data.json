@@ -25,6 +25,17 @@
         "model": "comments.Comment",
         "pk": 3,
         "fields": {
+            "author": 3,
+            "body": "Yet another comment.",
+            "content_type": ["auth", "user"],
+            "is_deleted": false,
+            "object_id": 1
+        }
+    },
+    {
+        "model": "comments.Comment",
+        "pk": 4,
+        "fields": {
             "author": 1,
             "body": "A deleted comment.",
             "content_type": ["auth", "user"],

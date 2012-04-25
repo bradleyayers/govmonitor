@@ -3,9 +3,12 @@
         "model": "auth.User",
         "pk": 1,
         "fields": {
+            "email": "chris@example.com",
+            "first_name": "Chris",
             "is_active": true,
             "is_staff": true,
             "is_superuser": true,
+            "last_name": "Doble",
             "password": "sha1$1e281$ddea3418bd7ef660a827d197de332a80acef47cd",
             "username": "chris"
         }
@@ -14,11 +17,28 @@
         "model": "auth.User",
         "pk": 2,
         "fields": {
+            "email": "brad@example.com",
+            "first_name": "Brad",
             "is_active": true,
             "is_staff": true,
             "is_superuser": true,
+            "last_name": "Ayers",
             "password": "sha1$1e281$ddea3418bd7ef660a827d197de332a80acef47cd",
             "username": "brad"
+        }
+    },
+    {
+        "model": "auth.User",
+        "pk": 3,
+        "fields": {
+            "email": "fred@example.com",
+            "first_name": "Frederick",
+            "is_active": true,
+            "is_staff": true,
+            "is_superuser": true,
+            "last_name": "Fredalburger",
+            "password": "sha1$1e281$ddea3418bd7ef660a827d197de332a80acef47cd",
+            "username": "fred"
         }
     },
     {
@@ -107,6 +127,28 @@
             "is_archived": true,
             "object_id": 1,
             "author": 1
+        }
+    },
+    {
+        "model": "comments.Comment",
+        "pk": null,
+        "fields": {
+            "author": 2,
+            "body": "A comment!",
+            "content_type": ["core", "reference"],
+            "is_deleted": false,
+            "object_id": 2
+        }
+    },
+    {
+        "model": "comments.Comment",
+        "pk": null,
+        "fields": {
+            "author": 3,
+            "body": "Another comment!",
+            "content_type": ["core", "reference"],
+            "is_deleted": false,
+            "object_id": 2
         }
     }
 ]
