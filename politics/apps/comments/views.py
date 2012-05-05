@@ -28,7 +28,7 @@ def comment(request, instance):
             instance.is_deleted = True
             instance.save()
 
-        return HttpResponse(status=200)
+        return HttpResponse(json.dumps(instance.to_json()))
     elif request.method == "PUT":
         # Deleted comments can't be edited.
         if instance.is_deleted:
@@ -75,7 +75,9 @@ def comments(request, instance):
         form = CommentForm(request.POST, instance=comment)
 
         if form.is_valid():
-            comment = form.save()
+            with reversion.create_revision():
+                comment = form.save()
+
             return HttpResponse(json.dumps(comment.to_json()), status=201)
         else:
             return HttpResponseBadRequest()

@@ -1,15 +1,73 @@
-div.comment-thread {
+.comment-thread {
   @border: 1px dotted #AAA;
   @indent: 15px;
   @vertical-spacing: 10px;
 
-  a.add-comment {
+  .add-comment {
     display: block;
-    margin: @vertical-spacing 0 0 0;
+    margin-top: @vertical-spacing;
   }
 
-  form {
-    margin: @vertical-spacing 0 0 @indent;
+  .comment {
+    border-bottom: @border;
+    line-height: 140%;
+    padding: @vertical-spacing 0 @vertical-spacing @indent;
+
+    &:first-child {
+      border-top: @border;
+    }
+
+    &:last-child {
+      margin-bottom: @vertical-spacing;
+    }
+
+    &:hover .delete {
+      display: inline-block;
+    }
+
+    &.deleted .body {
+      background-image: url("/static/comments/img/sprites.png");
+      display: inline-block;
+      height: 12px;
+      position: relative;
+      top: 2px;
+      width: 12px;
+    }
+
+    &.highlighted {
+      background-color: #FFF5CC;
+    }
+
+    &.own {
+      border-left: 3px solid #AAA;
+      padding-left: @indent - 3;
+    }
+
+    .body {
+      display: inline;
+    }
+
+    .delete {
+      background-image: url("/static/comments/img/sprites.png");
+      display: none;
+      height: 12px;
+      margin-left: 1px;
+      position: relative;
+      top: 2px;
+      width: 12px;
+
+      &:hover {
+          background-position: -12px 0;
+      }
+    }
+
+    .edit {
+      display: inline-block;
+      margin-left: 2px;
+    }
+  }
+
+  .comment-form {
     overflow: auto;
 
     div {
@@ -38,20 +96,6 @@ div.comment-thread {
     &.disabled > div > a:hover {
       cursor: default;
       text-decoration: none;
-    }
-  }
-
-  ol > li {
-    border-bottom: @border;
-    line-height: 140%;
-    padding: @vertical-spacing 0 @vertical-spacing @indent;
-
-    &:first-child {
-      border-top: @border;
-    }
-
-    &.highlighted {
-      background-color: #FFF5CC;
     }
   }
 }

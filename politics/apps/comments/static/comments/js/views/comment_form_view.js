@@ -4,6 +4,8 @@ AP.namespace("AP.Comments");
  * A comment creation/editing form.
  */
 AP.Comments.FormView = Backbone.View.extend({
+    model: AP.Comments.Comment,
+
     tagName: "form",
     className: "comment-form",
     attributes: {
@@ -17,11 +19,20 @@ AP.Comments.FormView = Backbone.View.extend({
         "submit": "_formSubmitted"
     },
 
-    model: AP.Comments.Comment,
-
     initialize: function() {
         _.bindAll(this);
         this.render();
+    },
+
+    /**
+     * Builds and returns a comment from the form's state.
+     *
+     * @returns {AP.Comments.Comment} A comment built from the form's state.
+     */
+    buildModel: function() {
+        return this.model.clone().set({
+            body: this._getBody()
+        });
     },
 
     /**
@@ -32,12 +43,13 @@ AP.Comments.FormView = Backbone.View.extend({
      * @private
      */
     _cancelClicked: function(e) {
+        // Because this is called from _keyPressed.
         if (e) {
             e.preventDefault();
         }
 
         if (!this.$el.hasClass("loading")) {
-            var message = "You will lose your comment if you continue.";
+            var message = "You will lose your changes if you continue.";
             if (!this._isDirty() || confirm(message)) {
                 this.trigger("cancel");
             } else {
@@ -47,7 +59,7 @@ AP.Comments.FormView = Backbone.View.extend({
     },
 
     /**
-     * Triggers the submit event if the comment model is valid.
+     * Triggers the submit event if the form's content is valid.
      *
      * Called when the form is submitted.
      *
@@ -56,12 +68,25 @@ AP.Comments.FormView = Backbone.View.extend({
     _formSubmitted: function(e) {
         e.preventDefault();
 
-        this._updateModel();
-        if (this._validate()) {
-            this.trigger("submit");
-        } else {
+        var attributes = {body: this._getBody()};
+        var errorMessage = this.model.validate(attributes);
+
+        if (errorMessage) {
+            this.showErrorMessage(errorMessage);
             this.$("textarea").focus();
+        } else {
+            this.trigger("submit");
         }
+    },
+
+    /**
+     * Returns the form's body value.
+     *
+     * @private
+     * @returns {string} The form's body value.
+     */
+    _getBody: function() {
+        return this.$("textarea").val();
     },
 
     /**
@@ -71,8 +96,7 @@ AP.Comments.FormView = Backbone.View.extend({
      * @returns {boolean} true iff the form has unsaved changes.
      */
     _isDirty: function() {
-        this._updateModel();
-        return this.model.get("body").length > 0;
+        return this._getBody() !== this.model.get("body");
     },
 
     /**
@@ -89,7 +113,7 @@ AP.Comments.FormView = Backbone.View.extend({
     },
 
     /**
-     * Remove the form.
+     * Remove the form and unbind all event handlers.
      */
     remove: function() {
         this.$el.remove();
@@ -101,14 +125,18 @@ AP.Comments.FormView = Backbone.View.extend({
      */
     render: function() {
         var template = _.template([
-          "<textarea name='body'></textarea>",
+          "<textarea name='body'><%- body %></textarea>",
           "<div>",
-            "<input type='submit' value='Add'/>",
+            "<input type='submit' value='<%- submitLabel %>'/>",
             "<a class='cancel' href='#'>Cancel</a>",
           "</div>",
         ].join(""));
 
-        this.$el.html(template());
+        var data = _.extend(this.model.toJSON(), {
+            submitLabel: this.model.id ? "Save" : "Add"
+        });
+
+        this.$el.html(template(data));
         return this;
     },
 
@@ -135,37 +163,10 @@ AP.Comments.FormView = Backbone.View.extend({
     /**
      * Show an error message in the form.
      *
-     * @private
      * @param {string} message The error message to show.
      */
     showErrorMessage: function(message) {
         this.$(".error").remove();
         this.$("textarea").after($("<p class='error'/>").text(message));
-    },
-
-    /**
-     * Update the comment model to reflect the current state of the form.
-     *
-     * @private
-     */
-    _updateModel: function() {
-        this.model.set({
-            body: this.$("textarea").val()
-        });
-    },
-
-    /**
-     * Validates the comment model, showing error messages as needed.
-     *
-     * @private
-     * @returns {boolean} true iff the comment model is in a valid state.
-     */
-    _validate: function() {
-        if (!this.model.get("body").length) {
-            this.showErrorMessage("Your comment can't be empty!");
-            return false;
-        }
-
-        return true;
     }
 });

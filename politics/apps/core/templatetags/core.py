@@ -232,6 +232,39 @@ def query_string(parser, token):
             raise TemplateSyntaxError("Malformed arguments to %s tag." % name)
 
 
+class SquashSpacesNode(Node):
+    """The node used in the ``squashspaces`` tag."""
+
+    def __init__(self, nodelist):
+        super(SquashSpacesNode, self).__init__()
+        self.nodelist = nodelist
+
+    def render(self, context):
+        import re
+
+        output = self.nodelist.render(context)
+        return re.sub("\s+", " ", output)
+
+
+@register.tag
+def squashspaces(parser, token):
+    """Squashes multiple spaces into a single space.
+
+    .. code-block:: django
+
+        {% squashspaces %}
+            <a>  <b>  Hello    world!  </b>  </a>
+        {% endsquashspaces %}
+
+    .. code-block:: django
+
+        <a> </b> Hello world! </b> </a>
+    """
+    nodelist = parser.parse(("endsquashspaces",))
+    parser.delete_first_token()
+    return SquashSpacesNode(nodelist)
+
+
 @register.simple_tag
 def tag_link(tag):
     """Renders a link to a tag.

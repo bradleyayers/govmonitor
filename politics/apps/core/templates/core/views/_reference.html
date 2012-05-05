@@ -1,6 +1,6 @@
 {% load comments core %}
 
-<div class="reference" data-comment-path="{% url core:references:comments reference.pk %}">
+<div class="reference" data-comment-url="{% url core:references:comments reference.pk %}">
     <div class="vote-widget">
         <input type="hidden" value="{{ reference.pk }}"/>
         {% if reference == selected_reference %}

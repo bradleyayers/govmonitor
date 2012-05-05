@@ -26,7 +26,10 @@ class CommentViewTestCase(TestCase):
 
         comment = Comment.objects.get(pk=1)
         self.assertEqual(200, response.status_code)
+        self.assertEqual(json.loads(response.content), comment.to_json())
         self.assertTrue(comment.is_deleted)
+
+        # 1 because the fixture doesn't include versions.
         self.assertEqual(1, len(reversion.get_for_object(comment)))
 
     def test_delete_nonexistent(self):
@@ -45,6 +48,8 @@ class CommentViewTestCase(TestCase):
         comment = Comment.objects.get(pk=1)
         self.assertEqual(401, response.status_code)
         self.assertFalse(comment.is_deleted)
+
+        # 0 because the fixture doesn't include versions.
         self.assertEqual(0, len(reversion.get_for_object(comment)))
 
     def test_delete_not_author(self):
@@ -55,6 +60,8 @@ class CommentViewTestCase(TestCase):
         comment = Comment.objects.get(pk=2)
         self.assertEqual(403, response.status_code)
         self.assertFalse(comment.is_deleted)
+
+        # 0 because the fixture doesn't include versions.
         self.assertEqual(0, len(reversion.get_for_object(comment)))
 
     def test_edit(self):
@@ -66,6 +73,8 @@ class CommentViewTestCase(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual(json.loads(response.content), comment.to_json())
         self.assertEqual("New body!", comment.body)
+
+        # 1 because the fixture doesn't include versions.
         self.assertEqual(1, len(reversion.get_for_object(comment)))
 
     def test_edit_deleted(self):
@@ -77,6 +86,8 @@ class CommentViewTestCase(TestCase):
         comment = Comment.objects.get(pk=4)
         self.assertEqual(400, response.status_code)
         self.assertEqual(old_comment.body, comment.body)
+
+        # 0 because the fixture doesn't include versions.
         self.assertEqual(0, len(reversion.get_for_object(comment)))
 
     def test_edit_invalid_fields(self):
@@ -100,6 +111,8 @@ class CommentViewTestCase(TestCase):
         self.assertEqual(old_comment.content_type, comment.content_type)
         self.assertEqual(old_comment.is_deleted, comment.is_deleted)
         self.assertEqual(old_comment.object_id, comment.object_id)
+
+        # 1 because the fixture doesn't include versions.
         self.assertEqual(1, len(reversion.get_for_object(comment)))
 
     def test_edit_invalid_values(self):
@@ -111,6 +124,8 @@ class CommentViewTestCase(TestCase):
         comment = Comment.objects.get(pk=1)
         self.assertEqual(400, response.status_code)
         self.assertEqual(old_comment.body, comment.body)
+
+        # 0 because the fixture doesn't include versions.
         self.assertEqual(0, len(reversion.get_for_object(comment)))
 
     def test_edit_nonexistent(self):
@@ -129,6 +144,8 @@ class CommentViewTestCase(TestCase):
         comment = Comment.objects.get(pk=2)
         self.assertEqual(403, response.status_code)
         self.assertEqual(old_comment.body, comment.body)
+
+        # 0 because the fixture doesn't include versions.
         self.assertEqual(0, len(reversion.get_for_object(comment)))
 
     def test_get(self):

@@ -6,6 +6,7 @@ import fudge
 import json
 from politics.apps.comments.models import Comment
 from politics.apps.comments.views import comments
+import reversion
 
 
 class CommentsViewTestCase(TestCase):
@@ -36,6 +37,9 @@ class CommentsViewTestCase(TestCase):
         self.assertEqual("A comment!", comment.body)
         self.assertEqual(self.user, comment.content_object)
         self.assertFalse(comment.is_deleted)
+
+        # Was an initial version of the comment created?
+        self.assertEqual(1, len(reversion.get_for_object(comment)))
 
         # Was the response the comment as JSON?
         self.assertEqual(json.loads(response.content), comment.to_json())

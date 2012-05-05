@@ -13,6 +13,8 @@ class View(models.Model):
     :type content_object: ``django.db.models.Model``
     :ivar   content_type: The type of the object that was viewed.
     :type   content_type: ``django.contrib.contenttypes.models.ContentType``
+    :ivar     ip_address: The IP address of the user doing the viewing.
+    :type     ip_address: ``str``
     :ivar      object_id: The ID of the object that was viewed.
     :type      object_id: ``int``
     """

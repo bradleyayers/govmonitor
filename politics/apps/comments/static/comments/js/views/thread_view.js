@@ -5,7 +5,7 @@ AP.namespace("AP.Comments");
  */
 AP.Comments.ThreadView = Backbone.View.extend({
     events: {
-        "click .add-comment": "addCommentClicked"
+        "click .add-comment": "_addCommentClicked"
     },
 
     initialize: function() {
@@ -15,11 +15,12 @@ AP.Comments.ThreadView = Backbone.View.extend({
 
     /**
      * Hides the add comment link and shows a "new comment" form.
+     *
+     * @private
      */
-    addCommentClicked: function(e) {
+    _addCommentClicked: function(e) {
         e.preventDefault();
 
-        var instance = this;
         var addComment = this.$(".add-comment");
         var form = new AP.Comments.FormView({
             model: new AP.Comments.Comment()
@@ -30,20 +31,24 @@ AP.Comments.ThreadView = Backbone.View.extend({
             form.remove();
         });
 
+        var instance = this;
         form.on("submit", function() {
+            var error = function() {
+                form.setLoading(false);
+                form.showErrorMessage("Something broke and your comment couldn't be added.");
+            };
+
             var success = function(comment) {
                 instance.collection.add(comment);
                 addComment.show();
                 form.remove();
             };
 
-            var error = function() {
-                form.setLoading(false);
-                form.showErrorMessage("Something broke and your comment couldn't be added.");
-            };
-
             form.setLoading(true);
-            instance.collection.createComment(form.model, success, error);
+            instance.collection.createComment(form.buildModel(), {
+                error: error,
+                success: success
+            });
         });
 
         addComment.hide();
@@ -72,14 +77,13 @@ AP.Comments.ThreadView = Backbone.View.extend({
      * @returns {AP.Comments.ThreadView} The resulting view.
      */
     fromElement: function(el) {
-        var path = $(el).closest("[data-comment-path]").data("comment-path");
-        var comments = $(".comment", el).map(function(commentEl) {
-            var commentView = AP.Comments.CommentView.fromElement(commentEl);
-            return commentView.model;
+        var url = $(el).closest("[data-comment-url]").data("comment-url");
+        var comments = $(".comment", el).map(function() {
+            return AP.Comments.CommentView.fromElement(this).model;
         });
 
         return new AP.Comments.ThreadView({
-            collection: new AP.Comments.Thread(comments, {path: path}),
+            collection: new AP.Comments.Thread(comments, {url: url}),
             el: el
         });
     }
