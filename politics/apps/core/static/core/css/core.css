@@ -149,15 +149,6 @@ html.issues.popular #header-issues-popular {
     width: 720px;
 }
 
-#content-secondary {
-    float: right;
-    width: 220px;
-}
-
-#content-secondary p {
-    line-height: 16px;
-}
-
 #footer {
     width: 100%;
 }

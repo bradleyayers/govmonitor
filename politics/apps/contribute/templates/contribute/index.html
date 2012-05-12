@@ -22,15 +22,12 @@
         {% if task %}
             {% with issue=task.view.issue party=task.view.party %}
                 <div class="information">
-                    <p>
-                        Try to find a reference that details the view of
-                        <strong><a href="{% url core:parties:show slug=party.slug pk=party.pk %}">{{ party.name }}</a></strong>
-                        on <strong><a href="{% url core:issues:show slug=issue.slug pk=issue.pk %}">{{ issue.name }}</a></strong>.
-                    </p>
-                    <ul>
-                        <li><a href="{% url core:about %}#question-reference">What's a reference?</a></li>
-                        <li><a href="{% url core:about %}#question-good-reference">What makes a good reference?</a></li>
-                    </ul>
+                    <p><strong>
+                        Find a reference that details the view of
+                        <em><a href="{% url core:parties:show slug=party.slug pk=party.pk %}">{{ party.name }}</a></em>
+                        on <em><a href="{% url core:issues:show slug=issue.slug pk=issue.pk %}">{{ issue.name }}</a></em>.
+                    </strong></p>
+                    <p>Can't find one? Click the "skip" button.</p>
                 </div>
             {% endwith %}
             <form action="" class="reference" method="POST">
@@ -46,9 +43,22 @@
         {% endif %}
     </div>
     <div id="content-secondary">
-        <h2 class="section">Help</h2>
+        <h2 class="section">What's a reference?</h2>
         <p>
-            Can't find a reference? Click "skip."
+            A reference is a source of information about a party's stance on an
+            issue; it could be a policy document, a news article, a video of a
+            speech, etc.
         </p>
+        <a class="more" href="{% url core:about %}#question-reference">more →</a>
+
+        <h2 class="section">What makes a good reference?</h2>
+        <p>The best references are those that:</p>
+        <ul>
+            <li>come from reliable sources,</li>
+            <li>were published fairly recently,</li>
+            <li>detail the whole party's stance, and</li>
+            <li>are clear and unambiguous.</li>
+        </ul>
+        <a class="more" href="{% url core:about %}#question-good-reference">more →</a>
     </div>
 {% endblock %}
