@@ -4,5 +4,5 @@ from politics.apps.comments.views import *
 
 
 urlpatterns = patterns("",
-    url("(?P<pk>\d+)/$", comment, name="comment"),
+    url("^(?P<pk>\d+)/$", comment, name="comment"),
 )

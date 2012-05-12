@@ -1,0 +1,54 @@
+{% extends "core/base.html" %}
+
+{% block html-class %}
+    {{ block.super }}
+    contribute
+{% endblock %}
+
+{% block title %}Contribute{% endblock %}
+
+{% block content %}
+    <div id="content-primary">
+        <h1><strong>Contribute</strong></h1>
+        {% if completed_task %}
+            {% with view=completed_task.view %}
+                <div class="success">
+                    Your reference was created and can be viewed
+                    <a href="{% url core:views:show slug=view.slug pk=view.pk %}">here</a>.
+                    Thanks for contributing!
+                </div>
+            {% endwith %}
+        {% endif %}
+        {% if task %}
+            {% with issue=task.view.issue party=task.view.party %}
+                <div class="information">
+                    <p>
+                        Try to find a reference that details the view of
+                        <strong><a href="{% url core:parties:show slug=party.slug pk=party.pk %}">{{ party.name }}</a></strong>
+                        on <strong><a href="{% url core:issues:show slug=issue.slug pk=issue.pk %}">{{ issue.name }}</a></strong>.
+                    </p>
+                    <ul>
+                        <li><a href="{% url core:about %}#question-reference">What's a reference?</a></li>
+                        <li><a href="{% url core:about %}#question-good-reference">What makes a good reference?</a></li>
+                    </ul>
+                </div>
+            {% endwith %}
+            <form action="" class="reference" method="POST">
+                {% include "core/references/_form.html" %}
+                <input type="submit" value="Save"/>
+            </form>
+            <form action="{% url contribute:skip %}" class="skip" method="POST">
+                {% csrf_token %}
+                <input type="submit" value="Skip"/>
+            </form>
+        {% else %}
+            <em>We don't have any tasks to give you; you'll have to find some other way to contribute.</em>
+        {% endif %}
+    </div>
+    <div id="content-secondary">
+        <h2 class="section">Help</h2>
+        <p>
+            Can't find a reference? Click "skip."
+        </p>
+    </div>
+{% endblock %}

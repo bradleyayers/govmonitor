@@ -74,6 +74,15 @@
         }
     },
     {
+        "model": "core.View",
+        "pk": 2,
+        "fields": {
+            "issue": 1,
+            "party": 2,
+            "stance": "unknown"
+        }
+    },
+    {
         "model": "core.Reference",
         "pk": 1,
         "fields": {

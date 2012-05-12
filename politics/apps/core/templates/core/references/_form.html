@@ -1,13 +1,15 @@
 {% csrf_token %}
-<p>
-    <label for="id_stance">Stance</label>
-    {{ form.stance }}
-</p>
-<p>
-    <label for="id_url">URL</label>
-    {{ form.url }}
-</p>
-<p>{{ form.text }}</p>
+<div class="fields">
+    <p>
+        <label for="id_stance">Stance</label>
+        {{ form.stance }}
+    </p>
+    <p>
+        <label for="id_url">URL (Link)</label>
+        {{ form.url }}
+    </p>
+</div>
+{{ form.text }}
 
 {% if form.errors %}
     <div class="errors">

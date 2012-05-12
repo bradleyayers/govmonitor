@@ -139,14 +139,23 @@ class ReferenceForm(forms.ModelForm):
         "DUPLICATE_URL": "This URL has already been submitted."
     }
 
-    # Use a text area for `text` and don't show the empty label in stance.
-    text = forms.CharField(required=False, widget=forms.Textarea)
+    # Don't show the empty label in the stance dropdown.
     stance = forms.ChoiceField(choices=Reference.STANCE_CHOICES,
                                initial=View.SUPPORT)
 
+    # Show placeholder text in the URL field...
+    url = forms.CharField(widget=forms.TextInput(attrs={
+            "placeholder": "http://example.com/"
+    }))
+
+    # ...and in the text field.
+    text = forms.CharField(required=False, widget=forms.Textarea(attrs={
+            "placeholder": "Brief summary of the reference (optional)."
+    }))
+
     class Meta:
         model = Reference
-        exclude = ("author", "is_archived", "view", "score")
+        exclude = ("author", "is_archived", "score", "text_html", "view")
 
     def clean(self):
         """Ensure that ``url`` is unique within the stance."""
