@@ -1,21 +1,33 @@
-#content-secondary {
-  float: right;
-  width: 220px;
-
-  li, p {
-    line-height: 16px;
-  }
-
-  p {
-    margin: 0.75em 0;
-  }
+// Helpers
+.border-radius (@radius) {
+  border-radius: @radius;
+  -moz-border-radius: @radius;
+  -webkit-border-radius: @radius;
 }
 
+.box-shadow (@x, @y, @blur, @colour) {
+  box-shadow: @x @y @blur @colour;
+  -moz-box-shadow: @x @y @blur @colour;
+  -webkit-box-shadow: @x @y @blur @colour;
+}
+
+.box-sizing (@type) {
+  box-sizing: @type;
+  -moz-box-sizing: @type;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+// Dialogs / Panels
 div.information, div.success {
   border: 1px solid #000;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
+  .border-radius(5px);
   padding: 8px;
 
   > :first-child {
@@ -35,4 +47,127 @@ div.information {
 div.success {
   background-color: #EAFFD5;
   border-color: #DAEAC0;
+}
+
+.white-panel {
+  background-color: #FFF;
+  .border-radius(5px);
+  .box-shadow(1px, 1px, 2px, rgba(0, 0, 0, 0.07));
+  overflow: auto;
+  padding: 13px 15px;
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+// General
+#content-secondary {
+  float: right;
+  width: 220px;
+
+  li, p {
+    line-height: 16px;
+  }
+
+  p {
+    margin: 0.75em 0;
+  }
+}
+
+
+// About
+html.about {
+  #content-primary {
+    // A Question
+    ol.questions > li {
+      margin-bottom: 20px;
+      .white-panel;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &.highlighted {
+        background-color: #FFF5CC;
+      }
+
+      h3 {
+        font-size: 19px;
+        font-weight: normal;
+        margin: 12px 0;
+      }
+
+      p, ul {
+        font-size: 12px;
+        line-height: 16px;
+        margin: 0 0 15px 0;
+      }
+
+      ul {
+        margin-left: 18px;
+      }
+    }
+
+    p {
+      font-size: 16px;
+      margin: 20px 0 0 0;
+    }
+  }
+
+  #content-secondary a.person {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 1.5em;
+    overflow: auto;
+
+    img {
+      border-radius: 5px;
+      float: left;
+      margin-right: 10px;
+    }
+
+    span {
+      display: block;
+      font-size: 12px;
+      font-weight: normal;
+    }
+  }
+}
+
+// Log In
+div.log-in {
+  margin: 0 auto;
+  .white-panel;
+  width: 500px;
+
+  .errors {
+    margin-bottom: 2em;
+  }
+
+  .left {
+    .box-sizing(border-box);
+    padding-right: 50px;
+    position: relative;
+    text-align: right;
+    top: 27px;
+    width: 50%;
+  }
+
+  .right {
+    border-left: 1px solid #DDD;
+    .box-sizing(border-box);
+    padding-left: 50px;
+    width: 50%;
+
+    input[type=password], input[type=text] {
+      display: block;
+      margin-bottom: 0.75em;
+    }
+  }
 }

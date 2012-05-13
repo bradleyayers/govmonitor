@@ -140,7 +140,8 @@ html.issues.popular #header-issues-popular {
 }
 
 #content-primary > :first-child,
-#content-secondary > :first-child {
+#content-secondary > :first-child,
+#content-content > div.full > :first-child {
     margin-top: 0;
 }
 
@@ -177,10 +178,6 @@ html.issues.popular #header-issues-popular {
 #footer-content p {
     line-height: 18px;
     margin: 0;
-}
-
-.right {
-  float: right;
 }
 
 a, a:visited {

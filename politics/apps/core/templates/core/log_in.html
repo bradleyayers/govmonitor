@@ -9,23 +9,26 @@
 
 {% block content %}
     {{ block.super }}
-    <div id="content-primary">
-        {% if request.GET.error %}
-            <p class="error">Uh oh, we couldn't log you in. Give it another go.</p>
-        {% endif %}
-        <p>
-            <a href="{% url socialauth_begin "facebook" %}{{ next }}">
-                <img alt="Facebook" src="{{ STATIC_URL }}core/img/facebook.png"/>
-            </a>
-        </p>
-        <form method="post">
-            {% csrf_token %}
-            <p><input name="email" placeholder="Email" type="text"/></p>
-            <p><input name="password" placeholder="Password" type="password"/></p>
-            <p>
-                <input type="submit" value="Log in"/>
-                <a href="{% url core:register %}">Register</a>
-            </p>
-        </form>
+    <div class="full">
+        <div class="log-in">
+            <h1><strong>Log In</strong></h1>
+            {% if form.errors or request.GET.error %}
+                <div class="errors">Uh oh, we couldn't log you in. Give it another go.</div>
+            {% endif %}
+            <div class="left">
+                <a href="{% url socialauth_begin "facebook" %}{{ next }}">
+                    <img alt="Facebook" src="{{ STATIC_URL }}core/img/facebook.png"/>
+                </a>
+            </div>
+            <div class="right">
+                <form method="post">
+                    {% csrf_token %}
+                    <input name="email" placeholder="Email" type="text"/>
+                    <input name="password" placeholder="Password" type="password"/>
+                    <input type="submit" value="Log in"/>
+                    <a href="{% url core:register %}">Register</a>
+                </form>
+            </div>
+        </div>
     </div>
 {% endblock %}
