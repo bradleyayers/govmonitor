@@ -22,12 +22,18 @@
         {% if task %}
             {% with issue=task.view.issue party=task.view.party %}
                 <div class="information">
-                    <p><strong>
+                    <p class="task">
                         Find a reference that details the view of
                         <em><a href="{% url core:parties:show slug=party.slug pk=party.pk %}">{{ party.name }}</a></em>
                         on <em><a href="{% url core:issues:show slug=issue.slug pk=issue.pk %}">{{ issue.name }}</a></em>.
-                    </strong></p>
-                    <p>Can't find one? Click the "skip" button.</p>
+                    </p>
+                    <p>Getting started:</p>
+                    <ul>
+                        <li>Search for "<a href="http://www.google.com/search?q={{ party.name }} {{ issue.name }}">{{ party.name }} {{ issue.name }}</a>".</li>
+                        <li>Check news outlets for relevant stories (e.g. <a href="http://www.abc.net.au">ABC</a>, <a href="http://www.smh.com.au">SMH</a>).</li>
+                        <li>Email or phone the party directly.</li>
+                        <li>Still can't find a reference? Click "skip".</li>
+                    </ul>
                 </div>
             {% endwith %}
             <form action="" class="reference" method="POST">
