@@ -1,5 +1,6 @@
 # coding=utf-8
 from autoslug.fields import AutoSlugField
+from datetime import datetime
 from django.core.urlresolvers import reverse
 from django.db import models
 from itertools import groupby
@@ -72,7 +73,7 @@ class View(models.Model):
     stance = models.CharField(choices=STANCE_CHOICES, default=UNKNOWN,
                               max_length=7)
 
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField()
 
     class Meta:
         app_label = "core"
@@ -189,3 +190,13 @@ class View(models.Model):
             # stances on the issue; recalculate all notabilities for the issue.
             for view in self.issue.view_set.all():
                 calculate_view_notability.delay(view.pk)
+
+    def save(self, *args, **kwargs):
+        """
+        :param touch_updated_at: Whether ``updated_at`` should be touched.
+        :type  touch_updated_at: ``bool``
+        """
+        if kwargs.pop("touch_updated_at", True):
+            self.updated_at = datetime.now()
+
+        super(View, self).save(*args, **kwargs)

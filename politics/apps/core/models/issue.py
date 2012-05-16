@@ -104,7 +104,7 @@ class Issue(models.Model):
         :type  instance: :class:`Issue`
         """
         for view in instance.view_set.all():
-            view.save()
+            view.save(touch_updated_at=False)
 
 
 models.signals.post_save.connect(Issue.create_views, sender=Issue)

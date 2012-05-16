@@ -88,7 +88,7 @@ def calculate_view_notability(view_pk):
     view = View.objects.get(pk=view_pk)
     if view.stance == View.UNKNOWN:
         view.notability = 0
-        view.save()
+        view.save(touch_updated_at=False)
         return
 
     # These functions take a View and return a score for some metric of
@@ -100,7 +100,7 @@ def calculate_view_notability(view_pk):
 
     scores = [calculator(view) for calculator in score_calculators]
     view.notability = max(scores)
-    view.save()
+    view.save(touch_updated_at=False)
 
 
 @periodic_task(ignore_result=True, run_every=crontab(hour=0, minute=0))

@@ -55,7 +55,7 @@ class Party(models.Model):
         (the party's name might have been changed).
         """
         for view in instance.view_set.all():
-            view.save()
+            view.save(touch_updated_at=False)
 
 
 models.signals.post_save.connect(Party.create_views, sender=Party)
