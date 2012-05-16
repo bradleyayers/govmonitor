@@ -79,6 +79,15 @@ div.success {
   }
 }
 
+.errors {
+  color: #F00;
+  font-weight: bold;
+  line-height: 1.3em;
+
+  ul {
+    margin-top: 0.5em;
+  }
+}
 
 // About
 html.about {
@@ -142,7 +151,7 @@ html.about {
 
 // Log In
 div.log-in {
-  margin: 0 auto;
+  margin: 0 auto 2px auto;
   .white-panel;
   width: 500px;
 
@@ -169,5 +178,40 @@ div.log-in {
       display: block;
       margin-bottom: 0.75em;
     }
+  }
+}
+
+// Register
+div.register {
+  margin: 0 auto 2px auto;
+  .white-panel;
+  width: 400px;
+
+  .fields {
+    display: table;
+    font-size: 13px;
+    width: 100%;
+
+    p {
+      display: table-row;
+
+      input {
+        display: table-cell;
+        font-size: 13px;
+        width: 100%;
+      }
+
+      label {
+        display: table-cell;
+        padding-right: 0.5em;
+        text-align: right;
+        width: 7.3em;
+      }
+    }
+  }
+
+  .captcha {
+    margin: 1em auto;
+    width: 318px;
   }
 }

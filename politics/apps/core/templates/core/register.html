@@ -1,15 +1,63 @@
 {% extends "core/base.html" %}
 
+{% load core %}
+
 {% block title %}Register{% endblock %}
 
 {% block content %}
     {{ block.super }}
-    <div id="content-primary">
-        <h1>Register</h1>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <p><input type="submit" value="Register"/></p>
-        </form>
+    <div class="full">
+        <div class="register">
+            <h1><strong>Register</strong></h1>
+            <form method="post">
+                {% csrf_token %}
+                {% if form.errors %}
+                    <div class="errors">
+                        {% if form.errors|length == 1 %}
+                            Oops! There was a problem with your registration:
+                        {% else %}
+                            Oops! There were a couple of problems with your registration:
+                        {% endif %}
+                        <ul>
+                            {% for field_name, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    {% if field_name == "__all__" %}
+                                        <li>{{ error }}</li>
+                                    {% else %}
+                                        {% with field=form|get:field_name %}
+                                            <li>{{ field.label }}: {{ error }}</li>
+                                        {% endwith %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                <div class="fields">
+                    <p>
+                        <label for="id_first_name">First Name</label>
+                        {{ form.first_name }}
+                    </p>
+                    <p>
+                        <label for="id_last_name">Last Name</label>
+                        {{ form.last_name }}
+                    </p>
+                    <p>
+                        <label for="id_email">Email</label>
+                        {{ form.email }}
+                    </p>
+                    <p>
+                        <label for="id_password">Password</label>
+                        {{ form.password }}
+                    </p>
+                    <p>
+                        <label for="id_password_confirmation">Password Again</label>
+                        {{ form.password_confirmation }}
+                    </p>
+                </div>
+                <div class="captcha">{{ form.captcha|safe }}</div>
+                <input type="submit" value="Register"/>
+            </form>
+        </div>
     </div>
 {% endblock %}

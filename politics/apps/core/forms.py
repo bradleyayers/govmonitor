@@ -188,12 +188,12 @@ class UserForm(forms.ModelForm):
         "REQUIRED": "This field is required.",
     }
 
-    first_name = forms.CharField()
-    last_name = forms.CharField()
+    first_name = forms.CharField(label="First Name")
+    last_name = forms.CharField(label="Last Name")
     email = forms.EmailField()
     password = forms.CharField(required=False, widget=forms.PasswordInput)
-    password_confirmation = forms.CharField(required=False,
-                                            widget=forms.PasswordInput)
+    password_confirmation = forms.CharField(label="Password Again",
+            required=False, widget=forms.PasswordInput)
 
     class Meta:
         model = User

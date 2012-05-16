@@ -210,11 +210,6 @@ code {
     font-family: "Courier New", monospace;
 }
 
-div.errors {
-    color: red;
-    font-weight: bold;
-}
-
 div.pager {
     margin-top: 5px;
     padding: 5px 0;

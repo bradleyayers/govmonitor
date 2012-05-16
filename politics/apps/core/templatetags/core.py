@@ -60,6 +60,18 @@ def _parse_token_kwargs(bits, parser):
 
 
 @register.filter
+def get(dictionary, key):
+    """Retrieve a value from a dictionary using the given key.
+
+    :param dictionary: The dictionary.
+    :type  dictionary: ``dict``
+    :param        key: The key.
+    :type         key: ``str``
+    """
+    return dictionary[key]
+
+
+@register.filter
 def indent(value, amount):
     """Indent each line of the given text by some number of spaces.
 
