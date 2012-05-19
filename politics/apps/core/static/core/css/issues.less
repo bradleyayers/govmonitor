@@ -1,0 +1,172 @@
+// Helpers
+.border-radius (@radius) {
+  -moz-border-radius: @radius;
+  -webkit-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.border-radius (@a, @b, @c, @d) {
+  -moz-border-radius: @a @b @c @d;
+  -webkit-border-radius: @a @b @c @d;
+  border-radius: @a @b @c @d;
+}
+
+.box-sizing (@type) {
+  -moz-box-sizing: @type;
+  box-sizing: @type;
+}
+
+// Issue Page
+div.issue {
+  background: #F5F5F5;
+  border: 1px solid #DDD;
+  .border-radius(5px);
+  margin-bottom: 1.5em;
+
+  .description {
+    background: #FFF;
+    .border-radius(5px, 5px, 0, 0);
+    padding: 10px;
+
+    > :first-child {
+      margin-top: 0;
+    }
+
+    ul.tags {
+      list-style-type: none;
+      margin: 1em 0 0 0;
+
+      li {
+        display: inline;
+      }
+    }
+  }
+
+  footer {
+    border-top: 1px solid #DDD;
+    .border-radius(0, 0, 5px, 5px);
+    .box-sizing(border-box);
+    overflow: auto;
+    padding: 8px 10px;
+    width: 100%;
+
+    ul.stats {
+      color: #B2B2B2;
+      float: left;
+      font-size: 11px;
+      list-style-type: none;
+      margin: 0;
+
+      li {
+        background: transparent url("/static/core/img/issues/icons.png") no-repeat;
+        display: inline-block;
+        height: 11px;
+        margin-right: 5px;
+        padding-left: 15px;
+
+        &.updated {
+          background-position: 0 -11px;
+        }
+
+        &.views {
+          background-image: url("/static/core/img/issues/eye.png");
+          padding-left: 17px;
+        }
+      }
+    }
+
+    ul.actions {
+      float: right;
+      list-style-type: none;
+      margin: 0;
+    }
+  }
+}
+
+// Issue Summary
+div.issue-summary {
+  background: #F5F5F5;
+  border: 1px solid #DDD;
+  .border-radius(5px);
+  margin-bottom: 1.5em;
+
+  h3 {
+    font-size: 18px;
+    line-height: 20px;
+    margin: 9px 0 9px 10px;
+
+    a {
+      color: #333;
+    }
+  }
+
+  ul.stats {
+    color: #B2B2B2;
+    font-size: 11px;
+    margin: 0 0 1em 10px;
+
+    li {
+      background: transparent url("/static/core/img/issues/icons.png") no-repeat;
+      display: inline-block;
+      height: 11px;
+      margin-right: 5px;
+      padding-left: 15px;
+
+      &.updated {
+        background-position: 0 -11px;
+      }
+
+      &.views {
+        background-image: url("/static/core/img/issues/eye.png");
+        padding-left: 17px;
+      }
+    }
+  }
+
+  > .views {
+    background-color: #FFF;
+    .border-radius(0, 0, 5px, 5px);
+    border-top: 1px solid #DDD;
+    font-size: 0;
+    margin: 0;
+    padding: 5px 5px 2px 5px;
+
+    ul li {
+      display: inline;
+
+      a {
+        background: transparent url("/static/core/img/lozenges.png") no-repeat;
+        border: 1px solid;
+        .border-radius(5px);
+        display: inline-block;
+        font-size: 12px;
+        font-weight: bold;
+        margin: 0 3px 3px 0;
+        padding: 3px 6px 4px 17px;
+        text-shadow: rgba(255, 255, 255, 0.75) 0px 1px 2px;
+        white-space: nowrap;
+
+        &.oppose {
+          background-color: #FFA6A6;
+          background-position: 4px 5px;
+          border-color: #DC7B7B;
+          color: #9D1515;
+        }
+
+        &.support {
+          background-color: #B1F0AF;
+          background-position: 4px -10px;
+          border-color: #96CD94;
+          color: #2D742B;
+        }
+
+        &.unclear {
+          background-color: #FFED93;
+          background-position: 4px -25px;
+          border-color: #EDD54E;
+          color: #AC841A;
+        }
+      }
+    }
+  }
+}

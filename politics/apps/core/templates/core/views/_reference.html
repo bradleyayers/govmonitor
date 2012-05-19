@@ -13,7 +13,9 @@
     <div class="stance {{ reference.stance }}">{{ reference.get_stance_display }}</div>
 
     {% if reference.text_html %}
-        {{ reference.text_html|safe }}
+        <div class="markdown">
+            {{ reference.text_html|safe }}
+        </div>
     {% else %}
         <i>No text available, see source.</i>
     {% endif %}

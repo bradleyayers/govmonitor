@@ -24,7 +24,7 @@
         <h1><a href="{% url core:issues:popular %}">Issues</a> / <strong>{{ issue.name }}</strong></h1>
 
         <div class="issue">
-            <div class="description">
+            <div class="description markdown">
                 {% if issue.description_html %}
                     {{ issue.description_html|safe }}
                 {% else %}
