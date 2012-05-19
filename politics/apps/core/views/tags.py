@@ -1,6 +1,7 @@
 # coding=utf-8
-from ..models import Issue, Tag
 from django.db.models import Avg, Count
+from politics.apps.core.models import Issue, Tag
+from politics.utils import group_n
 from politics.utils.decorators import render_to_template, slug_url
 from politics.utils.paginator import Paginator
 
@@ -16,14 +17,10 @@ def list(request):
     tags = tags.filter(issue_count__gt=0).order_by("-issue_count")
     page = Paginator(tags, 27).page(request.GET.get("page", 1))
 
-    # Split the tags into rows of length 3.
-    indices = range(0, len(page.object_list), 3)
-    tag_rows = [page.object_list[i:i + 3] for i in indices]
-
     return {
         "average_issues": int(round(tags.aggregate(avg=Avg("issue_count"))["avg"])),
         "page": page,
-        "tag_rows": tag_rows,
+        "tag_rows": group_n(tags, 3),
         "tags": tags,
     }
 

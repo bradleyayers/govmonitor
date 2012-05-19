@@ -14,13 +14,13 @@
             <li {% if request.GET.issues == "unknown" %}class="selected"{% endif %}><a href="{% query_string issues="unknown" %}" id="tab-unknown">Unknown</a></li>
         </ol>
 
-        {% for view in views %}
-            <div class="view-summary{% cycle "" " right" %}">
-                <h3><a href="{% url core:issues:show view.issue.pk view.issue.slug %}" title="{{ view.issue.name }}">{{ view.issue.name }}</a></h3>
-                <ul class="stats">
-                    <li class="updated">Last updated <strong>{{ view.updated_at|interval_string }}</strong> ago</li>
-                </ul>
-                <a class="stance {{ view.stance }}" href="{% url core:views:show view.pk view.slug %}">{{ view.get_stance_display }}</a>
+        {% for view_row in view_rows %}
+            <div class="view-summary-row">
+                {% for view in view_row %}
+                    {% with heading=view.issue.name %}
+                        {% include "core/views/_summary.html" %}
+                    {% endwith %}
+                {% endfor %}
             </div>
         {% endfor %}
     </div>

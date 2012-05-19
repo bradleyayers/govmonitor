@@ -5,6 +5,7 @@ from haystack.query import SearchQuerySet
 from politics.apps.core.forms import IssueForm
 from politics.apps.core.models import Issue, View
 from politics.apps.view_counts.decorators import record_view
+from politics.utils import group_n
 from politics.utils.decorators import render_to_template, slug_url
 from politics.utils.paginator import Paginator
 import reversion
@@ -86,5 +87,5 @@ def show(request, issue):
         "issue": issue,
         "related_issues": related_issues,
         "stances": stances,
-        "views": views,
+        "view_rows": group_n(views, 2)
     }

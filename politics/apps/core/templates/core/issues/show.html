@@ -50,13 +50,13 @@
             </footer>
         </div>
 
-        {% for view in views %}
-            <div class="view-summary{% cycle "" " right" %}">
-                <h3><a href="{% url core:parties:show view.party.pk view.party.slug %}">{{ view.party.name }}</a></h3>
-                <ul class="stats">
-                    <li class="updated">Last updated <strong>{{ view.updated_at|interval_string }}</strong> ago</li>
-                </ul>
-                <a class="stance {{ view.stance }}" href="{% url core:views:show view.pk view.slug %}">{{ view.get_stance_display }}</a>
+        {% for view_row in view_rows %}
+            <div class="view-summary-row">
+                {% for view in view_row %}
+                    {% with heading=view.party.name %}
+                        {% include "core/views/_summary.html" %}
+                    {% endwith %}
+                {% endfor %}
             </div>
         {% endfor %}
     </div>
