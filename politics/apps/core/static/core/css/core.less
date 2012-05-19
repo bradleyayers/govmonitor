@@ -1,19 +1,19 @@
 // Helpers
 .border-radius (@radius) {
-  border-radius: @radius;
   -moz-border-radius: @radius;
   -webkit-border-radius: @radius;
+  border-radius: @radius;
 }
 
 .box-shadow (@x, @y, @blur, @colour) {
-  box-shadow: @x @y @blur @colour;
   -moz-box-shadow: @x @y @blur @colour;
   -webkit-box-shadow: @x @y @blur @colour;
+  box-shadow: @x @y @blur @colour;
 }
 
 .box-sizing (@type) {
-  box-sizing: @type;
   -moz-box-sizing: @type;
+  box-sizing: @type;
 }
 
 .left {
@@ -66,6 +66,25 @@ div.success {
 }
 
 // General
+#header-primary form.search {
+  background-color: #FFF;
+  .border-radius(6px);
+  display: inline-block;
+  margin-left: 13px;
+  padding: 1px 3px;
+
+  input[type=text] {
+    border: 0;
+    outline: none;
+  }
+
+  input[type=submit] {
+    background: transparent url("/static/core/img/search.png") center no-repeat;
+    border: 0;
+    cursor: pointer;
+  }
+}
+
 #content-secondary {
   float: right;
   width: 220px;
@@ -196,6 +215,7 @@ div.register {
       display: table-row;
 
       input {
+        .box-sizing(border-box);
         display: table-cell;
         font-size: 13px;
         width: 100%;

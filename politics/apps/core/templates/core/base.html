@@ -72,8 +72,9 @@
                         {% endif %}
                         <li><a href="{% url core:about %}" id="header-about">Help</a></li>
                     </ol>
-                    <form action="{% url core:search %}">
+                    <form action="{% url core:search %}" class="search">
                         <input id="q" name="q" placeholder="Search" type="text" value="{{ request.GET.q }}"/>
+                        <input type="submit" value=""/>
                     </form>
                 </div>
             </div>

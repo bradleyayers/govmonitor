@@ -16,6 +16,7 @@
 {% block content %}
     {{ block.super }}
     <div id="content-primary">
+        <h1><a href="{% url core:issues:popular %}">Issues</a> / <strong>New</strong></h1>
         <form class="issue" method="post">
             <p>
                 <label for="name">Name</label>
