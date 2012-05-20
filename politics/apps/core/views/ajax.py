@@ -14,6 +14,9 @@ def tags(request):
     query = request.GET.get("q", "*")
     query = SearchQuerySet().query.clean(query)
 
+    if query == "":
+        return []
+
     # Retrieve tags that match an autocomplete (ngram) search or a normal
     # search so derivative words match (e.g. "immigrants" => "immigration").
     results = SearchQuerySet().models(Tag).load_all()

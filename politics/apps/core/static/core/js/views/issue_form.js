@@ -81,7 +81,9 @@ AP.IssueForm = Backbone.View.extend({
       window.clearTimeout(timeoutId);
     }
 
-    timeoutId = window.setTimeout(this._requestTagSuggestions, 250);
-    this.$tagsInput.data("suggestionsTimeoutId", timeoutId);
+    if (this.$tagsInput.val() !== "") {
+      timeoutId = window.setTimeout(this._requestTagSuggestions, 250);
+      this.$tagsInput.data("suggestionsTimeoutId", timeoutId);
+    }
   }
 });
