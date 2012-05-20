@@ -16,6 +16,13 @@
   box-sizing: @type;
 }
 
+.gradient-background (@from, @to) {
+  background-image: -o-linear-gradient(top, @from, @to);
+  background-image: -moz-linear-gradient(top, @from, @to);
+  background-image: -webkit-linear-gradient(top, @from, @to);
+  background-image: linear-gradient(top, @from, @to);
+}
+
 .left {
   float: left;
 }
@@ -47,6 +54,25 @@ div.information {
 div.success {
   background-color: #EAFFD5;
   border-color: #DAEAC0;
+}
+
+ol.suggestions {
+  background: #FFF;
+  border: 1px solid #DDD;
+  border-top: 0;
+  .box-sizing(border-box);
+  cursor: pointer;
+  font-size: 15px;
+  position: absolute;
+
+  li {
+    padding: 4px;
+
+    &.highlighted {
+      color: white;
+      .gradient-background(#55F, #00F);
+    }
+  }
 }
 
 .white-panel {
