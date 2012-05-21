@@ -1,13 +1,15 @@
 {% extends "core/issues/base.html" %}
 
+{% load core %}
+
 {% block html-class %}
     {{ block.super }}
-    issue-form
+    form
 {% endblock %}
 
 {% block title %}
     {% if form.instance.pk %}
-        Edit Issue
+        Edit {{ form.instance.name }}
     {% else %}
         New Issue
     {% endif %}
@@ -27,65 +29,76 @@
             {% endif %}
         </h1>
         <form class="issue" method="post">
-            <p>
-                <label for="name">Name</label>
-                <input autofocus id="name" name="name" type="text" value="{{ form.name.value|default:"" }}"/>
-            </p>
-            <textarea id="description" name="description">{{ form.description.value|default:"" }}</textarea>
-            <p>
-                <label for="tags">Tags</label>
-                <input id="tags" name="tags" placeholder="e.g. education, international-relations" type="text" value="{{ form.tags.value|default:"" }}"/>
-            </p>
+            {% csrf_token %}
+            <div class="fields">
+                <p>
+                    <label for="id_name">Name</label>
+                    {{ form.name }}
+                </p>
+                <p>
+                    <label for="id_tags">Tags</label>
+                    {{ form.tags }}
+                </p>
+            </div>
+            {{ form.description }}
             {% if form.errors %}
                 <div class="errors">
                     <p>Oops! The issue couldn't be saved because:</p>
                     <ul>
-                        {% for field, errors in form.errors.items %}
-                            {% for error in errors %}
-                                <li>{{ field }}: {{ error }}</li>
-                            {% endfor %}
+                        {% for field_name, errors in form.errors.items %}
+                            {% with field=form|get:field_name %}
+                                {% for error in errors %}
+                                    <li>{{ field.label }}: {{ error }}</li>
+                                {% endfor %}
+                            {% endwith %}
                         {% endfor %}
                     </ul>
                 </div>
             {% endif %}
-            <p class="actions">
-                {% if form.instance.pk %}
-                    <input type="submit" value="Save"/>
-                    <a href="{% url core:issues:show form.instance.pk form.instance.slug %}">Cancel</a>
-                {% else %}
-                    <input type="submit" value="Create"/>
-                {% endif %}
-            </p>
-            {% csrf_token %}
+            {% if form.instance.pk %}
+                <input type="submit" value="Save"/>
+                <a class="cancel" href="{% url core:issues:show form.instance.pk form.instance.slug %}">Cancel</a>
+            {% else %}
+                <input type="submit" value="Create"/>
+            {% endif %}
         </form>
     </div>
     <div id="content-secondary">
-        <div class="info module">
-            <h2>Formatting</h2>
-            <p>
-                <a href="http://daringfireball.net/projects/markdown/">Markdown</a>
-                can be used for formatting:
-            </p>
+        <div id="help_name">
+            <h2 class="section">Name</h2>
             <ul>
-                <li><code># Heading</code>, <code>## Sub-heading</code>, etc.</li>
-                <li>separate paragraphs with a blank line</li>
-                <li>to quote, start lines with &gt;</li>
-                <li><code><em>_italic_</em></code> and <code><b>**bold**</b></code></li>
-                <li>to create a link: <p><code>[Text](http://example.com)</code></p></li>
+                <li>Avoid negatives (e.g. use "carbon tax", rather than "no carbon tax").</li>
+                <li>Don't create issues that could become invalid after policy change (e.g. "lower taxes"—once they're lowered, the data may be wrong).</li>
             </ul>
         </div>
-        <div class="info module">
-            <h2>Tagging</h2>
-            <p>
-                A tag describes an issue and groups it with other, similar issues.
-                When tagging, remember:
-            </p>
+        <div id="help_tags">
+            <h2 class="section">Tagging</h2>
+            <p>Tags describe the topic of an issue and are used to group it with related issues.</p>
             <ul>
-                <li>try to use <a href={% url core:tags:list %}>existing, popular tags</a></li>
-                <li>don't include synonyms</li>
-                <li>separate tags with spaces</li>
-                <li>separate words within a tag with hyphens (e.g. <code>international-relations</code>)</li>
-                <li>use common abbreviations, acronyms, and initialisms (e.g. <code>lgbt</code>)</li>
+                <li>Separate different tags with spaces (e.g. "children education religion").</li>
+                <li>Separate words in tags with hyphens (e.g. "children-and-young-people").</li>
+                <li>Try to use <a href="{% url core:tags:list %}">existing, popular tags</a>.</li>
+                <li>Don't include synonyms (e.g. don't tag with both "children" and "kids").</li>
+            </ul>
+        </div>
+        <div id="help_description">
+            <h2 class="section">Description</h2>
+            <p>The description should make clear exactly what the issue is about so appropriate references can be found.</p>
+            <ul>
+                <li>Try to include links to background / introductory information on the topic.</li>
+                <li>Try to remain impartial: the goal is to simply explain the facts of the issue.</li>
+                <li>
+                    <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> formatting is supported:
+                    <ul>
+                        <li>Leave a blank line to end one paragraph and start another.</li>
+                        <li><tt># Header</tt>, <tt>## Subheader</tt>, etc.</li>
+                        <li><tt>[Link](www.example.com)</tt></li>
+                        <li><pre>&gt; This is a quote.
+&gt; Still a quote.</pre></li>
+                        <li><pre>* This is a list.
+* Still a list.</pre></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>

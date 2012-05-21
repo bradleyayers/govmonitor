@@ -1,9 +1,9 @@
 $(function() {
-  // Hook up the issue form (if any).
-  var issueForm = $("form.issue");
-  if (issueForm.length) {
+  // If there's an issue form, create a view for it. We use the content div
+  // instead of the form element iself because the sidebar content changes.
+  if ($("form.issue").length) {
     new AP.IssueForm({
-        el: issueForm
+        el: $("#content-content")
     });
   }
 

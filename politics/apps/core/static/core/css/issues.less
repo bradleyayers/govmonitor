@@ -11,9 +11,31 @@
   border-radius: @a @b @c @d;
 }
 
+.box-shadow (@x, @y, @blur, @colour) {
+  -moz-box-shadow: @x @y @blur @colour;
+  -webkit-box-shadow: @x @y @blur @colour;
+  box-shadow: @x @y @blur @colour;
+}
+
 .box-sizing (@type) {
   -moz-box-sizing: @type;
   box-sizing: @type;
+}
+
+.white-panel {
+  background-color: #FFF;
+  .border-radius(5px);
+  .box-shadow(1px, 1px, 2px, rgba(0, 0, 0, 0.07));
+  overflow: auto;
+  padding: 13px;
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
 }
 
 // Issue Page
@@ -167,6 +189,120 @@ div.issue-summary {
           color: #AC841A;
         }
       }
+    }
+  }
+}
+
+// Issue Form
+form.issue {
+  font-size: 14px;
+  .white-panel;
+
+  .errors p:first-child {
+    margin-top: 0;
+  }
+
+  div.fields {
+    display: table;
+    width: 100%;
+
+    p {
+      display: table-row;
+      margin: 0;
+
+      label {
+        display: table-cell;
+        padding: 0 0.5em 0.75em 0;
+        text-align: right;
+        width: 3em;
+      }
+
+      input {
+        .box-sizing(border-box);
+        display: table-cell;
+        font-size: 14px;
+        width: 100%;
+      }
+    }
+  }
+
+  textarea {
+    .box-sizing(border-box);
+    font-family: Monaco, Courier New, monospace;
+    font-size: 12px;
+    height: 17em;
+    margin-bottom: 0.5em;
+    width: 100%;
+  }
+
+  input[type=submit] {
+    margin: 0;
+  }
+
+  a.cancel {
+    font-size: 12px;
+  }
+}
+
+html.issues {
+  #call-to-action {
+    margin-bottom: 2em;
+
+    p {
+      font-size: 20px;
+      margin: 0 0 0.5em 0;
+    }
+
+    form {
+      display: block;
+      padding-right: 110px;
+      position: relative;
+
+      input[type=text] {
+        border: 1px solid #AAA;
+        .box-sizing(border-box);
+        font-size: 20px;
+        height: 30px;
+        margin: 0;
+        outline: none;
+        padding: 3px;
+        width: 100%;
+      }
+
+      input[type=submit] {
+        background-color: #DDD;
+        border: 1px solid #BBB;
+        font-size: 18px;
+        height: 30px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 100px;
+      }
+    }
+  }
+
+  &.form {
+    #content-primary {
+      padding-bottom: 2px;
+    }
+
+    #content-secondary {
+      h2.section {
+        margin-top: 0;
+      }
+
+      ul {
+        margin-top: 0.5em;
+      }
+
+      li {
+        margin-bottom: 0.5em;
+      }
+    }
+
+    #help_tags, #help_description {
+      display: none;
     }
   }
 }

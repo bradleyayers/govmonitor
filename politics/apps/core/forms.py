@@ -21,7 +21,9 @@ class TagsField(forms.Field):
     }
 
     def __init__(self, *args, **kwargs):
-        kwargs["widget"] = forms.TextInput
+        if "widget" not in kwargs:
+            kwargs["widget"] = forms.TextInput
+
         super(TagsField, self).__init__(*args, **kwargs)
 
     def prepare_value(self, value):
@@ -62,7 +64,13 @@ class TagsField(forms.Field):
 class IssueForm(forms.ModelForm):
     """A form for creating ``Issue``s."""
 
-    tags = TagsField()
+    tags = TagsField(widget=forms.TextInput(attrs={
+        "placeholder": "e.g. education, international-relations"
+    }))
+
+    description = forms.CharField(widget=forms.Textarea(attrs={
+        "placeholder": "A description of the issue."
+    }))
 
     class Meta:
         model = Issue

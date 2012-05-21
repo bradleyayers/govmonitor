@@ -3,14 +3,16 @@
  */
 AP.IssueForm = Backbone.View.extend({
   events: {
-    "keydown #tags": "_tagsKeyDown",
-    "keyup #tags": "_tagsKeyUp"
+    "focus input": "_showInputHelp",
+    "focus textarea": "_showInputHelp",
+    "keydown #id_tags": "_tagsKeyDown",
+    "keyup #id_tags": "_tagsKeyUp"
   },
 
   initialize: function() {
     _.bindAll(this);
-    this.$("#name").focus();
-    this.$tagsInput = this.$("#tags");
+    this.$("#id_name").focus();
+    this.$tagsInput = this.$("#id_tags");
   },
 
   /**
@@ -31,6 +33,16 @@ AP.IssueForm = Backbone.View.extend({
       success: this._showTagSuggestions,
       url: "/ajax/tags/?q=" + this.$tagsInput.val().split(" ").pop()
     });
+  },
+
+  /**
+   * Show the help text for a particular field.
+   *
+   * @param {event} e This event's target is the field.
+   */
+  _showInputHelp: function(e) {
+    this.$("#content-secondary > div").hide();
+    this.$("#help_" + $(e.target).attr("name")).show();
   },
 
   _showTagSuggestions: function(data) {
