@@ -151,8 +151,16 @@ class ReferenceForm(forms.ModelForm):
     stance = forms.ChoiceField(choices=Reference.STANCE_CHOICES,
                                initial=View.SUPPORT)
 
+    # Use Australian date formatting.
+    published_on = forms.DateField(
+            label="Published",
+            required=False,
+            widget=forms.DateInput(
+                    attrs={"placeholder": "dd/mm/yyyy (optional)"},
+                    format="%d/%m/%Y"))
+
     # Show placeholder text in the URL field...
-    url = forms.CharField(widget=forms.TextInput(attrs={
+    url = forms.CharField(label="URL", widget=forms.TextInput(attrs={
             "placeholder": "http://example.com/"
     }))
 

@@ -20,7 +20,12 @@
         <i>No text available, see source.</i>
     {% endif %}
 
-    <p><a href="{{ reference.url }}" target="_blank">{{ reference.url }}</a></p>
+    <p>
+        <a href="{{ reference.url }}" target="_blank">{{ reference.url }}</a>
+        {% if reference.published_on %}
+          <br/>Published on {{ reference.published_on|date:"jS F Y" }}
+        {% endif %}
+    </p>
 
     <p>
         {% user_link reference.author %}

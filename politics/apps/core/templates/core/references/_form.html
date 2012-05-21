@@ -1,9 +1,14 @@
+{% load core %}
+
 {% csrf_token %}
 <div class="fields">
     <p>
         <label for="id_stance">Stance</label>
         {{ form.stance }}
     </p>
+    <p>
+        <label for="id_published_on">Published</label>
+        {{ form.published_on }}
     <p>
         <label for="id_url">URL (Link)</label>
         {{ form.url }}
@@ -15,10 +20,12 @@
     <div class="errors">
         <p>Oops! The reference couldn't be saved because:</p>
         <ul>
-            {% for field, errors in form.errors.items %}
-                {% for error in errors %}
-                    <li>{{ field }}: {{ error }}</li>
-                {% endfor %}
+            {% for field_name, errors in form.errors.items %}
+                {% with field=form|get:field_name %}
+                    {% for error in errors %}
+                        <li>{{ field.label }}: {{ error }}</li>
+                    {% endfor %}
+                {% endwith %}
             {% endfor %}
         </ul>
     </div>

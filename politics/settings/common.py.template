@@ -83,6 +83,10 @@ EMAIL_USE_TLS = True
 
 ADMINS = (("NAME", "EMAIL"),)
 APPEND_SLASH = True
+DATE_INPUT_FORMATS = (
+    "%d/%m/%y", "%d/%m/%Y", "%d-%m-%y", "%d-m-%Y", "%b %d %Y", "%b %d, %Y",
+    "%d %b %Y", "%d %b, %Y", "%B %d %Y", "%B %d, %Y", "%d %B %Y", "%d %B, %Y",
+)
 
 INSTALLED_APPS = (
     "django.contrib.auth",

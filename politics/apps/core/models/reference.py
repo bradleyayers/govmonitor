@@ -21,6 +21,9 @@ class Reference(models.Model):
     :type  created_at: ``datetime.datetime``
     :ivar is_archived: Whether the reference has been archived.
     :type is_archived: ``bool``
+    :ivar published_on: When the information itself was published (e.g. when a
+                        news article was posted online or printed in the paper).
+    :type published_on: ``datetime.date`` or ``None``
     :ivar       score: A cached version of the reference's score. This is
                        updated automagically when its vote set changes.
     :type       score: ``int``
@@ -50,6 +53,7 @@ class Reference(models.Model):
     author = models.ForeignKey("auth.User")
     created_at = models.DateTimeField(auto_now_add=True)
     is_archived = models.BooleanField(default=False)
+    published_on = models.DateField(blank=True, null=True)
     score = ScoreField()
     stance = models.CharField(choices=STANCE_CHOICES, max_length=7)
     text = MarkdownField(blank=True, disable=["images"])
