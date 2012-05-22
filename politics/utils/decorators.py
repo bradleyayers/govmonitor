@@ -142,7 +142,7 @@ def slug_url(model):
             if slug != instance.slug:
                 match = resolve(request.get_full_path())
                 kwargs = {"pk": instance.pk, "slug": instance.slug}
-                return redirect(match.view_name, **kwargs)
+                return redirect(match.view_name, permanent=True, **kwargs)
 
             return function(request, instance, *args, **kwargs)
 
