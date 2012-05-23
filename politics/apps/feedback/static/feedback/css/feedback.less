@@ -1,0 +1,85 @@
+.border-radius (@radius) {
+  -moz-border-radius: @radius;
+  -webkit-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.box-shadow (@type) {
+  -moz-box-shadow: @type;
+  -webkit-box-shadow: @type;
+  box-shadow: @type;
+}
+
+.box-sizing (@type) {
+  -moz-box-sizing: @type;
+  -webkit-box-sizing: @type;
+  box-sizing: @type;
+}
+
+#feedback-button {
+  background: #84C961 url("/static/feedback/img/feedback.png") center no-repeat;
+  font-size: 0px;
+  height: 82px;
+  position: fixed;
+  top: 30%;
+  width: 30px;
+
+  &:hover {
+    background-color: #8ED968;
+  }
+}
+
+#feedback-form {
+  background: #FFF;
+  border: 1px solid #DDD;
+  border-size: 1px 1px 1px 0;
+  .box-shadow(1px 1px 3px rgba(0, 0, 0, 0.08));
+  .box-sizing(border-box);
+  font-size: 12px;
+  left: -410px;
+  padding: 12px 10px;
+  position: fixed;
+  top: 30%;
+  width: 400px;
+
+  a.close {
+    background: transparent url("/static/feedback/img/close-button.png") no-repeat;
+    display: block;
+    height: 30px;
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    width: 30px;
+  }
+
+  h1 {
+    font-weight: bold;
+    margin: 0 0 1em 0;
+  }
+
+  textarea {
+    border: 1px solid #AAA;
+    .border-radius(3px);
+    .box-sizing(border-box);
+    display: block;
+    font-size: 12px;
+    height: 100px;
+    margin-bottom: 0.5em;
+    width: 100%;
+  }
+
+  p.errors {
+    float: left;
+    margin: 0;
+    position: relative;
+    top: 3px;
+  }
+
+  input[type=submit] {
+    float: right;
+  }
+
+  div.success {
+    display: none;
+  }
+}

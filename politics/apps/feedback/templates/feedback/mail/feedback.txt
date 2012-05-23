@@ -1,0 +1,17 @@
+{% load core %}
+
+{% autoescape off %}
+{% squashspaces %}
+    {% if user %}
+        {{ user.get_full_name }} ({{ user.email }})
+    {% else %}
+        An anonymous user
+    {% endif %}
+
+    submitted some feedback:
+{% endsquashspaces %}
+
+{{ url }}
+
+{{ feedback|wordwrap:73|indent:4 }}
+{% endautoescape %}

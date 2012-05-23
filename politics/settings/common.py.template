@@ -107,6 +107,7 @@ INSTALLED_APPS = (
 
     "politics.apps.comments",
     "politics.apps.core",
+    "politics.apps.feedback",
     "politics.apps.view_counts",
     "politics.apps.south_libraries",
 )

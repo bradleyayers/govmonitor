@@ -1,0 +1,13 @@
+<a href="#" id="feedback-button">Feedback</a>
+<div id="feedback-form">
+    <h1>Feedback</h1>
+    <form>
+        {% csrf_token %}
+        <textarea name="feedback" placeholder="What's on your mind?"></textarea>
+        <input type="submit" value="Send"/>
+    </form>
+    <div class="success">
+        Your feedback has been submitted. Thanks!
+    </div>
+    <a class="close" href="#"></a>
+</form>
