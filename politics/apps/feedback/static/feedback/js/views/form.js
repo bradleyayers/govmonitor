@@ -7,6 +7,7 @@ AP.Feedback.Form = Backbone.View.extend({
   events: {
     "click a.close": "_close",
     "keydown": "_keydown",
+    "mousedown input[type=submit]": "_submit",
     "submit": "_submit"
   },
 
@@ -162,7 +163,6 @@ AP.Feedback.Form = Backbone.View.extend({
         instance.$el.removeClass("submitting");
       });
     } else {
-      this.$textarea.focus();
       this._showErrorMessage("You haven't written any feedback!");
     }
   }
