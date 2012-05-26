@@ -68,7 +68,7 @@ class IssueForm(forms.ModelForm):
         "placeholder": "e.g. education, international-relations"
     }))
 
-    description = forms.CharField(widget=forms.Textarea(attrs={
+    description = forms.CharField(required=False, widget=forms.Textarea(attrs={
         "placeholder": "A description of the issue."
     }))
 

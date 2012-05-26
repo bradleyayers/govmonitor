@@ -20,7 +20,7 @@ def list(request):
     return {
         "average_issues": int(round(tags.aggregate(avg=Avg("issue_count"))["avg"])),
         "page": page,
-        "tag_rows": group_n(tags, 3),
+        "tag_rows": group_n(page.object_list, 3),
         "tags": tags,
     }
 
