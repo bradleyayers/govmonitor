@@ -1,0 +1,49 @@
+@text-colour: #333;
+
+.border-radius (@radius) {
+  -moz-border-radius: @radius;
+  -webkit-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.box-shadow (@shadow) {
+  -moz-box-shadow: @shadow;
+  -webkit-box-shadow: @shadow;
+  box-shadow: @shadow;
+}
+
+.box-shadow (@a, @b) {
+  -moz-box-shadow: @a, @b;
+  -webkit-box-shadow: @a, @b;
+  box-shadow: @a, @b;
+}
+
+.box-sizing (@type) {
+  -moz-box-sizing: @type;
+  -webkit-box-sizing: @type;
+  box-sizing: @type;
+}
+
+.linear-gradient-background (@angle, @start, @end) {
+  background-image: -o-linear-gradient(@angle, @start, @end);
+  background-image: -moz-linear-gradient(@angle, @start, @end);
+  background-image: -webkit-linear-gradient(@angle, @start, @end);
+  background-image: linear-gradient(@angle, @start, @end);
+}
+
+.white-panel {
+  background-color: #FFF;
+  .border-radius(5px);
+  .box-shadow(1px 1px 2px rgba(0, 0, 0, 0.07));
+  margin-bottom: 2px;
+  overflow: auto;
+  padding: 13px;
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}

@@ -1,86 +1,84 @@
-// Helpers
-.border-radius (@radius) {
-  -moz-border-radius: @radius;
-  -webkit-border-radius: @radius;
-  border-radius: @radius;
-}
+@import "util";
 
-.border-radius (@a, @b, @c, @d) {
-  -moz-border-radius: @a @b @c @d;
-  -webkit-border-radius: @a @b @c @d;
-  border-radius: @a @b @c @d;
-}
+@background-colour: #F5F5F5;
+@border-colour: #DDD;
+@stats-colour: #B2B2B2;
 
-.box-shadow (@x, @y, @blur, @colour) {
-  -moz-box-shadow: @x @y @blur @colour;
-  -webkit-box-shadow: @x @y @blur @colour;
-  box-shadow: @x @y @blur @colour;
-}
+html.issues #call-to-action {
+  margin-bottom: 2em;
 
-.box-sizing (@type) {
-  -moz-box-sizing: @type;
-  box-sizing: @type;
-}
-
-.white-panel {
-  background-color: #FFF;
-  .border-radius(5px);
-  .box-shadow(1px, 1px, 2px, rgba(0, 0, 0, 0.07));
-  overflow: auto;
-  padding: 13px;
-
-  > :first-child {
-    margin-top: 0;
+  p {
+    font-size: 20px;
+    margin: 0 0 0.5em 0;
   }
 
-  > :last-child {
-    margin-bottom: 0;
+  form {
+    display: block;
+    padding-right: 110px;
+    position: relative;
+
+    input[type=text] {
+      .box-sizing(border-box);
+      font-size: 20px;
+      height: 30px;
+      margin: 0;
+      outline: none;
+      width: 100%;
+    }
+
+    input[type=submit] {
+      font-size: 18px;
+      height: 30px;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100px;
+    }
   }
 }
 
-// Issue Page
 div.issue {
-  background: #F5F5F5;
-  border: 1px solid #DDD;
+  background: @background-colour;
+  border: 1px solid @border-colour;
   .border-radius(5px);
   margin-bottom: 1.5em;
 
   .description {
     background: #FFF;
-    .border-radius(5px, 5px, 0, 0);
+    .border-radius(5px 5px 0 0);
     padding: 10px;
 
     > :first-child {
       margin-top: 0;
     }
+  }
 
-    ul.tags {
-      list-style-type: none;
-      margin: 1em 0 0 0;
+  ul.tags {
+    list-style-type: none;
+    margin: 1em 0 0 0;
 
-      li {
-        display: inline;
-      }
+    li {
+      display: inline;
     }
   }
 
   footer {
-    border-top: 1px solid #DDD;
-    .border-radius(0, 0, 5px, 5px);
+    border-top: 1px solid @border-colour;
+    .border-radius(0 0 5px 5px);
     .box-sizing(border-box);
     overflow: auto;
     padding: 8px 10px;
     width: 100%;
 
     ul.stats {
-      color: #B2B2B2;
+      color: @stats-colour;
       float: left;
       font-size: 11px;
       list-style-type: none;
       margin: 0;
 
       li {
-        background: transparent url("/static/core/img/issues/icons.png") no-repeat;
+        background: transparent url("/static/core/img/issue.png") no-repeat;
         display: inline-block;
         height: 11px;
         margin-right: 5px;
@@ -91,24 +89,20 @@ div.issue {
         }
 
         &.views {
-          background-image: url("/static/core/img/issues/eye.png");
-          padding-left: 17px;
+          background-position: 0 -22px;
         }
       }
     }
 
-    ul.actions {
+    a.edit {
       float: right;
-      list-style-type: none;
-      margin: 0;
     }
   }
 }
 
-// Issue Summary
 div.issue-summary {
-  background: #F5F5F5;
-  border: 1px solid #DDD;
+  background: @background-colour;
+  border: 1px solid @border-colour;
   .border-radius(5px);
   margin-bottom: 1.5em;
 
@@ -118,17 +112,17 @@ div.issue-summary {
     margin: 9px 0 9px 10px;
 
     a {
-      color: #333;
+      color: @text-colour;
     }
   }
 
   ul.stats {
-    color: #B2B2B2;
+    color: @stats-colour;
     font-size: 11px;
     margin: 0 0 1em 10px;
 
     li {
-      background: transparent url("/static/core/img/issues/icons.png") no-repeat;
+      background: transparent url("/static/core/img/issue.png") no-repeat;
       display: inline-block;
       height: 11px;
       margin-right: 5px;
@@ -139,21 +133,20 @@ div.issue-summary {
       }
 
       &.views {
-        background-image: url("/static/core/img/issues/eye.png");
-        padding-left: 17px;
+        background-position: 0 -22px;
       }
     }
   }
 
   > .views {
     background-color: #FFF;
-    .border-radius(0, 0, 5px, 5px);
-    border-top: 1px solid #DDD;
+    .border-radius(0 0 5px 5px);
+    border-top: 1px solid @border-colour;
     font-size: 0;
     margin: 0;
     padding: 5px 5px 2px 5px;
 
-    ul li {
+    li {
       display: inline;
 
       a {
@@ -165,7 +158,7 @@ div.issue-summary {
         font-weight: bold;
         margin: 0 3px 3px 0;
         padding: 3px 6px 4px 17px;
-        text-shadow: rgba(255, 255, 255, 0.75) 0px 1px 2px;
+        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.75);
         white-space: nowrap;
 
         &.oppose {
@@ -193,7 +186,6 @@ div.issue-summary {
   }
 }
 
-// Issue Form
 form.issue {
   font-size: 14px;
   .white-panel;
@@ -212,7 +204,7 @@ form.issue {
 
       label {
         display: table-cell;
-        padding: 0 0.5em 0.75em 0;
+        padding: 0 0.5em 0.8em 0;
         text-align: right;
         width: 3em;
       }
@@ -231,78 +223,40 @@ form.issue {
     font-family: Monaco, Courier New, monospace;
     font-size: 12px;
     height: 17em;
-    margin-bottom: 0.5em;
+    margin: 0.2em 0 0.5em 0;
     width: 100%;
   }
 
-  input[type=submit] {
-    margin: 0;
-  }
+  div.actions {
+    float: right;
 
-  a.cancel {
-    font-size: 12px;
+    input[type=submit] {
+      margin: 0;
+    }
+
+    a.cancel {
+      font-size: 12px;
+      margin-left: 0.5em;
+    }
   }
 }
 
-html.issues {
-  #call-to-action {
-    margin-bottom: 2em;
-
-    p {
-      font-size: 20px;
-      margin: 0 0 0.5em 0;
+html.issues.form {
+  #content-secondary {
+    h2.section {
+      margin-top: 0;
     }
 
-    form {
-      display: block;
-      padding-right: 110px;
-      position: relative;
+    ul {
+      margin-top: 0.5em;
+    }
 
-      input[type=text] {
-        border: 1px solid #AAA;
-        .box-sizing(border-box);
-        font-size: 20px;
-        height: 30px;
-        margin: 0;
-        outline: none;
-        padding: 3px;
-        width: 100%;
-      }
-
-      input[type=submit] {
-        background-color: #DDD;
-        border: 1px solid #BBB;
-        font-size: 18px;
-        height: 30px;
-        position: absolute;
-        right: 0;
-        top: 0;
-        width: 100px;
-      }
+    li {
+      margin-bottom: 0.5em;
     }
   }
 
-  &.form {
-    #content-primary {
-      padding-bottom: 2px;
-    }
-
-    #content-secondary {
-      h2.section {
-        margin-top: 0;
-      }
-
-      ul {
-        margin-top: 0.5em;
-      }
-
-      li {
-        margin-bottom: 0.5em;
-      }
-    }
-
-    #help_tags, #help_description {
-      display: none;
-    }
+  #help_tags, #help_description {
+    display: none;
   }
 }

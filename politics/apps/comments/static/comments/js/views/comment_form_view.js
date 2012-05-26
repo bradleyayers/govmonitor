@@ -127,7 +127,7 @@ AP.Comments.FormView = Backbone.View.extend({
         var template = _.template([
           "<textarea name='body'><%- body %></textarea>",
           "<div>",
-            "<input type='submit' value='<%- submitLabel %>'/>",
+            "<input class='button' type='submit' value='<%- submitLabel %>'/>",
             "<a class='cancel' href='#'>Cancel</a>",
           "</div>",
         ].join(""));

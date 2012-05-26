@@ -37,12 +37,12 @@
             {% if show_current %}
                 <form action="{% url core:references:archive reference.pk %}" class="archive" method="post">
                     {% csrf_token %}
-                    <input type="submit" value="Archive"/>
+                    <input class="button" type="submit" value="Archive"/>
                 </form>
             {% else %}
                 <form action="{% url core:references:unarchive reference.pk %}" class="archive" method="post">
                     {% csrf_token %}
-                    <input type="submit" value="Unarchive"/>
+                    <input class="button" type="submit" value="Unarchive"/>
                 </form>
             {% endif %}
             <a href="{% url core:references:edit reference.pk %}">Edit</a>

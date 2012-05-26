@@ -55,12 +55,14 @@
                     </ul>
                 </div>
             {% endif %}
-            {% if form.instance.pk %}
-                <input type="submit" value="Save"/>
-                <a class="cancel" href="{% url core:issues:show form.instance.pk form.instance.slug %}">Cancel</a>
-            {% else %}
-                <input type="submit" value="Create"/>
-            {% endif %}
+            <div class="actions">
+                {% if form.instance.pk %}
+                    <input class="button" type="submit" value="Save"/>
+                    <a class="cancel" href="{% url core:issues:show form.instance.pk form.instance.slug %}">Cancel</a>
+                {% else %}
+                    <input class="button" type="submit" value="Create"/>
+                {% endif %}
+            </div>
         </form>
     </div>
     <div id="content-secondary">

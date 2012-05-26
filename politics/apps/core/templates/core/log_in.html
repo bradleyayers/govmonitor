@@ -13,7 +13,7 @@
         <div class="log-in">
             <h1><strong>Log In</strong></h1>
             {% if form.errors or request.GET.error %}
-                <div class="errors">Uh oh, we couldn't log you in. Give it another go.</div>
+                <div class="errors">Oops, we couldn't log you in. Give it another go.</div>
             {% endif %}
             <div class="left">
                 <a href="{% url socialauth_begin "facebook" %}{{ next }}">
@@ -25,7 +25,7 @@
                     {% csrf_token %}
                     <input name="email" placeholder="Email" type="text"/>
                     <input name="password" placeholder="Password" type="password"/>
-                    <input type="submit" value="Log in"/>
+                    <input class="button" type="submit" value="Log In"/>
                     <a href="{% url core:register %}">Register</a>
                 </form>
             </div>

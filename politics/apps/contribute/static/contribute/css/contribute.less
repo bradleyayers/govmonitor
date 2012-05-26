@@ -1,21 +1,16 @@
-.gradient-background (@from, @to) {
-  background-image: -o-linear-gradient(top, @from, @to);
-  background-image: -moz-linear-gradient(top, @from, @to);
-  background-image: -webkit-linear-gradient(top, @from, @to);
-  background-image: linear-gradient(top, @from, @to);
-}
+@import "util";
 
 #header-primary a#header-contribute {
   border: 1px solid #CCC;
   border-color: rgba(0, 0, 0, 0.05) rgba(0, 0, 0, 0.05) rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  .gradient-background(#FFE550, #FFCD4A);
-  margin: 7px 10px 11px 10px;
+  .border-radius(5px);
+  .box-shadow(inset 0 1px 0 rgba(255, 255, 255, 0.2));
+  .linear-gradient-background(top, #FFE550, #FFCD4A);
+  margin: 0 10px;
   padding: 10px;
 
   &:hover {
-    .gradient-background(#FFF050, #FFD54A);
+    .linear-gradient-background(top, #FFF050, #FFD54A);
   }
 }
 

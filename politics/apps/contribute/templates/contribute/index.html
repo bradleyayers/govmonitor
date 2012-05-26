@@ -38,11 +38,11 @@
             {% endwith %}
             <form action="" class="reference" method="POST">
                 {% include "core/references/_form.html" %}
-                <input type="submit" value="Save"/>
+                <input class="button" type="submit" value="Save"/>
             </form>
             <form action="{% url contribute:skip %}" class="skip" method="POST">
                 {% csrf_token %}
-                <input type="submit" value="Skip"/>
+                <input class="button" type="submit" value="Skip"/>
             </form>
         {% else %}
             <em>We don't have any tasks to give you; you'll have to find some other way to contribute.</em>
