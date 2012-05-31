@@ -38,9 +38,9 @@
             </div>
             <footer>
                 <ul class="stats">
-                    <li class="available"><strong>{{ issue.percentage_views_known|floatformat:0 }}%</strong> of views known</li>
-                    <li class="updated" title="{{ issue.updated_at }}">Last updated <strong>{{ issue.updated_at|interval_string }}</strong> ago</li>
-                    <li class="views"><strong>{{ issue|view_count }}</strong> views</li>
+                    <li class="available icon-bar-chart"><strong>{{ issue.percentage_views_known|floatformat:0 }}%</strong> of views known</li>
+                    <li class="updated icon-time" title="{{ issue.updated_at }}">Last updated <strong>{{ issue.updated_at|interval_string }}</strong> ago</li>
+                    <li class="views icon-eye-open"><strong>{{ issue|view_count }}</strong> views</li>
                 </ul>
                 {% if request.user.is_authenticated %}
                     <a class="edit" href="{% url core:issues:edit issue.pk %}">Edit</a>

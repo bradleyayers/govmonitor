@@ -2,6 +2,7 @@
 from django import template
 from django.core.urlresolvers import reverse
 from django.template import Node
+from politics.apps.core.models import View
 
 
 register = template.Library()
@@ -69,6 +70,15 @@ def get(dictionary, key):
     :type         key: ``str``
     """
     return dictionary[key]
+
+
+@register.simple_tag
+def stance_icon(stance):
+    return {
+        View.OPPOSE: "icon-thumbs-down",
+        View.SUPPORT: "icon-thumbs-up",
+        View.UNCLEAR: "icon-question-sign",
+    }.get(stance, "")
 
 
 @register.filter

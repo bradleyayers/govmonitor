@@ -78,18 +78,16 @@ div.issue {
       margin: 0;
 
       li {
-        background: transparent url("/static/core/img/issue.png") no-repeat;
         display: inline-block;
         height: 11px;
         margin-right: 5px;
-        padding-left: 15px;
 
-        &.updated {
-          background-position: 0 -11px;
-        }
-
-        &.views {
-          background-position: 0 -22px;
+        &::before {
+          font-size: 14px;
+          padding-right: 0.3em;
+          position: relative;
+          text-indent: 0;
+          top: 1px;
         }
       }
     }
@@ -122,18 +120,16 @@ div.issue-summary {
     margin: 0 0 1em 10px;
 
     li {
-      background: transparent url("/static/core/img/issue.png") no-repeat;
       display: inline-block;
       height: 11px;
       margin-right: 5px;
-      padding-left: 15px;
 
-      &.updated {
-        background-position: 0 -11px;
-      }
-
-      &.views {
-        background-position: 0 -22px;
+      &::before {
+        font-size: 14px;
+        padding-right: 0.3em;
+        position: relative;
+        text-indent: 0;
+        top: 1px;
       }
     }
   }
@@ -150,36 +146,48 @@ div.issue-summary {
       display: inline;
 
       a {
-        background: transparent url("/static/core/img/lozenges.png") no-repeat;
         border: 1px solid;
         .border-radius(5px);
         display: inline-block;
         font-size: 12px;
         font-weight: bold;
         margin: 0 3px 3px 0;
-        padding: 3px 6px 4px 17px;
+        padding: 3px 6px 4px 6px;
         text-shadow: 0 1px 2px rgba(255, 255, 255, 0.75);
         white-space: nowrap;
+        width: auto;
 
         &.oppose {
           background-color: #FFA6A6;
-          background-position: 4px 5px;
           border-color: #DC7B7B;
           color: #9D1515;
         }
 
         &.support {
           background-color: #B1F0AF;
-          background-position: 4px -10px;
           border-color: #96CD94;
           color: #2D742B;
+
+          &::before {
+            top: 0;
+          }
         }
 
         &.unclear {
           background-color: #FFED93;
-          background-position: 4px -25px;
           border-color: #EDD54E;
           color: #AC841A;
+        }
+
+        &::before {
+          font-size: 13px;
+          padding-right: 0.3em;
+          position: relative;
+          top: 1px;
+        }
+
+        &:hover::before {
+          text-decoration: none;
         }
       }
     }

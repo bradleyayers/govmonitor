@@ -39,6 +39,9 @@
 {% block stylesheets %}
     {% compress css %}
         {{ block.super }}
+        <!-- Libraries -->
+        <link href="{{ STATIC_URL }}css/font-awesome.less" rel="stylesheet" type="text/less"/>
+
         <!-- Core -->
         <link href="{{ STATIC_URL }}css/base.less" rel="stylesheet" type="text/less"/>
         <link href="{{ STATIC_URL }}core/css/about.less" rel="stylesheet" type="text/less"/>

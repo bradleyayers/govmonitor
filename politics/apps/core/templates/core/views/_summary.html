@@ -3,7 +3,7 @@
 <div class="view-summary">
     <h3><a href="{% url core:views:show view.pk view.slug %}">{{ heading }}</a></h3>
     <ul class="stats">
-        <li class="updated">Last updated <strong>{{ view.updated_at|interval_string }}</strong> ago</li>
+        <li class="updated icon-time">Last updated <strong>{{ view.updated_at|interval_string }}</strong> ago</li>
     </ul>
     <a class="stance {{ view.stance }}" href="{% url core:views:show view.pk view.slug %}">{{ view.get_stance_display }}</a>
 </div>
