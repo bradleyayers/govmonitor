@@ -68,17 +68,6 @@ class ReferenceTestCase(TransactionTestCase):
         self.assertEqual(emails, {email.to[0] for email in mail.outbox})
         self.assertTrue(all(len(email.to) == 1 for email in mail.outbox))
 
-    def test_manager_not_archived(self):
-        """The default manager's ``not_archived()`` method should return all
-            non-archived references."""
-        # Some archived references must exist for this test to make sense.
-        expected = Reference.objects.filter(is_archived=False)
-        self.assertTrue(expected.exists())
-
-        actual = Reference.objects.not_archived()
-        self.assertEqual(len(actual), len(expected))
-        self.assertFalse(any(r.is_archived for r in actual))
-
     def test_score_archived_votes(self):
         """The reference's score shouldn't include archived votes."""
         reference = Reference.objects.get(pk=1)

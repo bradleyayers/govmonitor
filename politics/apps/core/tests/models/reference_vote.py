@@ -27,7 +27,7 @@ class ReferenceVoteTestCase(TestCase):
         view = View.objects.get(pk=1)
         votes = ReferenceVote.objects.filter(
                 content_type=ContentType.objects.get_for_model(Reference),
-                object_id__in=[r.pk for r in view.reference_set.not_archived()])
+                object_id__in=[r.pk for r in view.reference_set.all()])
 
         # First, test without archived votes...
         actual = ReferenceVote.objects.get_for_view(view)

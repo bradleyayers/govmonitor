@@ -87,7 +87,6 @@
         "pk": 1,
         "fields": {
             "author": 1,
-            "is_archived": false,
             "stance": "support",
             "text": "This is a reference.",
             "url": "http://a.com/",
@@ -99,7 +98,6 @@
         "pk": 2,
         "fields": {
             "author": 1,
-            "is_archived": false,
             "stance": "oppose",
             "text": "This is another reference.",
             "url": "http://b.com/",
@@ -111,7 +109,6 @@
         "pk": 3,
         "fields": {
             "author": 1,
-            "is_archived": true,
             "stance": "oppose",
             "text": "This is an archived reference.",
             "url": "http://c.com/",

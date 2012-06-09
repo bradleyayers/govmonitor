@@ -25,27 +25,18 @@ def show(request, view):
 
             form = ReferenceForm()
 
-    # Should we show current or archived references?
-    show_current = request.GET.get("archived") != "1"
-
-    if show_current:
-        references = view.reference_set.not_archived()
-
-        # Retrieve the reference selected by the user.
-        reference_vote = view.get_vote_for_user(request.user)
-        selected_reference = getattr(reference_vote, "content_object", None)
-    else:
-        references = view.reference_set.filter(is_archived=True)
-        selected_reference = None
-
     # Sort the references in descending order of score. Break ties between
     # references by ordering randomly (taking advantage of tuple comparisons).
+    references = view.reference_set.all()
     references = sorted(references, None, lambda r: (r.score, random()), True)
+
+    # Retrieve the reference selected by the user.
+    reference_vote = view.get_vote_for_user(request.user)
+    selected_reference = getattr(reference_vote, "content_object", None)
 
     return {
         "form": form,
         "references": references,
         "selected_reference": selected_reference,
-        "show_current": show_current,
         "view": view
     }

@@ -171,7 +171,7 @@ class ReferenceForm(forms.ModelForm):
 
     class Meta:
         model = Reference
-        exclude = ("author", "is_archived", "score", "text_html", "view")
+        exclude = ("author", "score", "text_html", "view")
 
     def clean(self):
         """Ensure that ``url`` is unique within the stance."""

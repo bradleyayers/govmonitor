@@ -2,7 +2,7 @@
 from django.contrib.contenttypes import generic
 from django.db import models
 from politics.apps.core.fields import ScoreField
-from politics.apps.core.models import ArchiveManager, View, Vote
+from politics.apps.core.models import View, Vote
 from politics.utils.models import MarkdownField
 
 
@@ -19,8 +19,6 @@ class Reference(models.Model):
     :type      author: ``django.contrib.auth.models.User``
     :ivar  created_at: When the reference was created.
     :type  created_at: ``datetime.datetime``
-    :ivar is_archived: Whether the reference has been archived.
-    :type is_archived: ``bool``
     :ivar published_on: When the information itself was published (e.g. when a
                         news article was posted online or printed in the paper).
     :type published_on: ``datetime.date`` or ``None``
@@ -52,7 +50,6 @@ class Reference(models.Model):
 
     author = models.ForeignKey("auth.User")
     created_at = models.DateTimeField(auto_now_add=True)
-    is_archived = models.BooleanField(default=False)
     published_on = models.DateField(blank=True, null=True)
     score = ScoreField()
     stance = models.CharField(choices=STANCE_CHOICES, max_length=7)
@@ -65,9 +62,6 @@ class Reference(models.Model):
 
     view = models.ForeignKey("View")
     votes = generic.GenericRelation(Vote)
-
-    # Override the default manager.
-    objects = ArchiveManager()
 
     class Meta:
         app_label = "core"
@@ -145,7 +139,6 @@ class Reference(models.Model):
 # Automatically cast a vote on new References from their author.
 models.signals.post_save.connect(Reference.create_author_vote, sender=Reference)
 
-# References will typically be archived instead of deleted, but hook it up
-# anyway just to avoid getting the database into an inconsistent state.
+# Update views when their references change.
 models.signals.post_delete.connect(Reference.update_view, sender=Reference)
 models.signals.post_save.connect(Reference.update_view, sender=Reference)

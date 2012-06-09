@@ -33,20 +33,7 @@
     </p>
 
     {% if request.user.is_authenticated %}
-        <p>
-            {% if show_current %}
-                <form action="{% url core:references:archive reference.pk %}" class="archive" method="post">
-                    {% csrf_token %}
-                    <input class="button" type="submit" value="Archive"/>
-                </form>
-            {% else %}
-                <form action="{% url core:references:unarchive reference.pk %}" class="archive" method="post">
-                    {% csrf_token %}
-                    <input class="button" type="submit" value="Unarchive"/>
-                </form>
-            {% endif %}
-            <a href="{% url core:references:edit reference.pk %}">Edit</a>
-        </p>
+        <p><a href="{% url core:references:edit reference.pk %}">Edit</a></p>
     {% endif %}
 
     {% comments reference %}

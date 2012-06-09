@@ -12,28 +12,6 @@ from politics.utils.decorators import (pk_url, render_json, render_to_template,
 import reversion
 
 
-@login_required
-@require_POST
-@pk_url(Reference)
-def archive(request, reference, archive=True):
-    """Archive or unarchive a reference.
-
-    :param   request: The HTTP request that was made.
-    :type    request: ``django.http.HttpRequest``
-    :param reference: The reference that is to be (un)archived.
-    :type  reference: :class:`Reference`
-    :param   archive: If ``True``, ``reference`` will be archived; if
-                      ``False``, it will be unarchived. Set in the URLconf.
-    :type    archive: ``bool``
-    """
-    reference.is_archived = archive
-    reference.save()
-
-    kwargs = {"pk": reference.view.pk, "slug": reference.view.slug}
-    return HttpResponseRedirect(reverse("core:views:show", kwargs=kwargs) +
-                                ("" if archive else "?archived=1"))
-
-
 @pk_url(Reference)
 def comments(request, reference):
     """Create/read reference comments.

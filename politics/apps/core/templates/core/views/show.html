@@ -21,20 +21,11 @@
             Current stance: <span class="{{ view.stance }}">{{ view.get_stance_display }}</span>
         </p>
 
-        <ol class="tabs">
-            <li {% if show_current %}class="selected"{% endif %}><a href="{% query_string archived=0 %}">Current</a></li>
-            <li {% if not show_current %}class="selected"{% endif %}><a href="{% query_string archived=1 %}">Archived</a></li>
-        </ol>
-
         <div class="references">
             {% for reference in references %}
                 {% include "core/views/_reference.html" %}
             {% empty %}
-                {% if show_current %}
-                    <i>There aren't any references. Why not submit one?</i>
-                {% else %}
-                    <i>There are no archived references for this view.</i>
-                {% endif %}
+                <i>There aren't any references. Why not submit one?</i>
             {% endfor %}
         </div>
 
