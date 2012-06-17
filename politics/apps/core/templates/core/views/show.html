@@ -17,10 +17,6 @@
             <strong><a href="{% url core:issues:show view.issue.pk view.issue.slug %}">{{ view.issue.name }}</a></strong>
         </h1>
 
-        <p class="stance">
-            Current stance: <span class="{{ view.stance }}">{{ view.get_stance_display }}</span>
-        </p>
-
         <div class="references">
             {% for reference in references %}
                 {% include "core/views/_reference.html" %}

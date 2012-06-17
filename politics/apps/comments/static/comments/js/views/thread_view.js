@@ -4,56 +4,9 @@ AP.namespace("AP.Comments");
  * A thread of comments.
  */
 AP.Comments.ThreadView = Backbone.View.extend({
-    events: {
-        "click .add-comment": "_addCommentClicked"
-    },
-
     initialize: function() {
         _.bindAll(this);
         this.collection.bind("add", this._createCommentView);
-    },
-
-    /**
-     * Hides the add comment link and shows a "new comment" form.
-     *
-     * @private
-     */
-    _addCommentClicked: function(e) {
-        e.preventDefault();
-
-        var addComment = this.$(".add-comment");
-        var form = new AP.Comments.FormView({
-            model: new AP.Comments.Comment()
-        });
-
-        form.on("cancel", function() {
-            addComment.show();
-            form.remove();
-        });
-
-        var instance = this;
-        form.on("submit", function() {
-            var error = function() {
-                form.setLoading(false);
-                form.showErrorMessage("Something broke and your comment couldn't be added.");
-            };
-
-            var success = function(comment) {
-                instance.collection.add(comment);
-                addComment.show();
-                form.remove();
-            };
-
-            form.setLoading(true);
-            instance.collection.createComment(form.buildModel(), {
-                error: error,
-                success: success
-            });
-        });
-
-        addComment.hide();
-        this.$el.append(form.el);
-        form.$("textarea").focus();
     },
 
     /**
@@ -68,6 +21,76 @@ AP.Comments.ThreadView = Backbone.View.extend({
         }).render();
 
         this.$("ol").append(commentView.el);
+    },
+
+    /**
+     * Remove the comment form.
+     *
+     * @private
+     */
+    _removeForm: function() {
+        this.form.$el.parent().remove();
+        delete this.form;
+
+        // If there are no comments, remove the chrome.
+        if (this.$("ol li").length === 0) {
+            this.$el.html("");
+        }
+    },
+
+    render: function() {
+        this.$el.html([
+            "<div class='arrow'></div>",
+            "<ol></ol>"
+        ].join(""));
+    },
+
+    /**
+     * Shows a comment form at the bottom of the thread.
+     */
+    showCommentForm: function() {
+        // Is there already a form?
+        if (this.form) {
+            this.form.focus();
+            return;
+        }
+
+        var form = this.form = new AP.Comments.FormView({
+            model: new AP.Comments.Comment()
+        });
+
+        var instance = this;
+        form.on("cancel", function() {
+            instance._removeForm();
+        });
+
+        form.on("submit", function() {
+            var error = function() {
+                form.setLoading(false);
+                form.showErrorMessage("Something broke and your comment couldn't be added.");
+            };
+
+            var success = function(comment) {
+                instance.collection.add(comment);
+                instance._removeForm();
+            };
+
+            form.setLoading(true);
+            instance.collection.createComment(form.buildModel(), {
+                error: error,
+                success: success
+            });
+        });
+
+        // Do we need to render? If there were no comments on page load, `el`
+        // will be empty and we'll need to render the chrome into it.
+        if (this.$("ol").length === 0) {
+            this.render();
+        }
+
+        var formEl = $("<li></li>").append(form.el);
+        this.$("ol").append(formEl);
+        form.focus();
     }
 }, {
     /**

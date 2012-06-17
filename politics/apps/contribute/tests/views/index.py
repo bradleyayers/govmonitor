@@ -2,13 +2,13 @@
 from ...models import Task
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.test import TransactionTestCase
 from django.test.client import Client
 from politics.apps.core.models import Reference, View
 from politics.utils.views import login_path
 
 
-class IndexTestCase(TestCase):
+class IndexTestCase(TransactionTestCase):
     """Unit tests for the ``index`` view."""
 
     fixtures = ("contribute_test_data", "core_test_data")
@@ -53,6 +53,7 @@ class IndexTestCase(TestCase):
         response = self.client.post(reverse("contribute:index"), {
             "stance": View.SUPPORT,
             "text": "This is a new reference!",
+            "title": "Reference",
             "url": "http://www.atlassian.com/",
         })
 

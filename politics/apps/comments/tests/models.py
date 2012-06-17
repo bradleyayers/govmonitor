@@ -1,10 +1,10 @@
 # coding=utf-8
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.test import TransactionTestCase
 from politics.apps.comments.models import Comment
 
 
-class CommentTestCase(TestCase):
+class CommentTestCase(TransactionTestCase):
     """Unit tests for the ``Comment`` model."""
 
     fixtures = ("comments_test_data", "core_test_data")

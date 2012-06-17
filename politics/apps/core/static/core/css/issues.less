@@ -1,9 +1,5 @@
 @import "util";
 
-@background-colour: #F5F5F5;
-@border-colour: #DDD;
-@stats-colour: #B2B2B2;
-
 html.issues #call-to-action {
   margin-bottom: 2em;
 
@@ -38,8 +34,8 @@ html.issues #call-to-action {
 }
 
 div.issue {
-  background: @background-colour;
-  border: 1px solid @border-colour;
+  background: @grey-background;
+  border: 1px solid @grey-border;
   .border-radius(5px);
   margin-bottom: 1.5em;
 
@@ -63,7 +59,7 @@ div.issue {
   }
 
   footer {
-    border-top: 1px solid @border-colour;
+    border-top: 1px solid @grey-border;
     .border-radius(0 0 5px 5px);
     .box-sizing(border-box);
     overflow: auto;
@@ -71,7 +67,7 @@ div.issue {
     width: 100%;
 
     ul.stats {
-      color: @stats-colour;
+      color: @meta-colour;
       float: left;
       font-size: 11px;
       list-style-type: none;
@@ -99,8 +95,8 @@ div.issue {
 }
 
 div.issue-summary {
-  background: @background-colour;
-  border: 1px solid @border-colour;
+  background: @grey-background;
+  border: 1px solid @grey-border;
   .border-radius(5px);
   margin-bottom: 1.5em;
 
@@ -115,7 +111,7 @@ div.issue-summary {
   }
 
   ul.stats {
-    color: @stats-colour;
+    color: @meta-colour;
     font-size: 11px;
     margin: 0 0 1em 10px;
 
@@ -137,7 +133,7 @@ div.issue-summary {
   > .views {
     background-color: #FFF;
     .border-radius(0 0 5px 5px);
-    border-top: 1px solid @border-colour;
+    border-top: 1px solid @grey-border;
     font-size: 0;
     margin: 0;
     padding: 5px 5px 2px 5px;
@@ -167,23 +163,22 @@ div.issue-summary {
           background-color: #B1F0AF;
           border-color: #96CD94;
           color: #2D742B;
-
-          &::before {
-            top: 0;
-          }
         }
 
         &.unclear {
           background-color: #FFED93;
           border-color: #EDD54E;
           color: #AC841A;
+
+          &::before {
+            position: relative;
+            top: 1px;
+          }
         }
 
         &::before {
           font-size: 13px;
           padding-right: 0.3em;
-          position: relative;
-          top: 1px;
         }
 
         &:hover::before {

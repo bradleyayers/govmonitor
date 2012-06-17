@@ -88,7 +88,7 @@ class Migration(SchemaMigration):
             'creator': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_archived': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'score': ('politics.apps.core.fields.ScoreField', [], {'default': '0'}),
+            'score': ('politics.apps.votes.fields.ScoreField', [], {'default': '0'}),
             'stance': ('django.db.models.fields.CharField', [], {'max_length': '7'}),
             'text': ('politics.utils.models.fields.MarkdownField', [], {'blank': 'True'}),
             'text_html': ('django.db.models.fields.TextField', [], {'blank': 'True'}),

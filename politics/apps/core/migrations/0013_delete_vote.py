@@ -5,25 +5,16 @@ from south.v2 import SchemaMigration
 from django.db import models
 
 class Migration(SchemaMigration):
+    depends_on = (
+      ("votes", "0001_initial"),
+    )
 
     def forwards(self, orm):
-        
-        # Adding model 'PartySimilarity'
-        db.create_table('core_partysimilarity', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('first_party', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Party'])),
-            ('is_archived', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('second_party', self.gf('django.db.models.fields.related.ForeignKey')(related_name='+', to=orm['core.Party'])),
-            ('similarity', self.gf('django.db.models.fields.FloatField')()),
-        ))
-        db.send_create_signal('core', ['PartySimilarity'])
+        pass
 
 
     def backwards(self, orm):
-        
-        # Deleting model 'PartySimilarity'
-        db.delete_table('core_partysimilarity')
+        pass
 
 
     models = {
@@ -96,11 +87,12 @@ class Migration(SchemaMigration):
             'author': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_archived': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'published_on': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'score': ('politics.apps.votes.fields.ScoreField', [], {'default': '0'}),
             'stance': ('django.db.models.fields.CharField', [], {'max_length': '7'}),
             'text': ('politics.utils.models.fields.MarkdownField', [], {'blank': 'True'}),
             'text_html': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
             'view': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.View']"})
         },
@@ -120,18 +112,21 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'View'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'issue': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Issue']"}),
+            'notability': ('django.db.models.fields.FloatField', [], {'default': '0'}),
             'party': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Party']"}),
             'slug': ('autoslug.fields.AutoSlugField', [], {'unique_with': '()', 'max_length': '193', 'populate_from': 'None', 'db_index': 'True'}),
-            'stance': ('django.db.models.fields.CharField', [], {'default': "'unknown'", 'max_length': '7'})
+            'stance': ('django.db.models.fields.CharField', [], {'default': "'unknown'", 'max_length': '7'}),
+            'updated_at': ('django.db.models.fields.DateTimeField', [], {})
         },
-        'core.vote': {
+        'votes.vote': {
             'Meta': {'object_name': 'Vote'},
             'author': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_archived': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'object_id': ('django.db.models.fields.PositiveIntegerField', [], {})
+            'object_id': ('django.db.models.fields.PositiveIntegerField', [], {}),
+            'type': ('django.db.models.fields.CharField', [], {'max_length': '4'})
         }
     }
 

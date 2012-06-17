@@ -8,7 +8,7 @@ class PartySimilarity(models.Model):
 
     The similarity between two parties is a measure of how many views they
     share: if their views differ on all issues, their similarity is 0; if
-    they're all the same, it is 100. It will likely fall somewhere in-between.
+    they're all the same, it is 1. It will likely fall somewhere in-between.
 
     As :class:`PartySimilarity` objects aren't deleted, the most recently
     created object referencing two parties is to be considered "correct".
@@ -43,7 +43,7 @@ class PartySimilarity(models.Model):
 
     def save(self, *args, **kwargs):
         # Validate the similarity value.
-        if not 0 <= self.similarity <= 100:
-            raise ValueError("similarity must be between 0 and 100 inclusive.")
+        if not 0 <= self.similarity <= 1:
+            raise ValueError("similarity must be between 0 and 1 inclusive.")
 
         super(PartySimilarity, self).save(*args, **kwargs)

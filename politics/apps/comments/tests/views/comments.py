@@ -1,7 +1,7 @@
 # coding=utf-8
 from django.contrib.auth.models import AnonymousUser, User
 from django.contrib.contenttypes.models import ContentType
-from django.test import TestCase
+from django.test import TransactionTestCase
 import fudge
 import json
 from politics.apps.comments.models import Comment
@@ -9,7 +9,7 @@ from politics.apps.comments.views import comments
 import reversion
 
 
-class CommentsViewTestCase(TestCase):
+class CommentsViewTestCase(TransactionTestCase):
     """Unit tests for the generic ``comments`` view."""
 
     fixtures = ("core_test_data",)

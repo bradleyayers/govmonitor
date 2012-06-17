@@ -9,6 +9,7 @@ slug_pattern = r"^(?P<pk>\d+)/(?:(?P<slug>[a-z0-9_-]*)/)?$"
 # /ajax/
 ajax_patterns = patterns("",
     url(r"^tags/$", ajax.tags, name="tags"),
+    url(r"^title/$", ajax.title, name="title"),
 )
 
 # /issues/

@@ -1,11 +1,11 @@
 # coding=utf-8
 from ..models import Task
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.test import TransactionTestCase
 from politics.apps.core.models import View
 
 
-class TaskTestCase(TestCase):
+class TaskTestCase(TransactionTestCase):
     """Unit tests for the ``Task`` model."""
 
     fixtures = ("contribute_test_data", "core_test_data")

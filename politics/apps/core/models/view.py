@@ -24,10 +24,8 @@ class View(models.Model):
     support, or unclear. This is calculated from :class:`Reference`s that have
     been submitted to the view, acting as evidence for one stance or another.
 
-    Users vote on the submitted references, with the stance of the highest
-    scoring reference used as the party's stance. Users may only vote on a
-    single reference, but they may change their vote at any time. This ensures
-    that new, high-quality references have the potential to rise to the top.
+    Users vote on the submitted references, with the stance of the most recently
+    published reference with a score above 0.5 being used as the party's stance.
     """
 
     # Stances a party might take on an issue.
@@ -85,64 +83,12 @@ class View(models.Model):
         """Returns the view's absolute URL."""
         return reverse("core:views:show", args=(self.pk, self.slug))
 
-    def get_vote_for_user(self, user):
-        """Retrieve a user's vote within the view.
-
-        Returns ``None`` if ``user`` is anonymous.
-
-        :param user: The user.
-        :type  user: ``django.contrib.auth.models.User``
-        :returns: ``user``'s vote or ``None`` if they haven't voted.
-        :rtype: :class:`ReferenceVote` or ``None``
-
-        .. note::
-
-            Assumes that the user cannot cast more than one vote; if they have
-            somehow cast multiple, then the system is in an inconsistent state.
-        """
-        from . import ReferenceVote
-
-        if user.is_anonymous():
-            return None
-
-        try:
-            votes = ReferenceVote.objects.get_for_view(self)
-            return votes.filter(author=user)[0]
-        except IndexError:
-            return None
-
-    def withdraw_vote(self, user):
-        """Withdraw a user's vote within the view.
-
-        :param user: The user.
-        :type  user: ``django.contrib.auth.models.User``
-        """
-        vote = self.get_vote_for_user(user)
-
-        if vote:
-            vote.is_archived = True
-            vote.save()
-
-    def cast_vote(self, reference, user):
-        """Cast a vote on one of the view's references.
-
-        The user's existing vote (if any) is withdrawn.
-
-        :param reference: The reference to vote for.
-        :type  reference: ``politics.apps.core.models.Reference``
-        :param      user: The user casting the vote.
-        :type       user: ``django.contrib.auth.models.User``
-        """
-        from . import ReferenceVote
-
-        self.withdraw_vote(user)
-        ReferenceVote(content_object=reference, author=user).save()
-
     def refresh_stance(self):
         """Recalculate the view's ``stance``.
 
-        A view's stance is equal to that of the :class:`Reference` with the
-        greatest number of non-archived votes (the "best" reference).
+        A view's stance is equal to that of the most recently published
+        :class:`Reference` with a score above 0.5 (this means that the majority
+        of users have voted the reference up rather than down; it is good).
 
         This method assumes that the view's :class:`Reference`s are up to date
         (their scores reflect the votes cast). If the stance changes, the
@@ -159,17 +105,11 @@ class View(models.Model):
             return
 
         try:
-            # Fetch the reference(s) with the greatest score.
-            references = self.reference_set.order_by("-score")
-            references = list(groupby(references, lambda r: r.score).next()[1])
-
-            # Calculate the winning stance. If there was a tie, we can only
-            # determine the winner if all the references have the same stance.
-            stance = self.UNCLEAR
-            if len(set(r.stance for r in references)) == 1:
-                stance = references[0].stance
+            references = self.reference_set.filter(score__gte=0.5)
+            references = references.order_by("-published_on")
+            stance = references[0].stance
         # No references.
-        except StopIteration:
+        except IndexError:
             stance = self.UNKNOWN
 
         if stance != self.stance:

@@ -1,6 +1,6 @@
 [
     {
-        "model": "core.Vote",
+        "model": "votes.Vote",
         "pk": null,
         "fields": {
             "author": 1,
@@ -10,7 +10,7 @@
         }
     },
     {
-        "model": "core.Vote",
+        "model": "votes.Vote",
         "pk": null,
         "fields": {
             "author": 1,

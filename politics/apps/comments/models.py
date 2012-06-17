@@ -80,13 +80,16 @@ class Comment(models.Model):
 
 
 @receiver(post_save, sender=Comment)
-def _notify_object_of_comment_creation(instance, **kwargs):
+def _notify_object_of_comment_creation(instance, created, **kwargs):
     """Notify an object that a comment has been made on it.
 
+    :param  created: Whether the comment is new.
+    :type   created: ``bool``
     :param instance: The comment that was created.
     :type  instance: ``politics.apps.comments.models.Comment``
     """
     try:
-        instance.content_object.handle_comment_created(instance)
+        if created:
+            instance.content_object.handle_comment_created(instance)
     except AttributeError:
         pass

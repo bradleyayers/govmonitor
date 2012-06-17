@@ -59,6 +59,13 @@ AP.Comments.FormView = Backbone.View.extend({
     },
 
     /**
+     * Focus the form.
+     */
+    focus: function() {
+        this.$("textarea").focus();
+    },
+
+    /**
      * Triggers the submit event if the form's content is valid.
      *
      * Called when the form is submitted.

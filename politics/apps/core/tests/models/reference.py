@@ -1,9 +1,11 @@
 # coding=utf-8
 from django.contrib.auth.models import User
 from django.core import mail
+from django.db import transaction
 from django.test import TransactionTestCase
 from politics.apps.comments.models import Comment
-from politics.apps.core.models import Reference, ReferenceVote, View
+from politics.apps.core.models import Reference, View
+from politics.apps.votes.models import Vote
 
 
 class ReferenceTestCase(TransactionTestCase):
@@ -16,16 +18,16 @@ class ReferenceTestCase(TransactionTestCase):
             cast on it from its author, archiving their old vote."""
         user = User.objects.get(pk=1)
         view = View.objects.get(pk=1)
-        vote = view.get_vote_for_user(user)
+        vote_count = Vote.objects.count()
+        reference = Reference.objects.get_or_create(author=user,
+                stance=View.SUPPORT, text="", title="A Reference!",
+                url="http://d.com/", view=view)[0]
 
-        # A vote should automatically be cast for this.
-        reference = Reference(author=user, stance=View.SUPPORT, text="",
-                              url="http://d.com/", view=view)
-        reference.save()
-
-        new_vote = view.get_vote_for_user(user)
-        self.assertNotEqual(new_vote, vote)
-        self.assertEqual(new_vote.content_object, reference)
+        vote = Vote.objects.latest("pk")
+        self.assertEqual(vote_count + 1, Vote.objects.count())
+        self.assertEqual(vote.author, user)
+        self.assertEqual(vote.content_object, reference)
+        self.assertEqual(vote.type, Vote.UP)
 
     def test_comment_emails_author(self):
         """A reference's author should be emailed if someone comments on it."""
@@ -67,9 +69,3 @@ class ReferenceTestCase(TransactionTestCase):
         emails = {User.objects.get(pk=pk).email for pk in (1, 3)}
         self.assertEqual(emails, {email.to[0] for email in mail.outbox})
         self.assertTrue(all(len(email.to) == 1 for email in mail.outbox))
-
-    def test_score_archived_votes(self):
-        """The reference's score shouldn't include archived votes."""
-        reference = Reference.objects.get(pk=1)
-        expected = ReferenceVote.objects.get_for_instance(reference).count()
-        self.assertEqual(reference.score, expected)

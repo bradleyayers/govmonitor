@@ -1,11 +1,11 @@
 $(function() {
-    $("div.comment-thread").each(function() {
-        AP.Comments.ThreadView.fromElement(this);
+    $(".commentable").each(function() {
+        AP.Comments.CommentableView.fromElement(this);
     });
 
     // Highlight the target comment.
     var hash = window.location.hash;
     if (hash !== "") {
-        $("div.comment-thread " + hash).addClass("highlighted");
+        $(".comment-thread " + hash).addClass("highlighted");
     }
 });

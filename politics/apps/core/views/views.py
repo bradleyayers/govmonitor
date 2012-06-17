@@ -30,13 +30,8 @@ def show(request, view):
     references = view.reference_set.all()
     references = sorted(references, None, lambda r: (r.score, random()), True)
 
-    # Retrieve the reference selected by the user.
-    reference_vote = view.get_vote_for_user(request.user)
-    selected_reference = getattr(reference_vote, "content_object", None)
-
     return {
         "form": form,
         "references": references,
-        "selected_reference": selected_reference,
         "view": view
     }

@@ -16,9 +16,9 @@ def interval_string(a, b):
     """Returns a string representing the interval between two points in time.
 
     :param a: The first point in time.
-    :type  a: ``datetime.datetime``
+    :type  a: ``datetime.date`` or ``datetime.datetime``
     :param b: The second point in time.
-    :type  b: ``datetime.datetime``
+    :type  b: ``datetime.date`` or ``datetime.datetime``
 
     :returns: A string representing the interval between ``a`` and ``b``.
     :rtype: ``str``
@@ -58,9 +58,9 @@ def _get_months_between(a, b):
         Assumes that ``b`` follows ``a``.
 
     :param a: The first point in time.
-    :type  a: ``datetime.datetime``
+    :type  a: ``datetime.date`` or ``datetime.datetime``
     :param b: The second point in time.
-    :type  b: ``datetime.datetime``
+    :type  b: ``datetime.date`` or ``datetime.datetime``
 
     :returns: The number of months between ``a`` and ``b``.
     :rtype: ``int``
@@ -105,9 +105,9 @@ def _get_years_between(a, b):
         Assumes that ``b`` follows ``a``.
 
     :param a: The first point in time.
-    :type  a: ``datetime.datetime``
+    :type  a: ``datetime.date`` or ``datetime.datetime``
     :param b: The second point in time.
-    :type  b: ``datetime.datetime``
+    :type  b: ``datetime.date`` or ``datetime.datetime``
 
     :returns: The number of years between ``a`` and ``b``.
     :rtype: ``int``

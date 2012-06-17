@@ -1,29 +1,37 @@
 # encoding: utf-8
 import datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
+from django.contrib.contenttypes import generic
 from django.db import models
+from politics.apps.votes.models import Vote
 
-class Migration(SchemaMigration):
+class Migration(DataMigration):
+    depends_on = (
+      ("votes", "0002_add_vote_type"),
+    )
 
     def forwards(self, orm):
-        
-        # Adding model 'PartySimilarity'
-        db.create_table('core_partysimilarity', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('first_party', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Party'])),
-            ('is_archived', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('second_party', self.gf('django.db.models.fields.related.ForeignKey')(related_name='+', to=orm['core.Party'])),
-            ('similarity', self.gf('django.db.models.fields.FloatField')()),
-        ))
-        db.send_create_signal('core', ['PartySimilarity'])
+        db.alter_column("core_reference", "score", models.FloatField())
+
+        # Add the generic foreign key back onto Vote.
+        generic_foreign_key = generic.GenericForeignKey()
+        generic_foreign_key.contribute_to_class(orm["votes.vote"], "content_object")
+
+        # The reference content type.
+        content_type = orm["contenttypes.ContentType"]
+        content_type = content_type.objects.get_or_create(app_label="core", model="reference")
+
+        for reference in orm.Reference.objects.all():
+            votes = orm["votes.vote"].objects.filter(content_type=content_type,
+                    is_archived=False, object_id=reference.pk)
+
+            if len(votes) > 0:
+                Vote.refresh_score(votes[0], votes=votes)
 
 
     def backwards(self, orm):
-        
-        # Deleting model 'PartySimilarity'
-        db.delete_table('core_partysimilarity')
+        db.alter_column("core_reference", "score", models.IntegerField())
 
 
     models = {
@@ -96,11 +104,12 @@ class Migration(SchemaMigration):
             'author': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_archived': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'published_on': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'score': ('politics.apps.votes.fields.ScoreField', [], {'default': '0'}),
             'stance': ('django.db.models.fields.CharField', [], {'max_length': '7'}),
             'text': ('politics.utils.models.fields.MarkdownField', [], {'blank': 'True'}),
             'text_html': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
             'view': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.View']"})
         },
@@ -120,18 +129,21 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'View'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'issue': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Issue']"}),
+            'notability': ('django.db.models.fields.FloatField', [], {'default': '0'}),
             'party': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Party']"}),
             'slug': ('autoslug.fields.AutoSlugField', [], {'unique_with': '()', 'max_length': '193', 'populate_from': 'None', 'db_index': 'True'}),
-            'stance': ('django.db.models.fields.CharField', [], {'default': "'unknown'", 'max_length': '7'})
+            'stance': ('django.db.models.fields.CharField', [], {'default': "'unknown'", 'max_length': '7'}),
+            'updated_at': ('django.db.models.fields.DateTimeField', [], {})
         },
-        'core.vote': {
+        'votes.vote': {
             'Meta': {'object_name': 'Vote'},
             'author': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_archived': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'object_id': ('django.db.models.fields.PositiveIntegerField', [], {})
+            'object_id': ('django.db.models.fields.PositiveIntegerField', [], {}),
+            'type': ('django.db.models.fields.CharField', [], {'max_length': '4'})
         }
     }
 

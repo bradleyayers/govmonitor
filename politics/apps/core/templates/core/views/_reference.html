@@ -1,40 +1,30 @@
 {% load comments core %}
 
-<div class="reference" data-comment-url="{% url core:references:comments reference.pk %}">
-    <div class="vote-widget">
-        <input type="hidden" value="{{ reference.pk }}"/>
-        {% if reference == selected_reference %}
-            <a class="selected" title="Deselect this reference."></a>
-        {% else %}
-            <a title="Select this reference."></a>
-        {% endif %}
-    </div>
+<div class="commentable" data-comment-url="{% url core:references:comments reference.pk %}">
+    <div class="reference {{ reference.stance }}">
+        <div class="content">
+            <h2><a href="{{ reference.url }}">{{ reference.title }}</a></h2>
+            <span class="pill {{ reference.stance }}">{{ reference.get_stance_display }}</span>
 
-    <div class="stance {{ reference.stance }}">{{ reference.get_stance_display }}</div>
+            {% if reference.published_on %}
+                <span class="icon-time published" title="{{ reference.published_on }}">Published <strong>{{ reference.published_on|interval_string }}</strong> ago</span>
+            {% endif %}
 
-    {% if reference.text_html %}
-        <div class="markdown">
-            {{ reference.text_html|safe }}
+            <div class="markdown">
+                {% if reference.text_html %}
+                    {{ reference.text_html|safe }}
+                {% else %}
+                    <i>No description available, see source.</i>
+                {% endif %}
+            </div>
         </div>
-    {% else %}
-        <i>No text available, see source.</i>
-    {% endif %}
-
-    <p>
-        <a href="{{ reference.url }}" target="_blank">{{ reference.url }}</a>
-        {% if reference.published_on %}
-          <br/>Published on {{ reference.published_on|date:"jS F Y" }}
-        {% endif %}
-    </p>
-
-    <p>
-        {% user_link reference.author %}
-        <span title="{{ reference.created_at }}">{{ reference.created_at|interval_string }} ago</span>
-    </p>
-
-    {% if request.user.is_authenticated %}
-        <p><a href="{% url core:references:edit reference.pk %}">Edit</a></p>
-    {% endif %}
+        <footer>
+            <ol class="actions">
+                <li><a class="add-comment icon-comment" href="#">Comment</a></li>
+                <li><a class="icon-pencil" href="{% url core:references:edit reference.pk %}">Edit</a></li>
+            </ol>
+        </footer>
+    </div>
 
     {% comments reference %}
 </div>

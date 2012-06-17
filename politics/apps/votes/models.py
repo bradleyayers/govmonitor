@@ -1,8 +1,10 @@
 # coding=utf-8
-from ..fields import ScoreField
-from .generic_manager import GenericManager
+from .fields import ScoreField
 from django.contrib.contenttypes import generic
 from django.db import IntegrityError, models
+from django.db.models import Count
+from politics.apps.core.models.generic_manager import GenericManager
+from math import sqrt
 
 
 class VotesManager(GenericManager):
@@ -37,13 +39,7 @@ class Vote(models.Model):
 
     .. code-block:: python
 
-        from .models import MyModel
-        from django.contrib.auth.models import User
-        from politics.apps.core.models import Vote
-
-
-        user = User.objects.get(...)
-        vote = Vote(author=user, content_object=MyModel.objects.get(...))
+        vote = Vote(author=..., content_object=MyModel.objects.get(...))
 
     A ``GenericRelation`` must be added to models that will be voted on to
     ensure that deletes cascade to votes. A useful side effect: this provides
@@ -73,7 +69,14 @@ class Vote(models.Model):
     :type    is_archived: ``bool``
     :ivar      object_id: The ID of the subject of the vote.
     :type      object_id: ``int``
+    :ivar           type: The vote's type (up or down).
+    :type           type: ``str``
     """
+
+    # Types
+    UP = "up"
+    DOWN = "down"
+    TYPE_CHOICES = ((UP, "Up"), (DOWN, "Down"))
 
     author = models.ForeignKey("auth.User")
     content_object = generic.GenericForeignKey("content_type", "object_id")
@@ -81,12 +84,13 @@ class Vote(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_archived = models.BooleanField(default=False)
     object_id = models.PositiveIntegerField()
+    type = models.CharField(choices=TYPE_CHOICES, max_length=4)
 
     # Override the default manager.
     objects = VotesManager()
 
     class Meta:
-        app_label = "core"
+        app_label = "votes"
 
     @staticmethod
     def refresh_score(instance, **kwargs):
@@ -95,12 +99,28 @@ class Vote(models.Model):
         :param instance: The :class:`Vote` that was deleted or saved.
         :type  instance: :class:`Vote`
         """
+        # Returns the lower bound of a sample's Wilson score interval with 95%
+        # confidence. n is the sample size, p is the observed proportion.
+        def _wilson(n, p):
+            z = 1.65 # 95%
+            z2 = z * z
+            result = p + z2 / (2 * n)
+            result = result - z * sqrt((p * (1 - p)) / n + z2 / (4 * n * n))
+            return result / (1 + z2 / n)
+
         # The subject will be None in cascading deletes.
         subject = instance.content_object
         if subject is None:
             return
 
-        score = Vote.objects.get_for_instance(subject).count()
+        # The votes are passed in when we're running in a migration.
+        votes = kwargs.pop("votes", Vote.objects.get_for_instance(subject))
+        votes = votes.values("type").annotate(count=Count("type"))
+        votes = dict((v["type"], 1.0 * v["count"]) for v in votes)
+
+        up = votes.get(Vote.UP, 0.0)
+        total = up + votes.get(Vote.DOWN, 0.0)
+        score = _wilson(total, up / total) if total > 0 else 0
 
         # Update all the subject's ScoreFields.
         for field in subject._meta.fields:
@@ -119,6 +139,7 @@ class Vote(models.Model):
             raise IntegrityError("Duplicate vote.")
 
         super(Vote, self).save(*args, **kwargs)
+
 
 
 # The post_delete signal won't fire often (if at all) because votes should be

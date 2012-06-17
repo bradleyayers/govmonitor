@@ -70,7 +70,8 @@
         "fields": {
             "issue": 1,
             "party": 1,
-            "stance": "support"
+            "stance": "support",
+            "updated_at": "2012-01-01 00:00:00"
         }
     },
     {
@@ -79,7 +80,8 @@
         "fields": {
             "issue": 1,
             "party": 2,
-            "stance": "unknown"
+            "stance": "unknown",
+            "updated_at": "2012-01-01 00:00:00"
         }
     },
     {
@@ -89,6 +91,7 @@
             "author": 1,
             "stance": "support",
             "text": "This is a reference.",
+            "title": "A Reference from a.com",
             "url": "http://a.com/",
             "view": 1
         }
@@ -100,6 +103,7 @@
             "author": 1,
             "stance": "oppose",
             "text": "This is another reference.",
+            "title": "A Reference from b.com",
             "url": "http://b.com/",
             "view": 1
         }
@@ -111,28 +115,31 @@
             "author": 1,
             "stance": "oppose",
             "text": "This is an archived reference.",
+            "title": "A Reference from c.com",
             "url": "http://c.com/",
             "view": 1
         }
     },
     {
-        "model": "core.Vote",
+        "model": "votes.Vote",
         "pk": null,
         "fields": {
             "author": 1,
             "content_type": ["core", "reference"],
             "is_archived": false,
-            "object_id": 1
+            "object_id": 1,
+            "type": "up"
         }
     },
     {
-        "model": "core.Vote",
+        "model": "votes.Vote",
         "pk": null,
         "fields": {
+            "author": 1,
             "content_type": ["core", "reference"],
             "is_archived": true,
             "object_id": 1,
-            "author": 1
+            "type": "up"
         }
     },
     {

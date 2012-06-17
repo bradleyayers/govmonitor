@@ -1,2 +1,2 @@
 # coding=utf-8
-from .references import ReferenceViewsTestCase
+from .references import *

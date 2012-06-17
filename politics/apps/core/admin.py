@@ -11,5 +11,5 @@ admin.site.register(Reference, VersionAdmin)
 admin.site.register(View, VersionAdmin)
 
 # Register other models.
-models = (Party, Tag, UserProfile, Vote)
+models = (Party, Tag, UserProfile)
 map(admin.site.register, models)

@@ -1,16 +1,14 @@
 # coding=utf-8
-from django.db import transaction
 from django.http import HttpResponse, HttpResponseBadRequest
 import json
 from politics.apps.comments.models import Comment
 from politics.apps.comments.forms import CommentForm
-from politics.utils.decorators import pk_url, render_json, require_authenticated
+from politics.utils.decorators import pk_url, require_authenticated
 import reversion
 
 
 @pk_url(Comment)
 @require_authenticated
-@transaction.commit_on_success
 def comment(request, instance):
     """A RESTful view for deleting/editing comments.
 
@@ -48,7 +46,7 @@ def comment(request, instance):
     return HttpResponse(status=405)
 
 
-@transaction.commit_on_success
+@require_authenticated
 def comments(request, instance):
     """A generic, RESTful view for creating/reading comments on an object.
 
@@ -67,10 +65,6 @@ def comments(request, instance):
     :type  instance: ``django.db.models.Model``
     """
     if request.method == "POST":
-        # The client must be authenticated to create a comment.
-        if not request.user.is_authenticated():
-            return HttpResponse(status=401)
-
         comment = Comment(author=request.user, content_object=instance)
         form = CommentForm(request.POST, instance=comment)
 

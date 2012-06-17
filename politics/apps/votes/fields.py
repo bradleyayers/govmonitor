@@ -2,7 +2,7 @@
 from django.db import models
 
 
-class ScoreField(models.IntegerField):
+class ScoreField(models.FloatField):
     """Used to cache a model's vote score.
 
     Effectively acts as a marker for :class:`Vote`. Add an instance of this
@@ -11,7 +11,7 @@ class ScoreField(models.IntegerField):
     .. code-block:: python
 
         from django.db import models
-        from politics.apps.core.forms import ScoreField
+        from politics.apps.votes.fields import ScoreField
 
 
         class MyModel(models.Model):
@@ -22,14 +22,14 @@ class ScoreField(models.IntegerField):
     .. code-block:: python
 
         >>> from django.contrib.auth.models import User
-        >>> from politics.apps.core.models import Vote
+        >>> from politics.apps.votes.models import Vote
         >>> model = MyModel.objects.get(...)
         >>> model.score
         0
-        >>> Vote(user=User.objects.get(...), content_object=model).save()
+        >>> Vote(author=..., content_object=model, type=Vote.UP).save()
         >>> model = MyModel.objects.get(pk=model.pk)
         >>> model.score
-        1
+        0.2686
     """
 
     # Override to provide a default default.
@@ -40,6 +40,6 @@ class ScoreField(models.IntegerField):
 # Add South introspection rules.
 try:
     from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^politics\.apps\.core\.fields\.ScoreField"])
+    add_introspection_rules([], ["^politics\.apps\.votes\.fields\.ScoreField"])
 except ImportError:
     pass

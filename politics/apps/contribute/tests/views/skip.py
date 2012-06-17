@@ -2,12 +2,12 @@
 from ...models import Task
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+from django.test import TransactionTestCase
 from django.test.client import Client
 from politics.utils.views import login_path
 
 
-class SkipTestCase(TestCase):
+class SkipTestCase(TransactionTestCase):
     """Unit tests for the ``skip`` view."""
 
     fixtures = ("contribute_test_data", "core_test_data")

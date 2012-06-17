@@ -83,20 +83,16 @@ AP.Comments.CommentView = Backbone.View.extend({
      */
     render: function() {
         var template = _.template([
-            "<div class='body'",
-              "<% if (is_deleted) { %>",
-                " title='Deleted'",
-              "<% } %>",
-              ">",
-                "<% if (!is_deleted) { %>",
-                    "<%- body %>",
-                "<% } %>",
-            "</div> — ",
-            "<a href='/users/<%- author.id %>/'>",
+            "<% if (is_deleted) { %>",
+              "<div class='body' title='Deleted'>Deleted</div>",
+            "<% } else { %>",
+              "<div class='body'><%- body %></div>",
+            "<% } %>",
+            " — <a href='/users/<%- author.id %>/'>",
                 "<%- author.first_name %> <%- author.last_name %>",
             "</a>",
             "<% if (is_editable && !is_deleted) { %>",
-                " <a class='edit' href='#'>Edit</a>",
+                " <a class='edit icon-pencil' href='#'>Edit</a>",
                 " <a class='delete' href='#' title='Delete'></a>",
             "<% } %>",
         ].join(""));

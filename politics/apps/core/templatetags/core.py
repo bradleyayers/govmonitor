@@ -97,21 +97,24 @@ def indent(value, amount):
 def interval_string(value, reference=None):
     """Returns a string representing the interval between two points in time.
 
-    If ``reference`` is ``None``, ``datetime.now()`` is used.
+    If ``reference`` is ``None``, ``date.today()`` or ``datetime.now()`` will be
+    used depending on the type of ``value``.
 
     :param     value: The first point in time.
-    :type      value: ``datetime.datetime``
+    :type      value: ``datetime.date`` or ``datetime.datetime``
     :param reference: The second point in time or ``None``.
-    :type  reference: ``datetime.datetime`` or ``None``
-
+    :type  reference: ``datetime.date``, ``datetime.datetime``, or ``None``
     :returns: A string representing the interval between ``value`` and either
               ``reference`` or ``datetime.now()``.
     :rtype: ``str``
     """
-    from datetime import datetime
+    from datetime import date, datetime
     from politics.utils import timestring
 
-    return timestring.interval_string(value, reference or datetime.now())
+    if reference is None:
+        reference = datetime.now() if isinstance(value, datetime) else date.today()
+
+    return timestring.interval_string(value, reference)
 
 
 @register.inclusion_tag("core/issues/_summary.html")

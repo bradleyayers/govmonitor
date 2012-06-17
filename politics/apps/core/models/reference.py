@@ -1,8 +1,9 @@
 # coding=utf-8
 from django.contrib.contenttypes import generic
 from django.db import models
-from politics.apps.core.fields import ScoreField
-from politics.apps.core.models import View, Vote
+from politics.apps.votes.fields import ScoreField
+from politics.apps.core.models import View
+from politics.apps.votes.models import Vote
 from politics.utils.models import MarkdownField
 
 
@@ -13,7 +14,7 @@ class Reference(models.Model):
     you could reference that page as proof that they support/oppose an issue.
 
     Each reference has a ``score`` which is an indication of its quality or how
-    well it "backs up" the view. This is the number of votes it has received.
+    well it "backs up" the view. This is calculated from the votes it receives.
 
     :ivar      author: The user that submitted the reference.
     :type      author: ``django.contrib.auth.models.User``
@@ -33,6 +34,8 @@ class Reference(models.Model):
     :type        text: ``str``
     :ivar   text_html: The reference's text converted to HTML.
     :type   text_html: ``str``
+    :ivar       title: The title of the reference.
+    :type       title: ``str``
     :ivar         url: The URL of the reference. May be FTP or HTTP(S).
     :type         url: ``str``
     :ivar        view: The issue/party pair that this reference concerns.
@@ -55,6 +58,7 @@ class Reference(models.Model):
     stance = models.CharField(choices=STANCE_CHOICES, max_length=7)
     text = MarkdownField(blank=True, disable=["images"])
     text_html = models.TextField(blank=True)
+    title = models.CharField(max_length=64)
 
     # TODO: Support references that aren't webpages.
     # TODO: Should we be validating URLs (ensuring they're online)?
@@ -84,7 +88,8 @@ class Reference(models.Model):
         """
         # Don't bother if we're loading a fixture as it will contain the votes.
         if created and not raw:
-            instance.view.cast_vote(instance, instance.author)
+            Vote(author=instance.author, content_object=instance,
+                    type=Vote.UP).save()
 
     def get_comment_thread_url(self):
         """Returns the absolute path to the reference's comment thread.

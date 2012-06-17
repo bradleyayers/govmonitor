@@ -1,30 +1,30 @@
 # encoding: utf-8
 import datetime
-from south.db import db
-from south.v2 import SchemaMigration
 from django.db import models
+from south.db import db
+from south.v2 import DataMigration
 
-class Migration(SchemaMigration):
-
+class Migration(DataMigration):
     def forwards(self, orm):
-        
-        # Adding model 'PartySimilarity'
-        db.create_table('core_partysimilarity', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('first_party', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Party'])),
-            ('is_archived', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('second_party', self.gf('django.db.models.fields.related.ForeignKey')(related_name='+', to=orm['core.Party'])),
-            ('similarity', self.gf('django.db.models.fields.FloatField')()),
-        ))
-        db.send_create_signal('core', ['PartySimilarity'])
+        """We need to generate titles for all the existing references.
 
+        First, try to extract the contents of the page's ``title`` element; if
+        that doesn't work (e.g. if it's a PDF), just use the URL's basename.
+        """
+        from os.path import basename, splitext
+        from politics.apps.core.views.ajax import _get_html_title
+
+        for reference in orm.Reference.objects.all():
+            if not reference.url.endswith(".pdf"):
+                reference.title = _get_html_title(reference.url)
+
+            if not reference.title:
+                reference.title = splitext(basename(reference.url.rstrip("/")))[0]
+
+            reference.save()
 
     def backwards(self, orm):
-        
-        # Deleting model 'PartySimilarity'
-        db.delete_table('core_partysimilarity')
-
+        pass
 
     models = {
         'auth.group': {
@@ -96,11 +96,12 @@ class Migration(SchemaMigration):
             'author': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"}),
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_archived': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'published_on': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'score': ('politics.apps.votes.fields.ScoreField', [], {'default': '0'}),
             'stance': ('django.db.models.fields.CharField', [], {'max_length': '7'}),
             'text': ('politics.utils.models.fields.MarkdownField', [], {'blank': 'True'}),
             'text_html': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '64', 'blank': 'True'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
             'view': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.View']"})
         },
@@ -120,9 +121,11 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'View'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'issue': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Issue']"}),
+            'notability': ('django.db.models.fields.FloatField', [], {'default': '0'}),
             'party': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Party']"}),
             'slug': ('autoslug.fields.AutoSlugField', [], {'unique_with': '()', 'max_length': '193', 'populate_from': 'None', 'db_index': 'True'}),
-            'stance': ('django.db.models.fields.CharField', [], {'default': "'unknown'", 'max_length': '7'})
+            'stance': ('django.db.models.fields.CharField', [], {'default': "'unknown'", 'max_length': '7'}),
+            'updated_at': ('django.db.models.fields.DateTimeField', [], {})
         },
         'core.vote': {
             'Meta': {'object_name': 'Vote'},

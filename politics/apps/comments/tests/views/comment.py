@@ -1,14 +1,14 @@
 # coding=utf-8
 from datetime import datetime
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.test import TransactionTestCase
 from django.test.client import Client
 import json
 from politics.apps.comments.models import Comment
 import reversion
 
 
-class CommentViewTestCase(TestCase):
+class CommentViewTestCase(TransactionTestCase):
     """Unit tests for the ``comment`` view."""
 
     fixtures = ("comments_test_data", "core_test_data")

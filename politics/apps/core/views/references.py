@@ -2,13 +2,10 @@
 from ..forms import ReferenceForm
 from ..models import Reference
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
-from django.views.decorators.http import require_http_methods, require_POST
 from politics.apps.comments.views import comments as base_comments
-from politics.utils.decorators import (pk_url, render_json, render_to_template,
-                                       require_authenticated)
+from politics.apps.votes.views import votes as base_votes
+from politics.utils.decorators import pk_url, render_to_template
 import reversion
 
 
@@ -18,7 +15,7 @@ def comments(request, reference):
 
     :param   request: The HTTP request that was made.
     :type    request: ``django.http.HttpRequest``
-    :param reference: The reference described by the primary key in the URL.
+    :param reference: The reference being commented on.
     :type  reference: :class:`Reference`
     """
     return base_comments(request, reference)
@@ -52,26 +49,13 @@ def edit(request, reference):
     return {"form": form, "reference": reference}
 
 
-@require_authenticated
-@require_http_methods(["DELETE", "POST"])
 @pk_url(Reference)
-@render_json
 def votes(request, reference):
-    """Attempts to cast or withdraw a vote on a :class:`Reference`.
+    """Create/delete votes.
 
-    Casting a vote will archive the user's existing vote within the view.
-
-    :param   request: The HTTP request that was made.
-    :type    request: ``django.http.HttpRequest``
-    :param reference: The reference described by the primary key in the URL.
+    :param  request: The HTTP request that was made.
+    :type   request: ``django.http.HttpRequest``
+    :param reference: The reference being voted on.
     :type  reference: :class:`Reference`
     """
-    # Either way, their vote is withdrawn.
-    reference.view.withdraw_vote(request.user)
-
-    if request.method == "POST":
-        reference.view.cast_vote(reference, request.user)
-
-    # Refresh the reference so its score is up to date.
-    reference = Reference.objects.get(pk=reference.pk)
-    return {"score": reference.score}
+    base_votes(request, reference)

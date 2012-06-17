@@ -1,103 +1,100 @@
 @import "util";
 
 .comment-thread {
-  @border: 1px dotted #AAA;
-  @indent: 15px;
-  @vertical-spacing: 10px;
-
-  .add-comment {
-    display: block;
-    margin-top: @vertical-spacing;
+  > .arrow {
+    background: transparent url("/static/comments/img/sprites.png") no-repeat 0 -12px;
+    height: 7px;
   }
 
-  .comment {
-    border-bottom: @border;
-    line-height: 140%;
-    padding: @vertical-spacing 0 @vertical-spacing @indent;
+  > ol {
+    border: 3px solid @grey-border;
+    .border-radius(5px);
+    padding: 3px 5px 2px 5px;
 
-    &:first-child {
-      border-top: @border;
-    }
+    > li {
+      border-top: 1px dashed #CCC;
+      line-height: 140%;
+      padding: 5px 0 4px 0;
 
-    &:last-child {
-      margin-bottom: @vertical-spacing;
-    }
+      &.deleted .body {
+        font-style: italic;
+      }
 
-    &:hover .delete {
-      display: inline-block;
-    }
+      &.highlighted {
+        background-color: #FFF5CC;
+      }
 
-    &.deleted .body {
-      background-image: url("/static/comments/img/sprites.png");
-      display: inline-block;
-      height: 12px;
-      position: relative;
-      top: 2px;
-      width: 12px;
-    }
+      &:first-child {
+        border-top: 0;
+        padding-top: 2px;
+      }
 
-    &.highlighted {
-      background-color: #FFF5CC;
-    }
+      &:hover .delete {
+        display: inline-block;
+      }
 
-    &.own {
-      border-left: 3px solid #AAA;
-      padding-left: @indent - 3;
-    }
+      &:last-child {
+        padding-bottom: 2px;
+      }
 
-    .body {
-      display: inline;
-    }
+      .body {
+        display: inline;
+      }
 
-    .delete {
-      background-image: url("/static/comments/img/sprites.png");
-      display: none;
-      height: 12px;
-      margin-left: 1px;
-      position: relative;
-      top: 2px;
-      width: 12px;
+      .delete {
+        background-image: url("/static/comments/img/sprites.png");
+        display: none;
+        height: 12px;
+        margin-left: 1px;
+        position: relative;
+        top: 2px;
+        width: 12px;
 
-      &:hover {
-        background-position: -12px 0;
+        &:hover {
+          background-position: -12px 0;
+        }
+      }
+
+      .edit {
+        margin-left: 0.4em;
+        width: auto;
+
+        &::before {
+          padding-right: 0.4em;
+        }
       }
     }
 
-    .edit {
-      display: inline-block;
-      margin-left: 2px;
-    }
-  }
+    .comment-form {
+      overflow: auto;
 
-  .comment-form {
-    overflow: auto;
+      div {
+        float: right;
+        margin-top: 2px;
 
-    div {
-      float: right;
-      margin-top: 2px;
-
-      a {
-        margin-left: 2px;
+        a {
+          margin-left: 2px;
+        }
       }
-    }
 
-    p.error {
-      color: red;
-      float: left;
-      font-weight: bold;
-      margin: 6px 0 0 0;
-    }
+      p.error {
+        color: red;
+        float: left;
+        font-weight: bold;
+        margin: 6px 0 0 0;
+      }
 
-    textarea {
-      .box-sizing(border-box);
-      display: block;
-      height: 50px;
-      width: 100%;
-    }
+      textarea {
+        .box-sizing(border-box);
+        display: block;
+        height: 50px;
+        width: 100%;
+      }
 
-    &.disabled > div > a:hover {
-      cursor: default;
-      text-decoration: none;
+      &.disabled > div > a:hover {
+        cursor: default;
+        text-decoration: none;
+      }
     }
   }
 }
