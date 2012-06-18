@@ -1,7 +1,6 @@
 # coding=utf-8
 from django.contrib.auth.models import User
 from django.core import mail
-from django.db import transaction
 from django.test import TransactionTestCase
 from politics.apps.comments.models import Comment
 from politics.apps.core.models import Reference, View

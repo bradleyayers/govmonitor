@@ -124,8 +124,6 @@ def issue_summary(issue):
     :param issue: The issue.
     :type  issue: :class:`Issue`
     """
-    from politics.apps.core.models import View
-
     views = View.objects.exclude(stance=View.UNKNOWN).filter(issue=issue)
     views = views.order_by("party__name").select_related("party")
     return {"issue": issue, "views": views}

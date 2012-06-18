@@ -21,8 +21,7 @@ class IndexTestCase(TransactionTestCase):
 
     def test_index_existing_task(self):
         """If the user has already been assigned a task view should show it."""
-        response = self.client.get(reverse("contribute:index"))
-
+        self.client.get(reverse("contribute:index"))
         self.assertEqual(self.task_count, Task.objects.count())
 
     def test_index_no_task(self):
@@ -31,7 +30,7 @@ class IndexTestCase(TransactionTestCase):
         self.client = Client()
         self.client.login(username="brad", password="password")
         self.user = User.objects.get(pk=2)
-        response = self.client.get(reverse("contribute:index"))
+        self.client.get(reverse("contribute:index"))
 
         self.assertEqual(self.task_count + 1, Task.objects.count())
         self.assertEqual(self.user, Task.objects.latest("pk").user)
@@ -50,7 +49,7 @@ class IndexTestCase(TransactionTestCase):
             for the view associated with the user's current task, and create a
             new task for the user."""
         reference_count = Reference.objects.count()
-        response = self.client.post(reverse("contribute:index"), {
+        self.client.post(reverse("contribute:index"), {
             "stance": View.SUPPORT,
             "text": "This is a new reference!",
             "title": "Reference",
