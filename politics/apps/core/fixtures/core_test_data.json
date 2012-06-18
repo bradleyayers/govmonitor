@@ -89,6 +89,7 @@
         "pk": 1,
         "fields": {
             "author": 1,
+            "published_on": "2012-01-01",
             "stance": "support",
             "text": "This is a reference.",
             "title": "A Reference from a.com",
@@ -101,6 +102,7 @@
         "pk": 2,
         "fields": {
             "author": 1,
+            "published_on": "2012-01-02",
             "stance": "oppose",
             "text": "This is another reference.",
             "title": "A Reference from b.com",
