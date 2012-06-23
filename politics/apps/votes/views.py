@@ -3,6 +3,7 @@ from .forms import VoteForm
 from .models import Vote
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_http_methods
+import json
 from politics.utils.decorators import require_authenticated
 
 
@@ -16,12 +17,20 @@ def votes(request, instance):
     :param instance: The object to operated on.
     :type  instance: ``django.db.models.Model``
     """
-    # Either way, their current vote is archived.
+    def _get_response_content():
+        return json.dumps({
+            "score": instance.__class__.objects.get(pk=instance.pk).score
+        })
+
+    # Either way, their current vote(s) are archived. We need to actually call
+    # save() to trigger the post_save signal which updates the object's score.
     votes = Vote.objects.get_for_instance(instance)
-    votes.filter(author=request.user).update(is_archived=True)
+    for vote in votes.filter(author=request.user):
+        vote.is_archived = True
+        vote.save()
 
     if request.method == "DELETE":
-        return HttpResponse()
+        return HttpResponse(_get_response_content())
 
     if request.method == "POST":
         vote = Vote(author=request.user, content_object=instance)
@@ -29,6 +38,6 @@ def votes(request, instance):
 
         if form.is_valid():
             vote = form.save()
-            return HttpResponse(status=201)
+            return HttpResponse(_get_response_content(), status=201)
         else:
             return HttpResponseBadRequest()
