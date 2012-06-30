@@ -1,96 +1,149 @@
 @import "util";
 
-div.reference {
-  @oppose-colour: #E64D4A;
-  @support-colour: #62C462;
-  @unclear-colour: #FC3;
+@oppose-colour: #E64D4A;
+@support-colour: #62C462;
+@unclear-colour: #FC3;
 
-  .border-radius(5px);
-  margin-bottom: 1em;
-  padding-top: 4px;
+.reference {
+  .score {
+    display: inline-block;
+    float: left;
+    font-weight: bold;
+    position: relative;
+    text-align: center;
+    top: 10px;
+    width: 70px;
 
-  &.oppose {
-    background-color: @oppose-colour;
-  }
-
-  &.support {
-    background-color: @support-colour;
-  }
-
-  &.unclear {
-    background-color: @unclear-colour;
-  }
-
-  div.content {
-    background-color: #FFF;
-    border: 1px solid @grey-border;
-    border-width: 0 1px;
-    padding: 8px 9px;
-
-    h2 {
-      font-size: 18px;
-      margin: 0 0 0.5em 0;
-
-      a {
-        color: @text-colour;
-      }
+    span {
+      display: block;
+      font-size: 24px;
     }
 
-    span.pill {
-      .border-radius(3px);
-      color: #FFF;
-      font-size: 11px;
-      font-weight: bold;
-      padding: 0 3px 1px 3px;
-      text-transform: uppercase;
+    i.icon-question-sign {
+      font-size: 14px;
+      padding: 0 3px 0 1px;
+      position: relative;
+      top: 1px;
+    }
 
-      &.oppose {
-        background-color: @oppose-colour;
+    div {
+      display: block;
+      margin-top: 0.75em;
+
+      a {
+        background-color: #D0D0D0;
+        .border-radius(11px);
+        .box-sizing(border-box);
+        color: white;
+        display: inline-block;
+        font-size: 13px;
+        height: 22px;
+        line-height: 22px;
+        width: 22px;
       }
 
-      &.support {
+      a:hover {
+        background-color: #E0E0E0;
+      }
+
+      a.icon-ok.selected {
         background-color: @support-colour;
       }
 
-      &.unclear {
-        background-color: @unclear-colour;
+      a.icon-remove.selected {
+        background-color: @oppose-colour;
       }
-    }
-
-    span.published {
-      color: @meta-colour;
-      font-size: 11px;
-      margin-left: 0.25em;
-
-      &::before {
-        padding-right: 0.3em;
-      }
-    }
-
-    div.markdown {
-      margin-top: 1em;
     }
   }
 
-  footer {
-    background-color: @grey-background;
-    border: 1px solid @grey-border;
-    .border-radius(0 0 5px 5px);
-    overflow: auto;
-    padding: 7px 10px;
+  .content {
+    .border-radius(5px);
+    margin: 0 0 1em 75px;
+    padding-top: 4px;
 
-    ol.actions {
-      float: right;
+    &.oppose {
+      background-color: @oppose-colour;
+    }
 
-      li {
-        display: inline;
-        margin-left: 0.5em;
+    &.support {
+      background-color: @support-colour;
+    }
+
+    &.unclear {
+      background-color: @unclear-colour;
+    }
+
+    > div {
+      background-color: #FFF;
+      border: 1px solid @grey-border;
+      border-width: 0 1px;
+      padding: 8px 9px;
+
+      h2 {
+        font-size: 18px;
+        margin: 0 0 0.5em 0;
 
         a {
-          width: auto;
+          color: @text-colour;
+        }
+      }
 
-          &::before {
-            padding-right: 0.25em;
+      span.pill {
+        .border-radius(3px);
+        color: #FFF;
+        font-size: 11px;
+        font-weight: bold;
+        padding: 0 3px 1px 3px;
+        text-transform: uppercase;
+
+        &.oppose {
+          background-color: @oppose-colour;
+        }
+
+        &.support {
+          background-color: @support-colour;
+        }
+
+        &.unclear {
+          background-color: @unclear-colour;
+        }
+      }
+
+      span.published {
+        color: @meta-colour;
+        font-size: 11px;
+        margin-left: 0.25em;
+
+        &::before {
+          padding-right: 0.3em;
+        }
+      }
+
+      div.markdown {
+        margin-top: 1em;
+      }
+    }
+
+    footer {
+      background-color: @grey-background;
+      border: 1px solid @grey-border;
+      .border-radius(0 0 5px 5px);
+      overflow: auto;
+      padding: 7px 10px;
+
+      ol.actions {
+        float: right;
+
+        li {
+          display: inline;
+          margin-left: 0.5em;
+
+          a {
+            width: auto;
+
+            &::before {
+              padding-right: 0.25em;
+            }
           }
         }
       }
@@ -99,7 +152,7 @@ div.reference {
 }
 
 div.references div.comment-thread {
-  margin-bottom: 1.5em;
+  margin: 0 0 1.5em 75px;
 }
 
 div.view-summary-row {

@@ -17,10 +17,10 @@ def votes(request, instance):
     :param instance: The object to operated on.
     :type  instance: ``django.db.models.Model``
     """
-    def _get_response_content():
-        return json.dumps({
-            "score": instance.__class__.objects.get(pk=instance.pk).score
-        })
+    def _build_response(status=200):
+        score = instance.__class__.objects.get(pk=instance.pk).score
+        return HttpResponse(json.dumps({"score": score}),
+                mimetype="application/json", status=status)
 
     # Either way, their current vote(s) are archived. We need to actually call
     # save() to trigger the post_save signal which updates the object's score.
@@ -30,7 +30,7 @@ def votes(request, instance):
         vote.save()
 
     if request.method == "DELETE":
-        return HttpResponse(_get_response_content())
+        return _build_response()
 
     if request.method == "POST":
         vote = Vote(author=request.user, content_object=instance)
@@ -38,6 +38,6 @@ def votes(request, instance):
 
         if form.is_valid():
             vote = form.save()
-            return HttpResponse(_get_response_content(), status=201)
+            return _build_response(201)
         else:
             return HttpResponseBadRequest()

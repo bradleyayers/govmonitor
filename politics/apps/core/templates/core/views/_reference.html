@@ -1,29 +1,40 @@
 {% load comments core %}
 
-<div class="commentable" data-comment-url="{% url core:references:comments reference.pk %}">
-    <div class="reference {{ reference.stance }}">
-        <div class="content">
-            <h2><a href="{{ reference.url }}">{{ reference.title }}</a></h2>
-            <span class="pill {{ reference.stance }}">{{ reference.get_stance_display }}</span>
-
-            {% if reference.published_on %}
-                <span class="icon-time published" title="{{ reference.published_on }}">Published <strong>{{ reference.published_on|interval_string }}</strong> ago</span>
-            {% endif %}
-
-            <div class="markdown">
-                {% if reference.text_html %}
-                    {{ reference.text_html|safe }}
-                {% else %}
-                    <i>No description available, see source.</i>
-                {% endif %}
+<div class="commentable" data-comments-url="{% url core:references:comments reference.pk %}">
+    <div class="reference" id="{{ reference.pk }}">
+        <div class="score" data-votes-url="{% url core:references:votes reference.pk %}">
+            <span>{{ reference.score|percentage }}</span> valid
+            <i class="icon-question-sign" data-placement="bottom"></i>
+            <div>
+                <a class="icon-ok" data-vote-type="up" href="#"></a>
+                <a class="icon-remove" data-vote-type="down" href="#"></a>
             </div>
         </div>
-        <footer>
-            <ol class="actions">
-                <li><a class="add-comment icon-comment" href="#">Comment</a></li>
-                <li><a class="icon-pencil" href="{% url core:references:edit reference.pk %}">Edit</a></li>
-            </ol>
-        </footer>
+        <div class="content {{ reference.stance }}">
+            <div>
+                <h2><a href="{{ reference.url }}">{{ reference.title }}</a></h2>
+                <span class="pill {{ reference.stance }}">{{ reference.get_stance_display }}</span>
+
+                {% if reference.published_on %}
+                    <span class="icon-time published" title="{{ reference.published_on }}">Published <strong>{{ reference.published_on|interval_string }}</strong> ago</span>
+                {% endif %}
+
+                <div class="markdown">
+                    {% if reference.text_html %}
+                        {{ reference.text_html|safe }}
+                    {% else %}
+                        <i>No description available, see source.</i>
+                    {% endif %}
+                </div>
+            </div>
+            <footer>
+                <ol class="actions">
+                    <li><a class="add-comment icon-comment" href="#">Comment</a></li>
+                    <li><a class="icon-link" href="#{{ reference.pk }}">Permalink</a></li>
+                    <li><a class="icon-pencil" href="{% url core:references:edit reference.pk %}">Edit</a></li>
+                </ol>
+            </footer>
+        </div>
     </div>
 
     {% comments reference %}

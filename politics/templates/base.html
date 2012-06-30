@@ -2,6 +2,7 @@
 <html class="{% block html-class %}{% endblock %}" lang="en">
     <head>
         <meta charset="utf-8"/>
+        {% block meta %}{% endblock %}
         <title>{% block title %}{% endblock %}</title>
         {% block javascript %}{% endblock %}
         {% block stylesheets %}

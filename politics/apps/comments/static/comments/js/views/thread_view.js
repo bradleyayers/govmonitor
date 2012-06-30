@@ -100,7 +100,7 @@ AP.Comments.ThreadView = Backbone.View.extend({
      * @returns {AP.Comments.ThreadView} The resulting view.
      */
     fromElement: function(el) {
-        var url = $(el).closest("[data-comment-url]").data("comment-url");
+        var url = $(el).closest("[data-comments-url]").data("comments-url");
         var comments = $(".comment", el).map(function() {
             return AP.Comments.CommentView.fromElement(this).model;
         });

@@ -206,6 +206,28 @@ def page_links(context, page, near=2):
     }
 
 
+@register.filter
+def percentage(value, precision=0):
+    """Returns the given value as a percentage.
+
+    .. code-block::
+
+        >>> percentage(0.1337)
+        '13%'
+        >>> percentage(42.42, 1)
+        '42.4%'
+
+    :param     value: The value.
+    :type      value: ``float``
+    :param precision: Round to this many decimal places.
+    :type  precision: ``int``
+    """
+    if 0 <= value <= 1:
+        value *= 100
+
+    return ("%." + str(precision) + "f%%") % value
+
+
 class QueryStringNode(Node):
     """The node used in the ``query_string`` tag."""
 

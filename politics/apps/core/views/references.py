@@ -58,4 +58,4 @@ def votes(request, reference):
     :param reference: The reference being voted on.
     :type  reference: :class:`Reference`
     """
-    base_votes(request, reference)
+    return base_votes(request, reference)

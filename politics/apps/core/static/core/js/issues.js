@@ -3,7 +3,7 @@ $(function() {
   // instead of the form element iself because the sidebar content changes.
   if ($("form.issue").length) {
     new AP.IssueForm({
-        el: $("#content-content")
+      el: $("#content-content")
     });
   }
 

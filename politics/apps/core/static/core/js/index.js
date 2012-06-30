@@ -1,12 +1,19 @@
 (function() {
-    window.AP = {};
+    AP = {};
+
+    /**
+     * Returns the content of the meta tag with the given name.
+     */
+    AP.meta = function(name) {
+        return $("meta[name=" + name +"]").attr("content");
+    };
 
     /**
      * Ensures that a namespace exists, creating it if necessary.
      *
      * @param name A dot-separated package name (e.g. AP.Package).
      */
-    window.AP.namespace = function(name) {
+    AP.namespace = function(name) {
         var container = window;
         _.each(name.split("."), function(bit) {
             container = container[bit] || (container[bit] = {});
