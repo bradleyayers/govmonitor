@@ -3,7 +3,7 @@
  */
 AP.ReferenceView = Backbone.View.extend({
   events: {
-    "click .score a": "_vote",
+    "click .score div a": "_vote",
   },
 
   // Assumes $el is set.
