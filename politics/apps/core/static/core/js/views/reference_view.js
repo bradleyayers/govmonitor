@@ -10,6 +10,14 @@ AP.ReferenceView = Backbone.View.extend({
   initialize: function() {
     _.bindAll(this);
 
+    // If the user has voted on this reference, select the appropriate button.
+    var pk = this.$el.data("pk");
+    if (AP.Votes.isUpvoted(pk)) {
+      this.$("[data-vote-type=up]").addClass("selected");
+    } else if (AP.Votes.isDownvoted(pk)) {
+      this.$("[data-vote-type=down]").addClass("selected");
+    }
+
     // Create the log in propmt tooltip.
     this.$(".score div").tooltip({
       trigger: "manual",

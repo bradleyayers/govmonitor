@@ -1,7 +1,7 @@
 {% load comments core %}
 
 <div class="commentable" data-comments-url="{% url core:references:comments reference.pk %}">
-    <div class="reference" id="{{ reference.pk }}">
+    <div class="reference" data-pk="{{ reference.pk }}" id="{{ reference.pk }}">
         <div class="score" data-votes-url="{% url core:references:votes reference.pk %}">
             <span>{{ reference.score|percentage }}</span> valid
             <i class="icon-question-sign" data-placement="bottom"></i>
