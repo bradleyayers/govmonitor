@@ -30,8 +30,10 @@
             <footer>
                 <ol class="actions">
                     <li><a class="add-comment icon-comment" href="#">Comment</a></li>
+                    {% if request.user.is_authenticated %}
+                        <li><a class="icon-pencil" href="{% url core:references:edit reference.pk %}">Edit</a></li>
+                    {% endif %}
                     <li><a class="icon-link" href="#{{ reference.pk }}">Permalink</a></li>
-                    <li><a class="icon-pencil" href="{% url core:references:edit reference.pk %}">Edit</a></li>
                 </ol>
             </footer>
         </div>

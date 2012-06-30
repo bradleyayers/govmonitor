@@ -18,23 +18,6 @@ AP.ReferenceView = Backbone.View.extend({
       this.$("[data-vote-type=down]").addClass("selected");
     }
 
-    // Create the log in propmt tooltip.
-    this.$(".score div").tooltip({
-      trigger: "manual",
-      placement: "bottom",
-      title: function() {
-        var path = window.location.pathname + window.location.search;
-        return "You must <a href='/login?next=" + path + "'>log in</a> to vote!";
-      }
-    });
-
-    // Hide the log in prompt tooltip on click.
-    $(document).click(_.bind(function(e) {
-      if (!$(e.target).is(".score div a")) {
-        this.$(".score div").tooltip("hide");
-      }
-    }, this));
-
     // Create the validity help text tooltip. Its title should update
     // automatically to reflect the reference's current score on the page.
     this.$(".score .icon-question-sign").tooltip({
@@ -55,7 +38,8 @@ AP.ReferenceView = Backbone.View.extend({
     e.preventDefault();
 
     if (!AP.meta("logged-in")) {
-      this.$(".score div").tooltip("show");
+      AP.showLogInTooltip(this.$("div.score div"), {verb: "vote"});
+      e.stopPropagation();
       return;
     }
 
