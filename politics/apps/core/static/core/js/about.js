@@ -14,7 +14,7 @@ $(function() {
 
     $("a").click(function() {
         var target = $(this).attr("href");
-        if (target.charAt(0) == "#") {
+        if (target.charAt(0) == "#" && target.length > 1) {
             highlightQuestion(target);
         }
     });
