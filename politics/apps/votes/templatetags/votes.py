@@ -16,21 +16,17 @@ class VoteDataNode(Node):
         self.variables = [template.Variable(v) for v in variables]
 
     def render(self, context):
+        # Resolve the variables, remove Nones, and flatten the list.
+        models = filter(bool, (v.resolve(context) for v in self.variables))
+        models = sum((m if isinstance(m, Iterable) else [m] for m in models), [])
+
         data = {}
         user = context["request"].user
-
-        if user.is_authenticated():
-            # Resolve the variables and flatten the list.
-            models = []
-            for v in self.variables:
-                v = v.resolve(context)
-                models += v if isinstance(v, Iterable) else [v]
-
-            if len(models) > 0:
-                pks = (model.pk for model in models)
-                votes = Vote.objects.get_for_model(models[0])
-                votes = votes.filter(author=user, object_id__in=pks)
-                data = dict((vote.object_id, vote.type) for vote in votes)
+        if user.is_authenticated() and len(models) > 0:
+            pks = (model.pk for model in models)
+            votes = Vote.objects.get_for_model(models[0])
+            votes = votes.filter(author=user, object_id__in=pks)
+            data = dict((vote.object_id, vote.type) for vote in votes)
 
         return render_to_string("votes/vote_data.html", {"data": data})
 
