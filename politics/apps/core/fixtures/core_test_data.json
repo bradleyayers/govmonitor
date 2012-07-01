@@ -102,7 +102,6 @@
         "pk": 2,
         "fields": {
             "author": 1,
-            "published_on": "2012-01-02",
             "stance": "oppose",
             "text": "This is another reference.",
             "title": "A Reference from b.com",

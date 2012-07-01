@@ -25,12 +25,17 @@ def show(request, view):
 
             form = ReferenceForm()
 
+    # The currently winning reference.
+    current_reference = view.get_current_reference()
+    current_reference_pk = getattr(current_reference, "pk", None)
+
     # Sort the references in descending order of score. Break ties between
     # references by ordering randomly (taking advantage of tuple comparisons).
-    references = view.reference_set.all()
+    references = view.reference_set.exclude(pk=current_reference_pk)
     references = sorted(references, None, lambda r: (r.score, random()), True)
 
     return {
+        "current_reference": current_reference,
         "form": form,
         "references": references,
         "view": view

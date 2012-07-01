@@ -37,13 +37,21 @@ class ViewTestCase(TransactionTestCase):
                     pass
 
         # Both references are valid, but the oppose one was published later.
-        self.assertEqual(View.OPPOSE, View.objects.get(pk=1).stance)
+        view = View.objects.get(pk=1)
+        self.assertEqual(View.OPPOSE, view.stance)
+        self.assertEqual(Reference.objects.get(pk=2),
+                view.get_current_reference())
 
         # If the score of the currently winning reference dips back below 0.5
         # (making it "invalid"), the view's stance should update accordingly.
         Vote.objects.filter(object_id=2).delete()
-        self.assertEqual(View.SUPPORT, View.objects.get(pk=1).stance)
+        view = View.objects.get(pk=1)
+        self.assertEqual(View.SUPPORT, view.stance)
+        self.assertEqual(Reference.objects.get(pk=1),
+                view.get_current_reference())
 
         # ...and if all the references become invalid, it should become unknown.
         Vote.objects.all().delete()
-        self.assertEqual(View.UNKNOWN, View.objects.get(pk=1).stance)
+        view = View.objects.get(pk=1)
+        self.assertEqual(View.UNKNOWN, view.stance)
+        self.assertEqual(None, view.get_current_reference())

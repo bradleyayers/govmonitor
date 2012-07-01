@@ -11,7 +11,7 @@
 
 {% block javascript %}
     {{ block.super }}
-    {% vote_data references %}
+    {% vote_data current_reference references %}
 {% endblock %}
 
 {% block content %}
@@ -23,11 +23,20 @@
         </h1>
 
         <div class="references">
-            {% for reference in references %}
-                {% include "core/views/_reference.html" %}
-            {% empty %}
+            {% if current_reference %}
+                <h2 class="section">Current Reference</h2>
+                {% with reference=current_reference %}
+                    {% include "core/views/_reference.html" %}
+                {% endwith %}
+            {% endif %}
+            {% if references %}
+                <h2 class="section">References</h2>
+                {% for reference in references %}
+                    {% include "core/views/_reference.html" %}
+                {% endfor %}
+            {% else %}
                 <i>There aren't any references. Why not submit one?</i>
-            {% endfor %}
+            {% endif %}
         </div>
 
         {% if request.user.is_authenticated %}

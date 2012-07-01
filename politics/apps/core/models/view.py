@@ -1,9 +1,8 @@
 # coding=utf-8
 from autoslug.fields import AutoSlugField
-from datetime import datetime
+from datetime import date, datetime, time
 from django.core.urlresolvers import reverse
 from django.db import models
-from itertools import groupby
 import reversion
 
 
@@ -83,6 +82,21 @@ class View(models.Model):
         """Returns the view's absolute URL."""
         return reverse("core:views:show", args=(self.pk, self.slug))
 
+    def get_current_reference(self):
+        """Fetch the view's currently "winning" reference.
+
+        That is, the reference that is currently determining its stance.
+        """
+        def _get_published_on(reference):
+            if not reference.published_on:
+                return reference.created_at
+            else:
+                return datetime.combine(reference.published_on, time())
+
+        references = self.reference_set.filter(score__gte=0.5)
+        references = sorted(references, key=_get_published_on, reverse=True)
+        return references[0] if len(references) > 0 else None
+
     def refresh_stance(self):
         """Recalculate the view's ``stance``.
 
@@ -104,13 +118,7 @@ class View(models.Model):
         except Issue.DoesNotExist:
             return
 
-        try:
-            references = self.reference_set.filter(score__gte=0.5)
-            references = references.order_by("-published_on")
-            stance = references[0].stance
-        # No references.
-        except IndexError:
-            stance = self.UNKNOWN
+        stance = getattr(self.get_current_reference(), "stance", self.UNKNOWN)
 
         if stance != self.stance:
             # Create a version so we have a history of the party's views.
