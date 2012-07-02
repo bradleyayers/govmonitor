@@ -20,7 +20,7 @@ class Migration(DataMigration):
 
         # The reference content type.
         content_type = orm["contenttypes.ContentType"]
-        content_type = content_type.objects.get_or_create(app_label="core", model="reference")
+        content_type = content_type.objects.get_or_create(app_label="core", model="reference")[0]
 
         for reference in orm.Reference.objects.all():
             votes = orm["votes.vote"].objects.filter(content_type=content_type,

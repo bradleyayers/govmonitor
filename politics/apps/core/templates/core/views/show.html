@@ -29,7 +29,7 @@
             <a href="{% url core:parties:show view.party.pk view.party.slug %}">{{ view.party.name }}</a> /
             <strong><a href="{% url core:issues:show view.issue.pk view.issue.slug %}">{{ view.issue.name }}</a></strong>
         </h1>
-
+        <p>Found more information on this party's views? Create a <a href="{% url core:views:new-reference view.pk %}">new reference</a>.</p>
         <div class="references">
             {% if current_reference %}
                 <h2 class="section">Current Reference</h2>
@@ -44,7 +44,5 @@
                 {% endfor %}
             {% endif %}
         </div>
-
-        <p>Found more information on the party's views? Create a <a href="{% url core:views:new-reference view.pk %}">new reference</a>.</p>
     </div>
 {% endblock %}

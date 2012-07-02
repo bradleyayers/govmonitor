@@ -64,6 +64,7 @@ AP.Comments.CommentView = Backbone.View.extend({
             var success = function(comment) {
                 form.remove();
                 instance.model = comment;
+                instance.model.on("change", instance.render);
                 instance.render();
             };
 

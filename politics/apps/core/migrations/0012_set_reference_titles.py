@@ -21,6 +21,7 @@ class Migration(DataMigration):
             if not reference.title:
                 reference.title = splitext(basename(reference.url.rstrip("/")))[0]
 
+            reference.title = reference.title[:64]
             reference.save()
 
     def backwards(self, orm):
