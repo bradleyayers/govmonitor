@@ -1,9 +1,9 @@
 /**
  * The create/edit issue form.
  */
-AP.IssueForm = Backbone.View.extend({
+AP.IssueFormView = Backbone.View.extend({
   events: {
-    "focus input": "_showInputHelp",
+    "focus .fields input": "_showInputHelp",
     "focus textarea": "_showInputHelp",
     "keydown #id_tags": "_tagsKeyDown",
     "keyup #id_tags": "_tagsKeyUp"
@@ -40,9 +40,9 @@ AP.IssueForm = Backbone.View.extend({
    *
    * @param {event} e This event's target is the field.
    */
-  _showInputHelp: function(e) {
-    this.$("#content-secondary > div").hide();
-    this.$("#help_" + $(e.target).attr("name")).show();
+  _showInputHelp: function() {
+    $("#content-secondary [id^=help-]").hide();
+    $("#help-" + $(document.activeElement).attr("name")).show();
   },
 
   _showTagSuggestions: function(data) {

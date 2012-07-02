@@ -7,15 +7,19 @@
         {{ form.stance }}
     </p>
     <p>
+        <label for="id_url">URL</label>
+        {{ form.url }}
+    </p>
+    <p>
+        <label for="id_title">Title</label>
+        {{ form.title }}
+    </p>
+    <p>
         <label for="id_published_on">Published</label>
         {{ form.published_on }}
-    <p>
-        <label for="id_url">URL (Link)</label>
-        {{ form.url }}
     </p>
 </div>
 {{ form.text }}
-
 {% if form.errors %}
     <div class="errors">
         <p>Oops! The reference couldn't be saved because:</p>

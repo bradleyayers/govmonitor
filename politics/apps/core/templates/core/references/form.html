@@ -1,0 +1,40 @@
+{% extends "core/base.html" %}
+
+{% block html-class %}
+    {{ block.super }}
+    reference
+{% endblock %}
+
+{% block title %}
+    {% if form.instance.pk %}
+        Edit Reference
+    {% else %}
+        New Reference
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    <div id="content-primary">
+        <h1>
+            <a href="{% url core:parties:show reference.view.party.pk reference.view.party.slug %}">{{ reference.view.party.name }}</a> /
+            <a href="{% url core:issues:show reference.view.issue.pk reference.view.issue.slug %}">{{ reference.view.issue.name }}</a> /
+            {% if form.instance.pk %}
+                <strong>Edit Reference</strong>
+            {% else %}
+                <strong>New Reference</strong>
+            {% endif %}
+        </h1>
+
+        <form class="reference" method="post">
+            {% include "core/references/_form.html" %}
+            <div class="actions">
+                <input class="button" type="submit" value="Save"/>
+                <a href="{% url core:views:show reference.view.pk reference.view.slug %}">Cancel</a>
+            </div>
+        </form>
+    </div>
+    <div id="content-secondary">
+        {% include "core/references/_form_help.html" %}
+    </div>
+{% endblock %}

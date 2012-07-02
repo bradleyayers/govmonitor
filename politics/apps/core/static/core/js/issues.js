@@ -1,11 +1,9 @@
 $(function() {
-  // If there's an issue form, create a view for it. We use the content div
-  // instead of the form element iself because the sidebar content changes.
-  if ($("form.issue").length) {
-    new AP.IssueForm({
-      el: $("#content-content")
+  $("form.issue").each(function() {
+    new AP.IssueFormView({
+      el: this
     });
-  }
+  });
 
   if ($("html").hasClass("issue")) {
     // Draw the stance distribution chart. Google charts is initialised in its

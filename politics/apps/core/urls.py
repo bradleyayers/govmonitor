@@ -50,6 +50,7 @@ user_patterns = patterns("",
 # /views/
 view_patterns = patterns("",
     url(slug_pattern, views.show, name="show"),
+    url(r"(?P<pk>\d+)/references/new/$", references.new, name="new-reference")
 )
 
 urlpatterns = patterns("",

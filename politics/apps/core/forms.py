@@ -165,9 +165,7 @@ class ReferenceForm(forms.ModelForm):
     }))
 
     # ...and in the text field.
-    text = forms.CharField(required=False, widget=forms.Textarea(attrs={
-            "placeholder": "Brief summary of the reference (optional)."
-    }))
+    text = forms.CharField(required=False, widget=forms.Textarea())
 
     class Meta:
         model = Reference

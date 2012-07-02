@@ -1,10 +1,18 @@
+@import "util";
+
 form.reference {
+  .white-panel;
+
   div.fields {
     display: table;
     width: 100%;
 
     p {
       display: table-row;
+
+      #id_title.loading {
+        background: transparent url("/static/core/img/spinner.gif") no-repeat 597px 4px;
+      }
 
       input[type=text] {
         box-sizing: border-box;
@@ -32,5 +40,23 @@ form.reference {
     -moz-box-sizing: border-box;
     font-family: Monaco, Courier New, monospace;
     width: 100%;
+  }
+
+  .actions {
+    float: right;
+  }
+}
+
+html.reference #content-secondary {
+  h2.section {
+    margin-top: 0;
+  }
+
+  ul {
+    margin-top: 0.5em;
+  }
+
+  li {
+    margin-bottom: 0.5em;
   }
 }

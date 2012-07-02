@@ -14,6 +14,14 @@
     {% vote_data current_reference references %}
 {% endblock %}
 
+{% block header-secondary %}
+    <div id="header-secondary">
+        <div class="right">
+            <a class="button" href="{% url core:views:new-reference view.pk %}">New Reference</a>
+        </div>
+    </div>
+{% endblock %}
+
 {% block content %}
     {{ block.super }}
     <div id="content-primary">
@@ -34,17 +42,9 @@
                 {% for reference in references %}
                     {% include "core/views/_reference.html" %}
                 {% endfor %}
-            {% else %}
-                <i>There aren't any references. Why not submit one?</i>
             {% endif %}
         </div>
 
-        {% if request.user.is_authenticated %}
-            <h2 class="section">Add a Reference</h2>
-            <form class="reference" method="post">
-                {% include "core/references/_form.html" %}
-                <p><input class="button" type="submit" value="Add"/></p>
-            </form>
-        {% endif %}
+        <p>Found more information on the party's views? Create a <a href="{% url core:views:new-reference view.pk %}">new reference</a>.</p>
     </div>
 {% endblock %}
