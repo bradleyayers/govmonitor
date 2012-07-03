@@ -1,3 +1,38 @@
+@import "util";
+
+form.party {
+  font-size: 14px;
+  margin: 0 auto;
+  .white-panel;
+  width: 400px;
+
+  .fields {
+    display: table;
+    width: 100%;
+
+    p {
+      display: table-row;
+
+      label {
+        display: table-cell;
+        width: 3.5em;
+      }
+
+      input {
+        .box-sizing(border-box);
+        display: table-cell;
+        font-size: 14px;
+        width: 100%;
+      }
+    }
+  }
+
+  .actions {
+    float: right;
+    margin-top: 0.5em;
+  }
+}
+
 html.parties #content-primary ol.parties > li {
   float: left;
   margin-bottom: 16px;

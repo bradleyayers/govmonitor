@@ -1,15 +1,36 @@
 {% extends "core/parties/base.html" %}
 
+{% load core %}
+
 {% block title %}New Party{% endblock %}
 
 {% block content %}
     {{ block.super }}
-    <div id="content-primary">
+    <div class="full" id="content-primary">
         <h1><a href="{% url core:parties:list %}">Parties</a> / <strong>New</strong></h1>
-        <form method="post">
+        <form class="party" method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-            <p><input class="button" type="submit" value="Create"/></p>
+            <div class="fields">
+                <p>
+                    <label for="id_name">Name</label>
+                    {{ form.name }}
+                </p>
+            </div>
+            {% if form.errors %}
+                <div class="errors">
+                    <p>Oops! The party couldn't be created because:</p>
+                    <ul>
+                        {% for field_name, errors in form.errors.items %}
+                            {% with field=form|get:field_name %}
+                                {% for error in errors %}
+                                    <li>{{ field.label }}: {{ error }}</li>
+                                {% endfor %}
+                            {% endwith %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <div class="actions"><input class="button" type="submit" value="Create"/></div>
         </form>
     </div>
 {% endblock %}
