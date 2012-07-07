@@ -1,4 +1,5 @@
 # coding=utf-8
+from datetime import date, datetime, time
 
 
 # Constant time intervals: those whose durations (essentially) never change.
@@ -23,7 +24,7 @@ def interval_string(a, b):
     :returns: A string representing the interval between ``a`` and ``b``.
     :rtype: ``str``
     """
-    a, b = sorted([a, b])
+    a, b = sorted(map(_get_datetime, [a, b]))
     difference = (b - a).total_seconds()
 
     # The first interval is our greatest accuracy. By skipping it, any smaller
@@ -45,6 +46,10 @@ def interval_string(a, b):
 
     weeks = difference // _INTERVALS[-1][0]
     return "%d week%s" % (weeks, _pluralize(weeks))
+
+
+def _get_datetime(obj):
+    return obj if isinstance(obj, datetime) else datetime.combine(obj, time())
 
 
 def _get_months_between(a, b):

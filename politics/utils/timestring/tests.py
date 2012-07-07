@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from timestring import interval_string
 import unittest
 
@@ -89,6 +89,11 @@ class TimeStringTestCase(unittest.TestCase):
         start = datetime(2012, 2, 29)
         end = datetime(2013, 3, 1)
         self.assertEqual(interval_string(start, end), "1 year")
+
+    def test_date_same_day(self):
+        start = date(2012, 1, 1)
+        end = date(2012, 2, 1)
+        self.assertEqual(interval_string(start, end), "1 month")
 
 
 if __name__ == "__main__":
