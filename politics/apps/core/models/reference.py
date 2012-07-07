@@ -115,13 +115,13 @@ class Reference(models.Model):
 
         # Email the author of the reference.
         if self.author != comment.author:
-            subject = "{author_name} commented on your reference on AusPolitics!"
+            subject = "{author_name} commented on your reference on GovMonitor!"
             send_comment_notification_emails.delay(comment.pk, subject,
                     "core/references/mail/comment.txt", (self.author,))
 
         # Email participants in the comment thread.
         authors = comment.get_earlier_authors() - {comment.author, self.author}
-        subject = "{author_name} replied to your comment on AusPolitics!"
+        subject = "{author_name} replied to your comment on GovMonitor!"
         send_comment_notification_emails.delay(comment.pk, subject,
                 "core/references/mail/reply.txt", authors)
 

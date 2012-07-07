@@ -1,10 +1,10 @@
 {% load core %}
 {% autoescape off %}
 
-{{ comment.author.get_full_name }} commented on your reference on AusPolitics:
+{{ comment.author.get_full_name }} commented on your reference on GovMonitor:
 
 {{ comment.body|wordwrap:73|indent:4 }}
 
-http://auspolitics.org{{ comment.get_absolute_url }}
+http://govmonitor.org{{ comment.get_absolute_url }}
 
 {% endautoescape %}

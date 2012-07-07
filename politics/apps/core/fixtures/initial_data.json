@@ -3,8 +3,8 @@
     "model": "sites.Site",
     "pk": 1,
     "fields": {
-      "domain": "auspolitics.herokuapp.com",
-      "name": "auspolitics"
+      "domain": "govmonitor.org",
+      "name": "GovMonitor"
     }
   }
 ]
