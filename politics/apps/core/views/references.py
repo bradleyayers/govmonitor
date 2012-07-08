@@ -2,7 +2,9 @@
 from ..forms import ReferenceForm
 from ..models import Reference, View
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
+import logging
 from politics.apps.comments.views import comments as base_comments
 from politics.apps.votes.views import votes as base_votes
 from politics.utils.decorators import pk_url, render_to_template
@@ -38,6 +40,7 @@ def edit(request, reference):
 # Common view functionality.
 def _form(request, reference):
     form = ReferenceForm(instance=reference)
+    new_reference = reference.pk is None
 
     if request.method == "POST":
         form = ReferenceForm(request.POST, instance=reference)
@@ -49,6 +52,14 @@ def _form(request, reference):
                 form.save()
 
             view = reference.view
+            logging.getLogger("email").info("Reference Saved", extra={"body":
+                "%s %s a reference.\n\nhttp://govmonitor.org%s" % (
+                    request.user.get_full_name(),
+                    "created" if new_reference else "edited",
+                    reverse("core:views:show", args=(view.pk, view.slug))
+                )
+            })
+
             return redirect("core:views:show", pk=view.pk, slug=view.slug)
 
     return {"form": form, "reference": reference}

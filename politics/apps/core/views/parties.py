@@ -1,6 +1,8 @@
 # coding: utf-8
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
+import logging
 from politics.apps.core.forms import PartyForm
 from politics.apps.core.models import Issue, Party, View
 from politics.apps.view_counts.decorators import record_view
@@ -49,6 +51,14 @@ def new(request):
 
         if form.is_valid():
             party = form.save()
+
+            logging.getLogger("email").info("New Party", extra={"body":
+                "%s created a party.\n\nhttp://govmonitor.org%s" % (
+                    request.user.get_full_name(),
+                    reverse("core:parties:show", args=(party.pk, party.slug))
+                )
+            })
+
             return redirect("core:parties:show", party.pk, party.slug)
 
     return {"form": form}

@@ -1,6 +1,7 @@
 # coding=utf-8
 from django.http import HttpResponse, HttpResponseBadRequest
 import json
+import logging
 from politics.apps.comments.models import Comment
 from politics.apps.comments.forms import CommentForm
 from politics.utils.decorators import pk_url, require_authenticated
@@ -71,6 +72,14 @@ def comments(request, instance):
         if form.is_valid():
             with reversion.create_revision():
                 comment = form.save()
+
+            logging.getLogger("email").info("New Comment", extra={"body":
+                "%s commented on %s %d." % (
+                    request.user.get_full_name(),
+                    instance.__class__.__name__,
+                    instance.pk
+                )
+            })
 
             return HttpResponse(json.dumps(comment.to_json()), status=201)
         else:

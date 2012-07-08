@@ -1,7 +1,9 @@
 # coding=utf-8
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, redirect
 from haystack.query import SearchQuerySet
+import logging
 from politics.apps.core.forms import IssueForm
 from politics.apps.core.models import Issue, View
 from politics.apps.view_counts.decorators import record_view
@@ -51,6 +53,14 @@ def form(request, pk=None):
                 # signals; thus it doesn't get up-to-date tags as they're saved
                 # after the Issue. Call save to fire a signal and fix this.
                 issue.save()
+
+            logging.getLogger("email").info("Issue Saved", extra={"body":
+                "%s %s an issue.\n\nhttp://govmonitor.org%s" % (
+                    request.user.get_full_name(),
+                    "created" if pk is None else "edited",
+                    reverse("core:issues:show", args=(issue.pk, issue.slug))
+                )
+            })
 
             return redirect("core:issues:show", pk=issue.pk, slug=issue.slug)
 

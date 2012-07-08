@@ -4,6 +4,7 @@ from .models import Vote
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_http_methods
 import json
+import logging
 from politics.utils.decorators import require_authenticated
 
 
@@ -38,6 +39,15 @@ def votes(request, instance):
 
         if form.is_valid():
             vote = form.save()
+            logging.getLogger("email").info("New Vote", extra={"body":
+                "%s voted %s %d %s." % (
+                    request.user.get_full_name(),
+                    instance.__class__.__name__,
+                    instance.pk,
+                    vote.type
+                )
+            })
+
             return _build_response(201)
         else:
             return HttpResponseBadRequest()

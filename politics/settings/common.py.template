@@ -75,6 +75,7 @@ EMAIL_HOST = "EMAIL_HOST"
 EMAIL_HOST_PASSWORD = "EMAIL_HOST_PASSWORD"
 EMAIL_HOST_USER = "EMAIL_HOST_USER"
 EMAIL_PORT = 587
+EMAIL_SUBJECT_PREFIX = "[govmonitor] "
 EMAIL_USE_TLS = True
 
 # -----------------------------------------------------------------------------
@@ -126,9 +127,8 @@ LOGGING = {
     },
     "handlers": {
         "mail_admins": {
-            "class": "django.utils.log.AdminEmailHandler",
-            "formatter": "default",
-            "level": "ERROR"
+            "class": "politics.utils.log.AsyncAdminEmailHandler",
+            "formatter": "default"
         }
     },
     "loggers": {
@@ -138,6 +138,11 @@ LOGGING = {
         },
         "django.request": {
             "propagate": True
+        },
+        "email": {
+            "handlers": ["mail_admins"],
+            "level": "INFO",
+            "propagate": False
         }
     }
 }

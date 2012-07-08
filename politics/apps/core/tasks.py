@@ -1,9 +1,12 @@
 # coding=utf-8
 from celery.schedules import crontab
 from celery.task import periodic_task
+from django.core.mail import mail_admins
 from django.db import transaction
 from django.db.models import Count
+from django.utils.log import AdminEmailHandler
 from djcelery_transactions import task
+import logging
 from politics.apps.core.models import Party, PartySimilarity, Tag, View
 
 
@@ -112,3 +115,20 @@ def delete_unused_tags():
     """
     tags = Tag.objects.annotate(issue_count=Count("issue"))
     tags.filter(issue_count=0).delete()
+
+
+@task(ignore_result=True)
+def email_log_record(record):
+    """Emails a log record to the site admins.
+
+    If ``record`` is an error, Django's default email handler is used as it
+    prints the exception, request, etc. Otherwise, the record's ``body``
+    attribute is used as the body of the email (if set).
+
+    :param record: The log record.
+    :type  record: ``logging.LogRecord``
+    """
+    if record.levelno >= logging.ERROR:
+        AdminEmailHandler().emit(record)
+    else:
+        mail_admins(record.getMessage(), getattr(record, "body", ""))

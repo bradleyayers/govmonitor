@@ -1,6 +1,7 @@
 # coding=utf-8
 from django.contrib.auth.models import User
 from django.db import models
+import logging
 
 
 class UserProfile(models.Model):
@@ -33,6 +34,9 @@ class UserProfile(models.Model):
         """
         if created:
             UserProfile(user=instance).save()
+            logging.getLogger("email").info("New User", extra={"body":
+                "%s registered on govmonitor." % instance.get_full_name()
+            })
 
 
 models.signals.post_save.connect(UserProfile.create_user_profile, sender=User)
