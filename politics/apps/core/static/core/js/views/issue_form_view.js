@@ -12,6 +12,7 @@ AP.IssueFormView = Backbone.View.extend({
   initialize: function() {
     _.bindAll(this);
     this.$("#id_name").focus();
+    this._showInputHelp();
     this.$tagsInput = this.$("#id_tags");
   },
 
