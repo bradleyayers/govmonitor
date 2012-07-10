@@ -15,11 +15,12 @@
                 <h2><a href="{{ reference.url }}">{{ reference.title }}</a></h2>
                 <span class="pill {{ reference.stance }}">{{ reference.get_stance_display }}</span>
 
-                {% if reference.published_on %}
-                    <span class="icon-time published" title="{{ reference.published_on }}">Published <strong>{{ reference.published_on|interval_string }}</strong> ago</span>
-                {% else %}
-                    <span class="icon-time published" title="{{ reference.created_at }}">Created <strong>{{ reference.created_at|interval_string }}</strong> ago</span>
-                {% endif %}
+                <ul class="stats">
+                    {% with published_at=reference.published_on|default:reference.created_at %}
+                        <li class="icon-time" title="{{ published_at }}">Published <strong>{{ published_at|interval_string }}</strong> ago</li>
+                    {% endwith %}
+                    <li class="icon-user">Submitted by <strong>{% user_link reference.author %}</strong></li>
+                </ul>
 
                 <div class="markdown">
                     {% if reference.text_html %}
