@@ -2,7 +2,7 @@
 
 {% load core %}
 
-{% block title %}{{ tag.name }}{% endblock %}
+{% block title %}{{ block.super }} / {{ tag.name }}{% endblock %}
 
 {% block content %}
     {{ block.super }}

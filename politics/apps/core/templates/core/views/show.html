@@ -7,7 +7,7 @@
     view
 {% endblock %}
 
-{% block title %}{{ view.issue.name }} – {{ view.party.name }}{% endblock %}
+{% block title %}{{ block.super }} / {{ view.party.name }} / {{ view.issue.name }}{% endblock %}
 
 {% block javascript %}
     {{ block.super }}

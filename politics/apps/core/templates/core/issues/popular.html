@@ -12,7 +12,7 @@
     {% endif %}
 {% endblock %}
 
-{% block title %}Popular Issues{% endblock %}
+{% block title %}{{ block.super }} / Popular Issues{% endblock %}
 
 {% block content %}
     {{ block.super }}

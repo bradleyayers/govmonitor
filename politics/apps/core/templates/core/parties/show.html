@@ -7,7 +7,7 @@
     party
 {% endblock %}
 
-{% block title %}{{ party.name }}{% endblock %}
+{% block title %}{{ block.super }} / {{ party.name }}{% endblock %}
 
 {% block content %}
     {{ block.super }}

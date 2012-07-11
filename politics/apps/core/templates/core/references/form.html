@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block title %}
+    {{ block.super }} /
     {% if form.instance.pk %}
         Edit Reference
     {% else %}

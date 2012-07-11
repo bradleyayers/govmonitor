@@ -1,6 +1,6 @@
 {% extends "core/base.html" %}
 
-{% block title %}{{ user.get_full_name }}{% endblock %}
+{% block title %}{{ block.super }} / {{ user.get_full_name }}{% endblock %}
 
 {% block content %}
     {{ block.super }}

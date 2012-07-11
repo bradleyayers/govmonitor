@@ -2,7 +2,7 @@
 
 {% load core %}
 
-{% block title %}New Party{% endblock %}
+{% block title %}{{ block.super }} / New Party{% endblock %}
 
 {% block content %}
     {{ block.super }}

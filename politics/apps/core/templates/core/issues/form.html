@@ -8,8 +8,9 @@
 {% endblock %}
 
 {% block title %}
+    {{ block.super }} /
     {% if form.instance.pk %}
-        Edit {{ form.instance.name }}
+        Edit Issue
     {% else %}
         New Issue
     {% endif %}
