@@ -7,6 +7,7 @@ from politics.apps.core.forms import ReferenceForm
 from politics.apps.core.models import Reference, View
 from politics.utils.decorators import render_to_template
 from politics.utils.views import login_path
+import logging
 import random
 import reversion
 
@@ -52,7 +53,7 @@ def index(request):
             # Version the reference.
             with reversion.create_revision():
                 reversion.set_user(request.user)
-                form.save()
+                reference = form.save()
 
             completed_task = task
             completed_task.is_complete = True
@@ -60,6 +61,14 @@ def index(request):
 
             form = ReferenceForm()
             task = _assign_task(request.user)
+
+            view = reference.view
+            logging.getLogger("email").info("Reference Saved", extra={"body":
+                "%s created a reference.\n\nhttp://govmonitor.org%s" % (
+                    request.user.get_full_name(),
+                    reverse("core:views:show", args=(view.pk, view.slug))
+                )
+            })
 
     return {"completed_task": completed_task, "form": form, "task": task}
 
