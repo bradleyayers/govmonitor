@@ -37,6 +37,15 @@
         padding-bottom: 2px;
       }
 
+      a[class*=icon-] {
+        margin-left: 0.4em;
+        width: auto;
+
+        &::before {
+          padding-right: 0.4em;
+        }
+      }
+
       .body {
         display: inline;
       }
@@ -52,15 +61,6 @@
 
         &:hover {
           background-position: -12px 0;
-        }
-      }
-
-      .edit {
-        margin-left: 0.4em;
-        width: auto;
-
-        &::before {
-          padding-right: 0.4em;
         }
       }
     }

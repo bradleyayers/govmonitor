@@ -18,9 +18,13 @@
                         <div class="body">{{ comment.body }}</div>
                     {% endif %}
                     — {% user_link comment.author %}
-                    {% if request.user == comment.author and not comment.is_deleted %}
-                        <a class="edit icon-pencil" href="#">Edit</a>
-                        <a class="delete" href="#" title="Delete"></a>
+                    {% if not comment.is_deleted %}
+                        {% if request.user == comment.author %}
+                            <a class="edit icon-pencil" href="#">Edit</a>
+                            <a class="delete" href="#" title="Delete"></a>
+                        {% else %}
+                            <a class="add-comment icon-share-alt" href="#">Reply</a>
+                        {% endif %}
                     {% endif %}
                 </li>
             {% endfor %}
