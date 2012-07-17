@@ -5,6 +5,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from haystack.query import SearchQuerySet
+import logging
 from politics.utils.decorators import render_to_template
 from politics.utils.paginator import Paginator
 
@@ -88,6 +89,17 @@ def search(request):
     # duplicates as this is shown below the results (but preserve ordering).
     related_tags = Issue.common_tags(issues)
     related_tags = [tag for tag in related_tags if tag not in tags]
+
+    if len(results) == 0:
+        username = "An anonymous user"
+        if not request.user.is_anonymous():
+            username = request.user.get_full_name()
+
+        logging.getLogger("email").info("Failed Search", extra={"body":
+            "%s searched for \"%s\", but no results were found." % (
+                username, query
+            )
+        })
 
     return {
         "issues": issues,
