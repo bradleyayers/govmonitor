@@ -107,10 +107,12 @@ INSTALLED_APPS = (
     "south",
 
     "politics.apps.comments",
+    "politics.apps.contribute",
     "politics.apps.core",
     "politics.apps.feedback",
-    "politics.apps.view_counts",
     "politics.apps.south_libraries",
+    "politics.apps.view_counts",
+    "politics.apps.votes"
 )
 
 INTERNAL_IPS = ["127.0.0.1"]
@@ -129,12 +131,16 @@ LOGGING = {
         "mail_admins": {
             "class": "politics.utils.log.AsyncAdminEmailHandler",
             "formatter": "default"
+        },
+        "mail_admins_error": {
+            "class": "politics.utils.log.AsyncAdminEmailHandler",
+            "formatter": "default",
+            "level": "ERROR"
         }
     },
     "loggers": {
         "": {
-            "handlers": ["mail_admins"],
-            "level": "ERROR"
+            "handlers": ["mail_admins_error"],
         },
         "django.request": {
             "propagate": True
@@ -198,7 +204,8 @@ DEBUG_TOOLBAR_PANELS = (
     "debug_toolbar.panels.request_vars.RequestVarsDebugPanel",
     "debug_toolbar.panels.template.TemplateDebugPanel",
     "debug_toolbar.panels.signals.SignalDebugPanel",
-    "debug_toolbar.panels.logger.LoggingPanel",
+    "debug_toolbar.panels.sql.SQLDebugPanel",
+    "debug_toolbar.panels.logger.LoggingPanel"
 )
 
 MIDDLEWARE_CLASSES = (
