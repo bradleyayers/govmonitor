@@ -1,54 +1,34 @@
 {% extends "core/base.html" %}
 
+{% load cache %}
+
 {% block html-class %}about{% endblock %}
-{% block title %}{{ block.super }} / Help{% endblock %}
+{% block title %}{{ block.super }} / About{% endblock %}
 
 {% block content %}
     <div id="content-primary">
-        <h2 class="section">Frequently Asked Questions</h2>
-        <ol class="questions">
-            <li id="question-stance">
-                <h3>How do you determine a party's stance on an issue?</h3>
-                <p>A party's stance on an issue—oppose, support, or unclear—is automatically calculated from user-submitted <a href="#question-reference">references</a> and the votes thereon. Users vote references as valid or invalid and the most recently published reference with a score above 50% is assumed to be correct. If no references have been submitted, the party's stance is unknown.</p>
-                <p>This emphasis on referencing fosters a community that values evidence and ensures that information is highly accurate.</p>
-            </li>
-            <li id="question-reference">
-                <h3>What's a reference?</h3>
-                <p>A reference is a source of information about a party's stance on an issue—it "backs up" claims of their opposition, support, or uncertainty. References can be sourced from a wide range of places (e.g. the media or the party themselves), and can be in any number of formats (e.g. text, audio, or video); the important thing is that they provide information about the party's stance.</p>
-            </li>
-            <li id="question-good-reference">
-                <h3>What makes a valid reference?</h3>
-                <p>Good references exhibit a number of qualities. They typically...</p>
-                <ul>
-                    <li>are sourced from reliable media outlets or the party themselves,</li>
-                    <li>have been published recently (to ensure they are still relevant),</li>
-                    <li>detail the stance of the entire party, not just a single member, and</li>
-                    <li>they do so explicitly: it should be clear which information is relevant.</li>
-                </ul>
-                <p>An ideal reference is thus an official party policy document, but these aren't always up-to-date and they don't detail the party's stance on every issue. This is where other sources like the media are helpful. Blog posts or opinion pieces are poor references unless they come from the party themselves; try following up on their references to find something useful.</p>
-            </li>
-            <li id="question-party-similarity">
-                <h3>How do you calculate party similarity?</h3>
-                <p>The similarity of two parties is calculated from their views. If they share the same view for every issue, their similarity is 100%; if their views differ for every issue, it is 0%. If either party's view is unknown for an issue, it will not be included in the calculation.</p>
-            </li>
-        </ol>
-        <p>Still need help with something? <a href="{% url core:contact %}">Contact me</a> and I'll see what I can do.</p>
+        <p><strong>govmonitor</strong> makes politics more accessible by explaining issues and the stances parties take on them — all from evidence-based user contributions.</p>
+        <p>govmonitor was created out of frustration with the inaccessibility of politics. Policy documents are scattered all over the Internet, making it impossible for most people to work out what parties actually stand for. Even when you've found one, they only list the policies the party wants you to know about; you need to scour news websites to find the rest of them!</p>
+        <p>By collecting all of this information and making it easy to understand, we hope to simplify politics and help people vote for the parties that best represents their views. We take an evidence-based approach, with the site powered entirely by user-submitted <a href="{% url core:faq %}#question-reference">references</a>.</p>
+        <p>Have a question? Check the <a href="{% url core:faq %}">FAQ</a> or <a href="{% url core:contact %}">get in touch</a>!</p>
     </div>
+
     <div id="content-secondary">
-        <h2 class="section">Who</h2>
-        <div class="person">
-            <img alt="Chris Doble" src="http://gravatar.com/avatar/8a9fd9669fc04f1ff2bc2001f68c047d?s=55"/>
-            <a href="http://twitter.com/chrisdoble">Chris Doble</a>
-            I like to make things.
+        <h2 class="section">Me</h2>
+        <div class="profile">
+            <img alt="Chris Doble" src="http://gravatar.com/avatar/8a9fd9669fc04f1ff2bc2001f68c047d?s=70"/>
+            <h3>Chris Doble</h3>
+            <a href="http://twitter.com/chrisdoble">@chrisdoble</a>
+            Atlassian, politics, programming, sorting alphabetically.
         </div>
 
-        <h2 class="section">Where</h2>
-        <p>Sydney, Australia.</p>
-
-        <h2 class="section">Why</h2>
-        <p>To help people learn about politics and make more informed decisions.</p>
-
-        <h2 class="section">How</h2>
-        <p>Python, Django, and Backbone.js. You can see the code on <a href="https://bitbucket.org/chrisdoble/politics">BitBucket</a>.</p>
+        {% cache 3600 about:stats %}
+            <h2 class="section">Stats</h2>
+            <ul>
+                <li><strong>{{ issues.count }}</strong> issues</li>
+                <li><strong>{{ parties.count }}</strong> parties</li>
+                <li><strong>{{ references.count }}</strong> references</li>
+            </ul>
+        {% endcache %}
     </div>
 {% endblock %}

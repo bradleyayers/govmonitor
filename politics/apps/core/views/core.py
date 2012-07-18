@@ -1,6 +1,6 @@
 # coding=utf-8
 from ..forms import LoginForm, UserForm
-from ..models import Issue, Tag
+from ..models import Issue, Party, Reference, Tag, View
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
@@ -8,18 +8,21 @@ from haystack.query import SearchQuerySet
 import logging
 from politics.utils.decorators import render_to_template
 from politics.utils.paginator import Paginator
+from politics.utils.views import simple_view
 
 
 @render_to_template("core/about.html")
 def about(request):
     """The about page."""
-    return {}
+    return {
+       "issues": Issue.objects.all(),
+       "parties": Party.objects.all(),
+       "references": Reference.objects.all(),
+    }
 
 
-@render_to_template("core/contact.html")
-def contact(request):
-    """The contact page."""
-    return {}
+contact = simple_view("core/contact.html")
+faq = simple_view("core/faq.html")
 
 
 @render_to_template("core/log_in.html")

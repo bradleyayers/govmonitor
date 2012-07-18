@@ -1,0 +1,73 @@
+{% extends "core/base.html" %}
+
+{% block html-class %}faq{% endblock %}
+{% block title %}{{ block.super }} / FAQ{% endblock %}
+
+{% block content %}
+    <div id="content-primary">
+        <h1><strong>Frequently Asked Questions</strong></h1>
+        <ol class="questions">
+            <li id="question-find">
+                <h3>How do I find a party's stance on an issue?</h3>
+                <p>You can search for the issue using the search box up the top-right of the page or you can find the party on the <a href="/parties">parties</a> page and browse their views from there. We may not know the party's stance on the issue, but we're constantly adding more information.</p>
+            </li>
+            <li id="question-stance">
+                <h3>How do you determine a party's stance on an issue?</h3>
+                <p>A party's stance on an issue—oppose, support, or unclear—is automatically calculated from user-submitted <a href="#question-reference">references</a> and the votes thereon. Users vote references as valid or invalid and the most recently published reference with a score above 50% is assumed to be correct. If no references have been submitted, the party's stance is unknown.</p>
+                <p>This emphasis on referencing fosters a community that values evidence and ensures that information is highly accurate.</p>
+            </li>
+            <li id="question-reference">
+                <h3>What's a reference?</h3>
+                <p>A reference is a source of information about a party's stance on an issue—it "backs up" claims of their opposition, support, or uncertainty. References can come from a wide range of places (e.g. the media or the party themselves), and can be in a number of formats (e.g. text, audio, or video); the important thing is that they are accessible online and detail the party's stance.</p>
+            </li>
+            <li id="question-missing-view">
+                <h3>Why don't you have information about this party's views?</h3>
+                <p>We may not know a party's stance on an issue for several reasons:</p>
+                <ul>
+                    <li>no <a href="#question-good-reference">valid</a> references are available,</li>
+                    <li>none of the submitted references have reached 50% validity, or</li>
+                    <li>the issue/party hasn't been created yet—feel free to do so!</li>
+                </ul>
+                <p>We're constantly adding more information, but if you feel that something's missing, please add it!</p>
+            </li>
+            <li id="question-good-reference">
+                <h3>What makes a valid reference?</h3>
+                <p>Good references exhibit a number of qualities. They typically...</p>
+                <ul>
+                    <li>are sourced from reliable media outlets or the party themselves,</li>
+                    <li>detail the stance of the entire party, not just a single member, and</li>
+                    <li>they do so explicitly: it should be clear which information is relevant.</li>
+                </ul>
+                <p>An ideal reference is thus an official party policy document, but don't always detail the party's stance on every issue—this is where other sources like the media are helpful. Blog posts or opinion pieces are poor references unless they come from the party themselves, so try following up on their references to find something useful.</p>
+            </li>
+            <li id="question-current-reference">
+                <h3>Do references have to be current?</h3>
+                <p>No! We want to know how parties felt in the past, so old references are welcome too. Just make sure you set the published date when creating the reference so it doesn't interfere with our calculation of their current stance.</p>
+            </li>
+            <li id="question-party-similarity">
+                <h3>How do you calculate party similarity?</h3>
+                <p>The similarity of two parties is calculated from their views. If they share the same view for every issue, their similarity is 100%; if their views differ for every issue, it is 0%. If either party's view is unknown for an issue, it will not be included in the calculation.</p>
+            </li>
+            <li id="question-help">
+                <h3>How can I help?</h3>
+                <p>The best way to help is to vote on references, create issues, and submit your own references. The <a href="{% url contribute:index %}">contribute</a> page makes it easy to get started by suggesting issues to work on, but if you're passionate about a particular issue or party, you can focus on them!</p>
+                <p>Oh, and make sure you tell people about the site (especially when it's time to vote)!</p>
+            </li>
+        </ol>
+        <p>Still need help with something? <a href="{% url core:contact %}">Contact me</a> and I'll see what I can do.</p>
+    </div>
+    <div id="content-secondary">
+        <div class="navigation">
+            <ul>
+                <li><a href="#question-find">How do I find a party's stance on an issue?</a></li>
+                <li><a href="#question-stance">How do you determine a party's stance on an issue?</a></li>
+                <li><a href="#question-reference">What's a reference?</a></li>
+                <li><a href="#question-missing-view">Why don't you have information about this party's views?</a></li>
+                <li><a href="#question-good-reference">What makes a valid reference?</a></li>
+                <li><a href="#question-current-reference">Do references have to be current?</a></li>
+                <li><a href="#question-party-similarity">How do you calculate party similarity?</a></li>
+                <li><a href="#question-help">How can I help?</a></li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
