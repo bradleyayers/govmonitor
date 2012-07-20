@@ -196,6 +196,7 @@ html.issues.popular #header-issues-popular {
   a {
     color: #777;
     font-weight: bold;
+    width: auto;
   }
 
   a.right {
@@ -208,12 +209,18 @@ html.issues.popular #header-issues-popular {
   }
 
   ol {
-    margin-bottom: 10px;
+    a::after {
+      content: none;
+    }
+
+    a::before {
+      padding-right: 0.25em;
+    }
   }
 
   p {
     line-height: 18px;
-    margin: 0;
+    margin: 10px 0;
   }
 }
 
