@@ -20,8 +20,8 @@ class ViewTestCase(TransactionTestCase):
         self.assertEqual(View.UNKNOWN, View.objects.get(pk=1).stance)
 
     def test_valid_reference(self):
-        """A view's stance should be equal to that its most-recently published,
-            valid reference (a reference is valid if its score is >= 0.5)."""
+        """A view's stance should be equal to that of its most recently
+            published, valid reference (valid if its score is >= 0.5)."""
         for reference_pk in (1, 2):
             reference = Reference.objects.get(pk=reference_pk)
 

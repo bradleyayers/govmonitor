@@ -51,17 +51,60 @@
         }
     },
     {
+        "model": "core.Issue",
+        "pk": 2,
+        "fields": {
+            "description": "Legalising marriage between gay and lesbian couples.",
+            "is_popular": true,
+            "name": "Gay marriage"
+        }
+    },
+    {
         "model": "core.Party",
         "pk": 1,
         "fields": {
-            "name": "Australian Labor Party"
+            "name": "Australian Labor Party",
+            "parent": null,
+            "tree_left": 1,
+            "tree_level": 0,
+            "tree_right": 6,
+            "tree_id": 1
         }
     },
     {
         "model": "core.Party",
         "pk": 2,
         "fields": {
-            "name": "Liberal Party of Australia"
+            "name": "Liberal Party of Australia",
+            "parent": null,
+            "tree_left": 1,
+            "tree_level": 0,
+            "tree_right": 2,
+            "tree_id": 2
+        }
+    },
+    {
+        "model": "core.Party",
+        "pk": 3,
+        "fields": {
+            "name": "Australian Labor Party Queensland",
+            "parent": 1,
+            "tree_left": 2,
+            "tree_level": 1,
+            "tree_right": 5,
+            "tree_id": 1
+        }
+    },
+    {
+        "model": "core.Party",
+        "pk": 4,
+        "fields": {
+            "name": "Australian Labor Party Caloundra",
+            "parent": 3,
+            "tree_left": 3,
+            "tree_level": 2,
+            "tree_right": 4,
+            "tree_id": 1
         }
     },
     {
@@ -80,6 +123,66 @@
         "fields": {
             "issue": 1,
             "party": 2,
+            "stance": "unknown",
+            "updated_at": "2012-01-01 00:00:00"
+        }
+    },
+    {
+        "model": "core.View",
+        "pk": 3,
+        "fields": {
+            "issue": 1,
+            "party": 3,
+            "stance": "unknown",
+            "updated_at": "2012-01-01 00:00:00"
+        }
+    },
+    {
+        "model": "core.View",
+        "pk": 4,
+        "fields": {
+            "issue": 1,
+            "party": 4,
+            "stance": "unknown",
+            "updated_at": "2012-01-01 00:00:00"
+        }
+    },
+    {
+        "model": "core.View",
+        "pk": 5,
+        "fields": {
+            "issue": 2,
+            "party": 1,
+            "stance": "support",
+            "updated_at": "2012-01-01 00:00:00"
+        }
+    },
+    {
+        "model": "core.View",
+        "pk": 6,
+        "fields": {
+            "issue": 2,
+            "party": 2,
+            "stance": "unknown",
+            "updated_at": "2012-01-01 00:00:00"
+        }
+    },
+    {
+        "model": "core.View",
+        "pk": 7,
+        "fields": {
+            "issue": 2,
+            "party": 3,
+            "stance": "oppose",
+            "updated_at": "2012-01-01 00:00:00"
+        }
+    },
+    {
+        "model": "core.View",
+        "pk": 8,
+        "fields": {
+            "issue": 2,
+            "party": 4,
             "stance": "unknown",
             "updated_at": "2012-01-01 00:00:00"
         }
@@ -115,10 +218,10 @@
         "fields": {
             "author": 1,
             "stance": "oppose",
-            "text": "This is an archived reference.",
+            "text": "This is yet another reference.",
             "title": "A Reference from c.com",
             "url": "http://c.com/",
-            "view": 1
+            "view": 6
         }
     },
     {
@@ -140,6 +243,39 @@
             "content_type": ["core", "reference"],
             "is_archived": true,
             "object_id": 1,
+            "type": "up"
+        }
+    },
+    {
+        "model": "votes.Vote",
+        "pk": null,
+        "fields": {
+            "author": 1,
+            "content_type": ["core", "reference"],
+            "is_archived": false,
+            "object_id": 3,
+            "type": "up"
+        }
+    },
+    {
+        "model": "votes.Vote",
+        "pk": null,
+        "fields": {
+            "author": 2,
+            "content_type": ["core", "reference"],
+            "is_archived": false,
+            "object_id": 3,
+            "type": "up"
+        }
+    },
+    {
+        "model": "votes.Vote",
+        "pk": null,
+        "fields": {
+            "author": 3,
+            "content_type": ["core", "reference"],
+            "is_archived": false,
+            "object_id": 3,
             "type": "up"
         }
     },
