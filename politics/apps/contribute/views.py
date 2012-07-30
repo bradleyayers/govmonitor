@@ -25,7 +25,8 @@ def _assign_task(user):
     :returns: The newly created task, if one was created.
     :rtype: ``politics.apps.contribute.models.Task`` or ``None``
     """
-    views = View.objects.filter(stance=View.UNKNOWN)
+    # Only consider thew views of root parties (not sub-parties).
+    views = View.objects.filter(party__tree_level=0, stance=View.UNKNOWN)
 
     if len(views) > 0:
         task = Task(user=user, view=random.choice(views))

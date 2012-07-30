@@ -2,15 +2,24 @@
 
 {% load core %}
 
+{% block html-class %}
+    {{ block.super }}
+    form
+{% endblock %}
+
 {% block title %}{{ block.super }} / New Party{% endblock %}
 
 {% block content %}
     {{ block.super }}
-    <div class="full" id="content-primary">
+    <div id="content-primary">
         <h1><a href="{% url core:parties:list %}">Parties</a> / <strong>New</strong></h1>
         <form class="party" method="post">
             {% csrf_token %}
             <div class="fields">
+                <p>
+                    <label for="id_parent">Parent</label>
+                    {{ form.parent }}
+                </p>
                 <p>
                     <label for="id_name">Name</label>
                     {{ form.name }}
@@ -32,5 +41,19 @@
             {% endif %}
             <div class="actions"><input class="button" type="submit" value="Create"/></div>
         </form>
+    </div>
+    <div id="content-secondary">
+        <div id="help-parent">
+            <h2 class="section">Parent</h2>
+            <p>Are you creating a branch of a larger party (e.g. The Greens NSW is a branch of The Greens)? Select the parent party here.</p>
+        </div>
+        <div id="help-name">
+            <h2 class="section">Name</h2>
+            <p>The name of the party.</p>
+            <ul>
+                <li>Avoid acronyms/initialisms.</li>
+                <li>Try to use the name that's registered with the electoral commission.</p>
+            </ul>
+        </div>
     </div>
 {% endblock %}

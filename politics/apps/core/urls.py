@@ -27,6 +27,7 @@ party_patterns = patterns("",
     url(r"^$", parties.list, name="list"),
     url(r"^new/$", parties.new, name="new"),
     url(slug_pattern, parties.show, name="show"),
+    url(r"^(?P<pk>\d+)/parties/new/$", parties.new_child, name="new-child")
 )
 
 # /references/

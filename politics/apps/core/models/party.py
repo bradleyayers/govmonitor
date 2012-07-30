@@ -36,6 +36,14 @@ class Party(MPTTModel):
     def __unicode__(self):
         return self.name
 
+    @property
+    def common_tags(self):
+        """Returns tags the party has participated in, sorted by commonality."""
+        from . import Issue, View
+
+        views = self.view_set.exclude(stance=View.UNKNOWN).select_related()
+        return Issue.common_tags({view.issue for view in views})
+
     @staticmethod
     def create_views(instance, created, raw, **kwargs):
         """Creates initial views for a new ``Party``.
@@ -57,32 +65,6 @@ class Party(MPTTModel):
             for issue in Issue.objects.all():
                 View(issue=issue, party=instance).save()
 
-    def get_views(self):
-        """Retrieves the party's views.
-
-        Sub-parties inherit their parents' views, but can override them. This
-        method takes this into account, resolving the party's "final" views.
-
-        :returns: The party's views.
-        :rtype: *Iterable*
-        """
-        from . import View
-
-        # Retrieve all views that may be inherited by this party (exclude
-        # unknown views in sub-parties because they cannot be inherited).
-        parties = self.get_ancestors(include_self=True)
-        views = (View.objects.filter(party__in=parties)
-            .exclude(party__tree_level__gt=0, stance=View.UNKNOWN)
-            .order_by("-party__pk"))
-
-        resolved_views = {}
-        for view in views:
-            key = view.issue_id
-            if key not in resolved_views:
-                resolved_views[key] = view
-
-        return resolved_views.values()
-
     @staticmethod
     def update_view_slugs(instance, **kwargs):
         """Update a party's views' slugs.
@@ -92,6 +74,19 @@ class Party(MPTTModel):
         """
         for view in instance.view_set.all():
             view.save(touch_updated_at=False)
+
+    @property
+    def view_percentage(self):
+        """Calculates the percentage of the party's views that are known.
+
+        :returns: The percentage of the party's views that are known.
+        :rtype: ``float``
+        """
+        from . import View
+
+        views = self.view_set.all()
+        known_views = views.exclude(stance=View.UNKNOWN)
+        return known_views.count() * 100.0 / views.count()
 
 
 models.signals.post_save.connect(Party.create_views, sender=Party)

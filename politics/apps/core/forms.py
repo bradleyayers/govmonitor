@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
+from mptt.forms import TreeNodeChoiceField
 from politics.utils.forms import ReCAPTCHAField
 
 
@@ -129,7 +130,30 @@ class PartyForm(forms.ModelForm):
 
     class Meta:
         model = Party
-        exclude = ("slug",)
+        fields = ("name", "parent")
+
+    def __init__(self, *args, **kwargs):
+        super(PartyForm, self).__init__(*args, **kwargs)
+
+        # Exclude our instance from the queryset. You can't be your own parent!
+        instance_pk = kwargs["instance"].pk if "instance" in kwargs else None
+        self.fields["parent"] = TreeNodeChoiceField(empty_label="",
+            level_indicator=u"\u00A0\u00A0", required=False,
+            queryset=Party.objects.exclude(pk=instance_pk))
+
+    def clean_parent(self):
+        """Ensures that the parent relationship doesn't introduce a loop."""
+        instance = self.instance
+        parent = self.cleaned_data["parent"]
+
+        if parent and parent.pk == self.instance.pk:
+            raise forms.ValidationError("A party can't be its own parent!")
+
+        # Is parent a child of our instance?
+        if parent and instance and parent.is_descendant_of(instance):
+            raise forms.ValidationError("That is an invalid party relationship!")
+
+        return parent
 
 
 class ReferenceForm(forms.ModelForm):

@@ -7,7 +7,7 @@ from politics.apps.core.forms import PartyForm
 from politics.apps.core.models import Issue, Party, View
 from politics.apps.view_counts.decorators import record_view
 from politics.utils import group_n
-from politics.utils.decorators import render_to_template, slug_url
+from politics.utils.decorators import render_to_template, pk_url, slug_url
 import re
 
 
@@ -18,33 +18,24 @@ def list(request):
     def _party_key(party):
         return re.sub("^the", "", party.name.lower()).strip()
 
-    parties = Party.objects.all()
+    # Only show "root" parties (not sub-parties).
+    parties = Party.objects.filter(tree_level=0)
     parties = sorted(parties, key=_party_key)
-    average_view_percentage = 0
 
-    for party in parties:
-        # Retrieve all information that we have on the party.
-        views = party.view_set.exclude(stance=View.UNKNOWN).select_related()
-
-        # Calculate the party's "favourite" tags.
-        party.tags = Issue.common_tags(set(view.issue for view in views))
-
-        # Calculate the view percentage.
-        issue_count = Issue.objects.count()
-        party.view_percentage = float(len(views)) / issue_count * 100
-        average_view_percentage += party.view_percentage
+    average_view_percentage = sum(p.view_percentage for p in parties)
+    average_view_percentage = float(average_view_percentage) / len(parties)
 
     return {
-        "average_view_percentage": average_view_percentage / len(parties),
+        "average_view_percentage": average_view_percentage,
         "parties": parties
     }
 
 
 @login_required
 @render_to_template("core/parties/new.html")
-def new(request):
+def new(request, parent=None):
     """Create a new party."""
-    form = PartyForm()
+    form = PartyForm(initial={"parent": parent})
 
     if request.method == "POST":
         form = PartyForm(request.POST)
@@ -64,12 +55,20 @@ def new(request):
     return {"form": form}
 
 
+@login_required
+@pk_url(Party)
+def new_child(request, party):
+    """Create a new party with the parent field pre-filled."""
+    return new(request, party)
+
+
 @slug_url(Party)
 @record_view
 @render_to_template("core/parties/show.html")
 def show(request, party):
     """Show information about a ``Party``."""
     views = party.view_set.order_by("-notability", "issue__name")
+
     if request.GET.get("issues") != "unknown":
         views = views.exclude(stance=View.UNKNOWN)
     else:
@@ -79,6 +78,7 @@ def show(request, party):
     party_similarities = party_similarities.order_by("-similarity")
 
     return {
+        "children": party.get_children(),
         "party": party,
         "party_similarities": party_similarities,
         "view_rows": group_n(views, 2)

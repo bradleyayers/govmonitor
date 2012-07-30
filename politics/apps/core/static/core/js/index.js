@@ -2,6 +2,17 @@
   AP = {};
 
   /**
+   * Display help text in the side bar for the currently focused field.
+   *
+   * Help text containers in #content-secondary should have an id of the format
+   * "help-{field name}". All containers other than the target one are hidden.
+   */
+  AP.showInputHelp = function() {
+    $("#content-secondary > [id^=help-]").hide();
+    $("#help-" + $(document.activeElement).attr("name")).show();
+  };
+
+  /**
    * Shows a tooltip attached to the given element prompting the user to log in.
    * A one-shot click handler is attached to the document to close the tooltip.
    */

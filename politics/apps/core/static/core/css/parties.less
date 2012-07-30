@@ -4,7 +4,6 @@ form.party {
   font-size: 14px;
   margin: 0 auto;
   .white-panel;
-  width: 400px;
 
   .fields {
     display: table;
@@ -15,10 +14,11 @@ form.party {
 
       label {
         display: table-cell;
+        padding-bottom: 0.75em;
         width: 3.5em;
       }
 
-      input {
+      input, select {
         .box-sizing(border-box);
         display: table-cell;
         font-size: 14px;
@@ -33,28 +33,36 @@ form.party {
   }
 }
 
-html.parties #content-primary ol.parties > li {
-  float: left;
-  margin-bottom: 16px;
-  width: 360px;
+ol.parties {
+  overflow: auto;
 
-  > a {
-    display: block;
-    font-size: 16px;
-    font-weight: bold;
-  }
+  > li {
+    float: left;
+    margin-bottom: 16px;
+    width: 360px;
 
-  ol {
-    margin: 5px 0 2px 0;
-  }
+    > a {
+      display: block;
+      font-size: 16px;
+      font-weight: bold;
+    }
 
-  li {
-    display: inline;
-  }
+    ol {
+      margin: 5px 0 2px 0;
+    }
 
-  span {
-    color: #AAA;
+    li {
+      display: inline;
+    }
+
+    span {
+      color: #AAA;
+    }
   }
+}
+
+html.form.parties #content-secondary h2 {
+  margin-top: 0;
 }
 
 html.party #content-secondary {

@@ -32,7 +32,10 @@ def calculate_party_similarities(party_pk):
     # Archive existing PartySimilarity objects.
     PartySimilarity.objects.filter(first_party=party).update(is_archived=True)
 
-    for other_party in Party.objects.exclude(pk=party_pk):
+    # Only consider root parties. Otherwise every party would be ~100% similar
+    # to its sub-parties and this whole feature would be pointless!
+    other_parties = Party.objects.exclude(pk=party_pk).exclude(tree_level__gt=0)
+    for other_party in other_parties:
         other_party_views = _get_party_view_set(other_party)
         other_party_issues = set(view[0] for view in other_party_views)
 

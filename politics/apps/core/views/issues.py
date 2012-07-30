@@ -90,7 +90,7 @@ def show(request, issue):
     related_issues = [result.object for result in related_issues]
 
     # Pass stance counts through for the pie chart.
-    views = issue.view_set.select_related().order_by("party__name")
+    views = issue.view_set.filter(party__tree_level=0).select_related().order_by("party__name")
     stances = [(s[1], views.filter(stance=s[0]).count()) for s in View.STANCE_CHOICES]
 
     return {

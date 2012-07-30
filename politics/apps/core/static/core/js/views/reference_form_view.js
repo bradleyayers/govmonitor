@@ -5,15 +5,15 @@ AP.ReferenceFormView = Backbone.View.extend({
   events: {
     "input #id_title": "_titleChanged",
     "input #id_url": "_fetchTitle",
-    "focus .fields input": "_showInputHelp",
-    "focus select": "_showInputHelp",
-    "focus textarea": "_showInputHelp"
+    "focus .fields input": AP.showInputHelp,
+    "focus select": AP.showInputHelp,
+    "focus textarea": AP.showInputHelp
   },
 
   initialize: function() {
     _.bindAll(this);
     this.$("#id_stance").focus();
-    this._showInputHelp();
+    AP.showInputHelp();
   },
 
   /**
@@ -52,16 +52,6 @@ AP.ReferenceFormView = Backbone.View.extend({
       $title.addClass("loading");
       $title.attr("disabled", "disabled");
     }, 200);
-  },
-
-  /**
-   * Show the help text for a particular field.
-   *
-   * @param {event} e This event's target is the field.
-   */
-  _showInputHelp: function() {
-    $("#content-secondary > [id^=help-]").hide();
-    $("#help-" + $(document.activeElement).attr("name")).show();
   },
 
   /**

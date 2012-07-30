@@ -9,10 +9,35 @@
 
 {% block title %}{{ block.super }} / {{ party.name }}{% endblock %}
 
+{% block header-secondary %}
+    <div id="header-secondary">
+        <div class="right">
+            <a class="button" href="{% url core:parties:new-child party.pk %}">New Party</a>
+        </div>
+    </div>
+{% endblock %}
+
 {% block content %}
     {{ block.super }}
     <div id="content-primary">
         <h1><a href="{% url core:parties:list %}">Parties</a> / <strong>{{ party.name }}</strong></h1>
+
+        {% if children %}
+            <h2 class="section">Branches</h2>
+            <ol class="parties">
+                {% for child in children %}
+                    <li>
+                        <a href="{% url core:parties:show child.pk child.slug %}">{{ child.name }}</a>
+                        <ol>
+                            {% for tag in party.common_tags|slice:":3" %}
+                                <li>{% tag_link tag %}</li>
+                            {% endfor %}
+                        </ol>
+                        <span>{{ party.view_percentage|floatformat:0 }}% of issues available</span>
+                    </li>
+                {% endfor %}
+            </ol>
+        {% endif %}
 
         <ol class="tabs">
             <li {% if request.GET.issues != "unknown" %}class="selected"{% endif %}><a href="{% query_string issues="known" %}" id="tab-known">Known</a></li>

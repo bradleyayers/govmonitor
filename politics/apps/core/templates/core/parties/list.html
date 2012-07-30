@@ -13,7 +13,7 @@
                 <li>
                     <a href="{% url core:parties:show party.pk party.slug %}">{{ party.name }}</a>
                     <ol>
-                        {% for tag in party.tags|slice:":3" %}
+                        {% for tag in party.common_tags|slice:":3" %}
                             <li>{% tag_link tag %}</li>
                         {% endfor %}
                     </ol>
