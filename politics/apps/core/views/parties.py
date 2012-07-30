@@ -19,15 +19,14 @@ def list(request):
         return re.sub("^the", "", party.name.lower()).strip()
 
     # Only show "root" parties (not sub-parties).
-    parties = Party.objects.filter(tree_level=0)
-    parties = sorted(parties, key=_party_key)
+    parties = sorted(Party.objects.filter(tree_level=0), key=_party_key)
 
     average_view_percentage = sum(p.view_percentage for p in parties)
     average_view_percentage = float(average_view_percentage) / len(parties)
 
     return {
         "average_view_percentage": average_view_percentage,
-        "parties": parties
+        "party_rows": group_n(parties, 2)
     }
 
 

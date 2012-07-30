@@ -64,29 +64,11 @@ div.issue {
     .border-radius(0 0 5px 5px);
     .box-sizing(border-box);
     overflow: auto;
-    padding: 8px 10px;
+    padding: 8px 10px 10px;
     width: 100%;
 
     ul.stats {
-      color: @meta-colour;
-      float: left;
-      font-size: 11px;
-      list-style-type: none;
       margin: 0;
-
-      li {
-        display: inline-block;
-        height: 11px;
-        margin-right: 5px;
-
-        &::before {
-          font-size: 14px;
-          padding-right: 0.3em;
-          position: relative;
-          text-indent: 0;
-          top: 1px;
-        }
-      }
     }
 
     a.edit {
@@ -108,26 +90,6 @@ div.issue-summary {
 
     a {
       color: @text-colour;
-    }
-  }
-
-  ul.stats {
-    color: @meta-colour;
-    font-size: 11px;
-    margin: 0 0 1em 10px;
-
-    li {
-      display: inline-block;
-      height: 11px;
-      margin-right: 5px;
-
-      &::before {
-        font-size: 14px;
-        padding-right: 0.3em;
-        position: relative;
-        text-indent: 0;
-        top: 1px;
-      }
     }
   }
 

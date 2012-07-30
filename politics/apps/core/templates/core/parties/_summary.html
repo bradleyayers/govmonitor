@@ -1,0 +1,16 @@
+{% load core %}
+
+<div class="party-summary">
+    <h3><a href="{% url core:parties:show party.pk party.slug %}">{{ party.name }}</a></h3>
+    <ul class="stats">
+        <li class="icon-bar-chart"><strong>{{ party.view_percentage|floatformat:0 }}%</strong> of views known</li>
+        {% with branch_count=party.get_children.count %}
+            <li class="icon-sitemap"><strong>{{ branch_count }}</strong> branch{{ branch_count|pluralize:"es" }}</li>
+        {% endwith %}
+    </ul>
+    <ol class="tags">
+        {% for tag in party.common_tags|slice:":3" %}
+            <li>{% tag_link tag %}</li>
+        {% endfor %}
+    </ol>
+</div>

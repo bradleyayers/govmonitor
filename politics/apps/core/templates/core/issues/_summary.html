@@ -4,9 +4,9 @@
 <div class="issue-summary">
     <h3><a href="{% url core:issues:show issue.pk issue.slug %}">{{ issue.name }}</a></h3>
     <ul class="stats">
-        <li class="available icon-bar-chart"><strong>{{ issue.percentage_views_known|floatformat:0 }}%</strong> of views known</li>
-        <li class="updated icon-time" title="{{ issue.updated_at }}">Last updated <strong>{{ issue.updated_at|interval_string }}</strong> ago</li>
-        <li class="views icon-eye-open"><strong>{{ issue|view_count }}</strong> views</li>
+        <li class="icon-bar-chart"><strong>{{ issue.percentage_views_known|floatformat:0 }}%</strong> of views known</li>
+        <li class="icon-time" title="{{ issue.updated_at }}">Last updated <strong>{{ issue.updated_at|interval_string }}</strong> ago</li>
+        <li class="icon-eye-open"><strong>{{ issue|view_count }}</strong> views</li>
     </ul>
     <div class="views">
         {% if views %}

@@ -1,5 +1,46 @@
 @import "util";
 
+div.party-summary {
+  background: @grey-background;
+  border: 1px solid @grey-border;
+  .border-radius(5px);
+  .box-sizing(border-box);
+  float: left;
+  margin-bottom: 1.5em;
+  width: 351px;
+
+  h3 {
+    font-size: 18px;
+    line-height: 20px;
+    margin: 9px 0 9px 10px;
+
+    a {
+      color: @text-colour;
+    }
+  }
+
+  ol.tags {
+    margin: 0 10px 9px 10px;
+
+    li {
+      display: inline;
+      margin-top: -0.3em;
+    }
+  }
+}
+
+div.party-summary-row {
+  overflow: auto;
+
+  > :last-child {
+    float: right;
+  }
+
+  > :first-child {
+    float: left;
+  }
+}
+
 form.party {
   font-size: 14px;
   margin: 0 auto;
@@ -30,34 +71,6 @@ form.party {
   .actions {
     float: right;
     margin-top: 0.5em;
-  }
-}
-
-ol.parties {
-  overflow: auto;
-
-  > li {
-    float: left;
-    margin-bottom: 16px;
-    width: 360px;
-
-    > a {
-      display: block;
-      font-size: 16px;
-      font-weight: bold;
-    }
-
-    ol {
-      margin: 5px 0 2px 0;
-    }
-
-    li {
-      display: inline;
-    }
-
-    span {
-      color: #AAA;
-    }
   }
 }
 

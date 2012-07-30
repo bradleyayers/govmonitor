@@ -8,19 +8,13 @@
     {{ block.super }}
     <div id="content-primary">
         <h1><strong>Parties</strong></h1>
-        <ol class="parties">
-            {% for party in parties %}
-                <li>
-                    <a href="{% url core:parties:show party.pk party.slug %}">{{ party.name }}</a>
-                    <ol>
-                        {% for tag in party.common_tags|slice:":3" %}
-                            <li>{% tag_link tag %}</li>
-                        {% endfor %}
-                    </ol>
-                    <span>{{ party.view_percentage|floatformat:0 }}% of issues available</span>
-                </li>
-            {% endfor %}
-        </ol>
+        {% for party_row in party_rows %}
+            <div class="party-summary-row">
+                {% for party in party_row %}
+                    {% party_summary party %}
+                {% endfor %}
+            </div>
+        {% endfor %}
    </div>
    <div id="content-secondary">
        <h2 class="section">About Parties</h2>

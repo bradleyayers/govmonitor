@@ -206,6 +206,16 @@ def page_links(context, page, near=2):
     }
 
 
+@register.inclusion_tag("core/parties/_summary.html")
+def party_summary(party):
+    """Renders a summary of a party suitable for display in a list of parties.
+
+    :param party: The party.
+    :type  party: :class:`Party`
+    """
+    return {"party": party}
+
+
 @register.filter
 def percentage(value, precision=0):
     """Returns the given value as a percentage.

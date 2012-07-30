@@ -111,19 +111,8 @@
       }
 
       ul.stats {
-        color: @meta-colour;
         display: inline;
-        font-size: 11px;
-        margin: 0;
-
-        li {
-          display: inline;
-          margin-left: 0.4em;
-
-          &::before {
-            padding-right: 0.3em;
-          }
-        }
+        margin-left: 5px;
       }
 
       div.markdown {
@@ -179,6 +168,7 @@ div.view-summary {
   background-color: @grey-background;
   border: 1px solid @grey-border;
   .border-radius(5px);
+  .box-sizing(border-box);
   display: inline-block;
   width: 351px;
 
@@ -190,26 +180,6 @@ div.view-summary {
 
     a {
       color: @text-colour;
-    }
-  }
-
-  ul.stats {
-    color: @meta-colour;
-    font-size: 11px;
-    margin: 0 0 1em 10px;
-
-    li {
-      display: inline-block;
-      height: 11px;
-      margin-right: 5px;
-
-      &::before {
-        font-size: 14px;
-        padding-right: 0.3em;
-        position: relative;
-        text-indent: 0;
-        top: 1px;
-      }
     }
   }
 
