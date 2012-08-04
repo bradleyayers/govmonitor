@@ -13,6 +13,8 @@ class Party(MPTTModel):
     :type       name: ``str``
     :ivar     parent: The parent party of which this is a subsidiary.
     :type     parent: :class:`Party`
+    :ivar    picture: The party's picture.
+    :type    picture: ``django.db.models.FileField``
     :ivar       slug: A slug version of the party's name.
     :type       slug: ``str``
     """
@@ -21,6 +23,8 @@ class Party(MPTTModel):
     name = models.CharField(max_length=64)
     parent = TreeForeignKey("self", blank=True, null=True,
             related_name="children")
+    picture = models.FileField(blank=True, null=True,
+            upload_to="party_pictures")
     slug = AutoSlugField(always_update=True, max_length=64,
             populate_from="name")
 
@@ -64,6 +68,13 @@ class Party(MPTTModel):
         if created and not raw:
             for issue in Issue.objects.all():
                 View(issue=issue, party=instance).save()
+
+    def get_picture(self):
+        """
+        :returns: The party's picture or the default if it doesn't have one.
+        :rtype: ``django.db.models.fields.files.FieldFile`` or ``str``
+        """
+        return self.picture if self.picture else "party_pictures/default.png"
 
     @staticmethod
     def update_view_slugs(instance, **kwargs):

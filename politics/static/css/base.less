@@ -108,7 +108,11 @@ h2 {
   font-size: 14px;
 }
 
-input, select, textarea {
+input[type=file] {
+  padding: 1px 0;
+}
+
+input[type=password], input[type=text], select, textarea {
   .border-radius(3px);
   border: 1px solid #CCC;
   padding: 4px;

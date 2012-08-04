@@ -130,7 +130,7 @@ class PartyForm(forms.ModelForm):
 
     class Meta:
         model = Party
-        fields = ("name", "parent")
+        fields = ("name", "parent", "picture")
 
     def __init__(self, *args, **kwargs):
         super(PartyForm, self).__init__(*args, **kwargs)

@@ -13,7 +13,7 @@
     {{ block.super }}
     <div id="content-primary">
         <h1><a href="{% url core:parties:list %}">Parties</a> / <strong>New</strong></h1>
-        <form class="party" method="post">
+        <form class="party" enctype="multipart/form-data" method="post">
             {% csrf_token %}
             <div class="fields">
                 <p>
@@ -23,6 +23,10 @@
                 <p>
                     <label for="id_name">Name</label>
                     {{ form.name }}
+                </p>
+                <p>
+                    <label for="id_picture">Picture</label>
+                    {{ form.picture }}
                 </p>
             </div>
             {% if form.errors %}

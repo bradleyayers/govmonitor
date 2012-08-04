@@ -1,7 +1,7 @@
 # coding=utf-8
-from django.contrib import admin
+from django.conf import settings
 from django.conf.urls.defaults import patterns, include, url
-from django.contrib.staticfiles.views import serve
+from django.contrib import admin
 from politics.apps.comments.urls import urlpatterns as comments_urlpatterns
 from politics.apps.contribute.urls import urlpatterns as contribute_urlpatterns
 from politics.apps.core.urls import urlpatterns as core_urlpatterns
@@ -20,8 +20,12 @@ urlpatterns = patterns("",
     url(r"^contribute/", include(contribute_urlpatterns, namespace="contribute")),
     url(r"^feedback/", include(feedback_urlpatterns, namespace="feedback")),
     url(r"^", include(core_urlpatterns, namespace="core")),
-
-    # Serve static media. This is horrendously slow and should be removed as
-    # soon as possible, replaced with something like Amazon S3.
-    url(r"^static/(?P<path>.*)$", serve, {"insecure": True})
 )
+
+if settings.DEBUG:
+    urlpatterns += patterns("",
+        url(r"^static/(?P<path>.*)$", "django.contrib.staticfiles.views.serve"),
+        url(r"^media/(?P<path>.*)$", "django.views.static.serve", {
+            "document_root": settings.MEDIA_ROOT
+        })
+    )

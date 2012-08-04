@@ -1,7 +1,10 @@
-{% load core %}
+{% load core thumbnail %}
 
 <div class="party-summary">
-    <h3><a href="{% url core:parties:show party.pk party.slug %}">{{ party.name }}</a></h3>
+    <h3><a href="{% url core:parties:show party.pk party.slug %}">
+        <img alt="Party picture" src="{{ party.get_picture|thumbnail_url:'party-picture' }}"/>
+        {{ party.name }}
+    </a></h3>
     <ul class="stats">
         <li class="icon-bar-chart"><strong>{{ party.view_percentage|floatformat:0 }}%</strong> of views known</li>
         {% with branch_count=party.get_children.count %}

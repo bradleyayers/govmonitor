@@ -7,20 +7,28 @@ div.party-summary {
   .box-sizing(border-box);
   float: left;
   margin-bottom: 1.5em;
+  padding-bottom: 6px;
   width: 351px;
 
   h3 {
     font-size: 18px;
     line-height: 20px;
-    margin: 9px 0 9px 10px;
+    margin: 9px 0 9px 9px;
 
     a {
       color: @text-colour;
     }
+
+    img {
+      .border-radius(5px);
+      float: left;
+      margin-right: 9px;
+    }
   }
 
   ol.tags {
-    margin: 0 10px 9px 10px;
+    padding-left: 59px;
+    margin: 0 10px 1px 10px;
 
     li {
       display: inline;
@@ -56,7 +64,7 @@ form.party {
       label {
         display: table-cell;
         padding-bottom: 0.75em;
-        width: 3.5em;
+        width: 4em;
       }
 
       input, select {

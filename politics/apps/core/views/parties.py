@@ -37,7 +37,7 @@ def new(request, parent=None):
     form = PartyForm(initial={"parent": parent})
 
     if request.method == "POST":
-        form = PartyForm(request.POST)
+        form = PartyForm(request.POST, request.FILES)
 
         if form.is_valid():
             party = form.save()
