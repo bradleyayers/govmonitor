@@ -1,24 +1,30 @@
 {% load core %}
 
 {% csrf_token %}
-<div class="fields">
-    <p>
-        <label for="id_stance">Stance</label>
+<fieldset>
+    <label for="id_stance">Stance</label>
+    <div>
         {{ form.stance }}
-    </p>
-    <p>
-        <label for="id_url">URL</label>
+    </div>
+</fieldset>
+<fieldset>
+    <label for="id_url">URL</label>
+    <div>
         {{ form.url }}
-    </p>
-    <p>
-        <label for="id_title">Title</label>
+    </div>
+</fieldset>
+<fieldset>
+    <label for="id_title">Title</label>
+    <div>
         {{ form.title }}
-    </p>
-    <p>
-        <label for="id_published_on">Published</label>
+    </div>
+</fieldset>
+<fieldset>
+    <label for="id_published_on">Published</label>
+    <div>
         {{ form.published_on }}
-    </p>
-</div>
+    </div>
+</fieldset>
 {{ form.text }}
 {% if form.errors %}
     <div class="errors">

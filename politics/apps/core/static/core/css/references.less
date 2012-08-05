@@ -3,47 +3,26 @@
 form.reference {
   .white-panel;
 
-  div.fields {
-    display: table;
-    width: 100%;
-
-    p {
-      display: table-row;
-
-      #id_title.loading {
-        background: transparent url("/static/core/img/spinner.gif") no-repeat 597px 4px;
-      }
-
-      input[type=text] {
-        box-sizing: border-box;
-        display: table-cell;
-        font-size: 14px;
-        width: 100%;
-      }
-
-      label {
-        display: table-cell;
-        font-size: 14px;
-        padding: 0 0.5em 0.75em 0;
-        text-align: right;
-        width: 4.8em;
-      }
-    }
+  .actions {
+    float: right;
   }
 
-  p {
-    margin: 0.5em 0;
+  fieldset div {
+    padding-left: 5.5em;
+  }
+
+  #id_title.loading {
+    background: transparent url("/static/core/img/spinner.gif") no-repeat 597px 4px;
+  }
+
+  label {
+    width: 4.5em;
   }
 
   textarea {
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
+    .box-sizing(border-box);
     font-family: Monaco, Courier New, monospace;
     width: 100%;
-  }
-
-  .actions {
-    float: right;
   }
 }
 

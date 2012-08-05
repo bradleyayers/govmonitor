@@ -36,10 +36,12 @@
                     </ul>
                 </div>
             {% endwith %}
-            <form action="" class="reference" method="POST">
+            <form action="" class="fields reference" method="POST">
                 {% include "core/references/_form.html" %}
-                <input class="button" type="submit" value="Save"/>
-                <input class="button skip" type="button" value="Skip"/>
+                <div class="actions">
+                    <input class="button" type="submit" value="Save"/>
+                    <input class="button skip" type="button" value="Skip"/>
+                </div>
             </form>
             <form action="{% url contribute:skip %}" class="skip" method="POST">
                 {% csrf_token %}

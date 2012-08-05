@@ -7,13 +7,13 @@ div.party-summary {
   .box-sizing(border-box);
   float: left;
   margin-bottom: 1.5em;
-  padding-bottom: 6px;
+  padding: 9px;
   width: 351px;
 
   h3 {
     font-size: 18px;
-    line-height: 20px;
-    margin: 9px 0 9px 9px;
+    line-height: 22px;
+    margin: 0 0 9px 0;
 
     a {
       color: @text-colour;
@@ -26,14 +26,8 @@ div.party-summary {
     }
   }
 
-  ol.tags {
-    padding-left: 59px;
-    margin: 0 10px 1px 10px;
-
-    li {
-      display: inline;
-      margin-top: -0.3em;
-    }
+  ul {
+    margin: 0;
   }
 }
 
@@ -50,35 +44,33 @@ div.party-summary-row {
 }
 
 form.party {
-  font-size: 14px;
   margin: 0 auto;
   .white-panel;
 
-  .fields {
-    display: table;
-    width: 100%;
+  fieldset div {
+    padding-left: 4em;
+  }
 
-    p {
-      display: table-row;
+  img {
+    .border-radius(5px);
+    float: left;
+  }
 
-      label {
-        display: table-cell;
-        padding-bottom: 0.75em;
-        width: 4em;
-      }
+  input[type=file] {
+    line-height: 30px;
+    margin-left: 0.5em;
+  }
 
-      input, select {
-        .box-sizing(border-box);
-        display: table-cell;
-        font-size: 14px;
-        width: 100%;
-      }
-    }
+  label {
+    width: 3em;
   }
 
   .actions {
     float: right;
-    margin-top: 0.5em;
+
+    .cancel {
+      font-size: 12px;
+    }
   }
 }
 

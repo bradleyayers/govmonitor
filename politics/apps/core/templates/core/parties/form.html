@@ -1,6 +1,6 @@
 {% extends "core/parties/base.html" %}
 
-{% load core %}
+{% load core thumbnail %}
 
 {% block html-class %}
     {{ block.super }}
@@ -12,23 +12,35 @@
 {% block content %}
     {{ block.super }}
     <div id="content-primary">
-        <h1><a href="{% url core:parties:list %}">Parties</a> / <strong>New</strong></h1>
-        <form class="party" enctype="multipart/form-data" method="post">
+        <h1>
+            <a href="{% url core:parties:list %}">Parties</a> /
+            {% if form.instance.pk %}
+                <a href="{% url core:parties:show form.instance.pk form.instance.slug %}">{{ form.instance.name }}</a> / <strong>Edit</strong>
+            {% else %}
+                <strong>New</strong>
+            {% endif %}
+        </h1>
+        <form class="fields party" enctype="multipart/form-data" method="post">
             {% csrf_token %}
-            <div class="fields">
-                <p>
-                    <label for="id_parent">Parent</label>
+            <fieldset>
+                <label for="id_parent">Parent</label>
+                <div>
                     {{ form.parent }}
-                </p>
-                <p>
-                    <label for="id_name">Name</label>
+                </div>
+            </fieldset>
+            <fieldset>
+                <label for="id_name">Name</label>
+                <div>
                     {{ form.name }}
-                </p>
-                <p>
-                    <label for="id_picture">Picture</label>
-                    {{ form.picture }}
-                </p>
-            </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <label for="id_picture">Picture</label>
+                <div>
+                    <img alt="Party picture" src="{{ form.instance.get_picture|thumbnail_url:'party-picture' }}"/>
+                    <input id="id_picture" name="picture" type="file"/>
+                </div>
+            </fieldset>
             {% if form.errors %}
                 <div class="errors">
                     <p>Oops! The party couldn't be created because:</p>
@@ -43,7 +55,14 @@
                     </ul>
                 </div>
             {% endif %}
-            <div class="actions"><input class="button" type="submit" value="Create"/></div>
+            <div class="actions">
+                {% if form.instance.pk %}
+                    <input class="button" type="submit" value="Save"/>
+                    <a class="cancel" href="{% url core:parties:show form.instance.pk form.instance.slug %}">Cancel</a>
+                {% else %}
+                    <input class="button" type="submit" value="Create"/>
+                {% endif %}
+            </div>
         </form>
     </div>
     <div id="content-secondary">

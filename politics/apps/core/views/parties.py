@@ -1,7 +1,7 @@
 # coding: utf-8
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 import logging
 from politics.apps.core.forms import PartyForm
 from politics.apps.core.models import Issue, Party, View
@@ -9,6 +9,42 @@ from politics.apps.view_counts.decorators import record_view
 from politics.utils import group_n
 from politics.utils.decorators import render_to_template, pk_url, slug_url
 import re
+import reversion
+
+
+@login_required
+@render_to_template("core/parties/form.html")
+def form(request, pk=None, parent=None):
+    # If we're editing a party, pk will be set.
+    party = Party()
+    if pk is not None:
+        party = get_object_or_404(Party, pk=pk)
+
+    initial = {}
+    if parent is not None:
+        initial["parent"] = parent
+
+    form = PartyForm(initial=initial, instance=party)
+
+    if request.method == "POST":
+        form = PartyForm(request.POST, request.FILES, initial=initial,
+                instance=party)
+
+        if form.is_valid():
+            with reversion.create_revision():
+                reversion.set_user(request.user)
+                party = form.save()
+
+            logging.getLogger("email").info("New Party", extra={"body":
+                "%s created a party.\n\nhttp://govmonitor.org%s" % (
+                    request.user.get_full_name(),
+                    reverse("core:parties:show", args=(party.pk, party.slug))
+                )
+            })
+
+            return redirect("core:parties:show", party.pk, party.slug)
+
+    return {"form": form}
 
 
 @render_to_template("core/parties/list.html")
@@ -31,34 +67,10 @@ def list(request):
 
 
 @login_required
-@render_to_template("core/parties/new.html")
-def new(request, parent=None):
-    """Create a new party."""
-    form = PartyForm(initial={"parent": parent})
-
-    if request.method == "POST":
-        form = PartyForm(request.POST, request.FILES)
-
-        if form.is_valid():
-            party = form.save()
-
-            logging.getLogger("email").info("New Party", extra={"body":
-                "%s created a party.\n\nhttp://govmonitor.org%s" % (
-                    request.user.get_full_name(),
-                    reverse("core:parties:show", args=(party.pk, party.slug))
-                )
-            })
-
-            return redirect("core:parties:show", party.pk, party.slug)
-
-    return {"form": form}
-
-
-@login_required
 @pk_url(Party)
 def new_child(request, party):
     """Create a new party with the parent field pre-filled."""
-    return new(request, party)
+    return form(request, None, party)
 
 
 @slug_url(Party)

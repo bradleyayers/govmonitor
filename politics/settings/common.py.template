@@ -101,6 +101,7 @@ INSTALLED_APPS = (
     "compressor",
     "debug_toolbar",
     "djcelery",
+    "easy_thumbnails",
     "haystack",
     "mptt",
     "reversion",
@@ -187,6 +188,16 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
     "compressor.finders.CompressorFinder",
 )
+
+THUMBNAIL_ALIASES = {
+    "": {
+        "party-picture": {
+            "crop": True,
+            "size": (50, 50),
+            "quality": 100
+        }
+    }
+}
 
 # -----------------------------------------------------------------------------
 # Other

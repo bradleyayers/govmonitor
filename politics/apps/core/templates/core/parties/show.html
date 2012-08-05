@@ -22,17 +22,14 @@
     <div id="content-primary">
         <h1><a href="{% url core:parties:list %}">Parties</a> / <strong>{{ party.name }}</strong></h1>
 
+        <a class="icon-pencil" href="{% url core:parties:edit party.pk %}">Edit</a>
+
         {% if children %}
             <h2 class="section">Branches</h2>
             <ol class="parties">
                 {% for child in children %}
                     <li>
                         <a href="{% url core:parties:show child.pk child.slug %}">{{ child.name }}</a>
-                        <ol>
-                            {% for tag in party.common_tags|slice:":3" %}
-                                <li>{% tag_link tag %}</li>
-                            {% endfor %}
-                        </ol>
                         <span>{{ party.view_percentage|floatformat:0 }}% of issues available</span>
                     </li>
                 {% endfor %}

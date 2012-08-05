@@ -11,9 +11,4 @@
             <li class="icon-sitemap"><strong>{{ branch_count }}</strong> branch{{ branch_count|pluralize:"es" }}</li>
         {% endwith %}
     </ul>
-    <ol class="tags">
-        {% for tag in party.common_tags|slice:":3" %}
-            <li>{% tag_link tag %}</li>
-        {% endfor %}
-    </ol>
 </div>

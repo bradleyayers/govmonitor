@@ -95,6 +95,25 @@ em, i {
   }
 }
 
+form.fields fieldset {
+  font-size: 14px;
+  margin-bottom: 0.5em;
+  overflow: auto;
+  width: 100%;
+
+  input[type=password], input[type=text], select {
+    .box-sizing(border-box);
+    font-size: 14px;
+    width: 100%;
+  }
+
+  label {
+    float: left;
+    line-height: 30px;
+    text-align: right;
+  }
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
   margin: 1em 0;
@@ -108,8 +127,10 @@ h2 {
   font-size: 14px;
 }
 
-input[type=file] {
-  padding: 1px 0;
+input[type=file], input[type=password], input[type=text], select {
+  .box-sizing(border-box);
+  font-size: 14px;
+  height: 30px;
 }
 
 input[type=password], input[type=text], select, textarea {

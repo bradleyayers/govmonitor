@@ -29,18 +29,16 @@
                 <strong>New</strong>
             {% endif %}
         </h1>
-        <form class="issue" method="post">
+        <form class="fields issue" method="post">
             {% csrf_token %}
-            <div class="fields">
-                <p>
-                    <label for="id_name">Name</label>
-                    {{ form.name }}
-                </p>
-                <p>
-                    <label for="id_tags">Tags</label>
-                    {{ form.tags }}
-                </p>
-            </div>
+            <fieldset>
+                <label for="id_name">Name</label>
+                <div>{{ form.name }}</div>
+            </fieldset>
+            <fieldset>
+                <label for="id_tags">Tags</label>
+                <div>{{ form.tags }}</div>
+            </fieldset>
             {{ form.description }}
             {% if form.errors %}
                 <div class="errors">

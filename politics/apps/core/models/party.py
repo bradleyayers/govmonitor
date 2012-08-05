@@ -23,7 +23,7 @@ class Party(MPTTModel):
     name = models.CharField(max_length=64)
     parent = TreeForeignKey("self", blank=True, null=True,
             related_name="children")
-    picture = models.FileField(blank=True, null=True,
+    picture = models.ImageField(blank=True, null=True,
             upload_to="party_pictures")
     slug = AutoSlugField(always_update=True, max_length=64,
             populate_from="name")
@@ -39,14 +39,6 @@ class Party(MPTTModel):
 
     def __unicode__(self):
         return self.name
-
-    @property
-    def common_tags(self):
-        """Returns tags the party has participated in, sorted by commonality."""
-        from . import Issue, View
-
-        views = self.view_set.exclude(stance=View.UNKNOWN).select_related()
-        return Issue.common_tags({view.issue for view in views})
 
     @staticmethod
     def create_views(instance, created, raw, **kwargs):

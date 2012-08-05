@@ -68,6 +68,7 @@ div.issue {
     width: 100%;
 
     ul.stats {
+      float: left;
       margin: 0;
     }
 
@@ -160,35 +161,18 @@ div.issue-summary {
 }
 
 form.issue {
-  font-size: 14px;
   .white-panel;
+
+  fieldset div {
+    padding-left: 4em;
+  }
 
   .errors p:first-child {
     margin-top: 0;
   }
 
-  div.fields {
-    display: table;
-    width: 100%;
-
-    p {
-      display: table-row;
-      margin: 0;
-
-      label {
-        display: table-cell;
-        padding: 0 0.5em 0.8em 0;
-        text-align: right;
-        width: 3em;
-      }
-
-      input {
-        .box-sizing(border-box);
-        display: table-cell;
-        font-size: 14px;
-        width: 100%;
-      }
-    }
+  label {
+    width: 3em;
   }
 
   textarea {

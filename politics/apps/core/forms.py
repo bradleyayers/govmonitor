@@ -136,7 +136,7 @@ class PartyForm(forms.ModelForm):
         super(PartyForm, self).__init__(*args, **kwargs)
 
         # Exclude our instance from the queryset. You can't be your own parent!
-        instance_pk = kwargs["instance"].pk if "instance" in kwargs else None
+        instance_pk = getattr(kwargs.get("instance"), "pk", None)
         self.fields["parent"] = TreeNodeChoiceField(empty_label="",
             level_indicator=u"\u00A0\u00A0", required=False,
             queryset=Party.objects.exclude(pk=instance_pk))

@@ -9,7 +9,7 @@
     <div class="full">
         <div class="register">
             <h1><strong>Register</strong></h1>
-            <form method="post">
+            <form class="fields" method="post">
                 {% csrf_token %}
                 {% if form.errors %}
                     <div class="errors">
@@ -33,28 +33,36 @@
                         </ul>
                     </div>
                 {% endif %}
-                <div class="fields">
-                    <p>
-                        <label for="id_first_name">First Name</label>
+                <fieldset>
+                    <label for="id_first_name">First Name</label>
+                    <div>
                         {{ form.first_name }}
-                    </p>
-                    <p>
-                        <label for="id_last_name">Last Name</label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <label for="id_last_name">Last Name</label>
+                    <div>
                         {{ form.last_name }}
-                    </p>
-                    <p>
-                        <label for="id_email">Email</label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <label for="id_email">Email</label>
+                    <div>
                         {{ form.email }}
-                    </p>
-                    <p>
-                        <label for="id_password">Password</label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <label for="id_password">Password</label>
+                    <div>
                         {{ form.password }}
-                    </p>
-                    <p>
-                        <label for="id_password_confirmation">Password Again</label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <label for="id_password_confirmation">Password Again</label>
+                    <div>
                         {{ form.password_confirmation }}
-                    </p>
-                </div>
+                    </div>
+                </fieldset>
                 <div class="captcha">{{ form.captcha|safe }}</div>
                 <input class="button" type="submit" value="Register"/>
             </form>

@@ -25,7 +25,8 @@ issue_patterns = patterns("",
 # /parties/
 party_patterns = patterns("",
     url(r"^$", parties.list, name="list"),
-    url(r"^new/$", parties.new, name="new"),
+    url(r"^(?P<pk>\d+)/edit/$", parties.form, name="edit"),
+    url(r"^new/$", parties.form, name="new"),
     url(slug_pattern, parties.show, name="show"),
     url(r"^(?P<pk>\d+)/parties/new/$", parties.new_child, name="new-child")
 )

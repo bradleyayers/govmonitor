@@ -27,7 +27,7 @@ div.log-in {
 
     input[type=password], input[type=text] {
       display: block;
-      margin-bottom: 0.75em;
+      margin-bottom: 0.5em;
     }
   }
 }
@@ -37,30 +37,6 @@ div.register {
   .white-panel;
   width: 400px;
 
-  .fields {
-    display: table;
-    font-size: 13px;
-    width: 100%;
-
-    p {
-      display: table-row;
-
-      label {
-        display: table-cell;
-        padding: 0 0.5em 0.8em 0;
-        text-align: right;
-        width: 7.3em;
-      }
-
-      input {
-        .box-sizing(border-box);
-        display: table-cell;
-        font-size: 13px;
-        width: 100%;
-      }
-    }
-  }
-
   .captcha {
     margin: 1em auto;
     width: 318px;
@@ -68,9 +44,21 @@ div.register {
     a::after {
       content: none;
     }
+
+    input {
+      height: auto;
+    }
+  }
+
+  fieldset div {
+    padding-left: 8.5em;
   }
 
   input[type=submit] {
     float: right;
+  }
+
+  label {
+    width: 7.5em;
   }
 }
