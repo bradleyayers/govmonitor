@@ -78,22 +78,23 @@ def new_child(request, party):
 @render_to_template("core/parties/show.html")
 def show(request, party):
     """Show information about a ``Party``."""
-    tab = request.GET.get("tab", "known")
     views = party.view_set.order_by("-notability", "issue__name")
+    known_views = views.exclude(stance=View.UNKNOWN)
+    unknown_views = views.filter(stance=View.UNKNOWN)
 
-    if tab == "unknown":
-        views = views.filter(stance=View.UNKNOWN)
-    elif tab != "branches":
+    tab = request.GET.get("tab", "known")
+    if tab not in ("branches", "known", "unknown"):
         tab = "known"
-        views = views.exclude(stance=View.UNKNOWN)
 
     party_similarities = party.partysimilarity_set.not_archived()
     party_similarities = party_similarities.order_by("-similarity")
 
     return {
-        "branch_rows": group_n(party.get_children(), 2),
+        "branches": party.get_children(),
+        "known_views": known_views,
         "party": party,
         "party_similarities": party_similarities,
-        "view_rows": group_n(views, 2),
-        "tab": tab
+        "tab": tab,
+        "unknown_views": unknown_views,
+        "views": known_views if tab == "known" else unknown_views
     }

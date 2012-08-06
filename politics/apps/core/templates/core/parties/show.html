@@ -31,13 +31,13 @@
         </h1>
 
         <ol class="tabs">
-            <li {% if tab == "known" %}class="selected"{% endif %}><a href="{% query_string tab="known" %}">Known Views</a></li>
-            <li {% if tab == "unknown" %}class="selected"{% endif %}><a href="{% query_string tab="unknown" %}">Unknown Views</a></li>
-            <li {% if tab == "branches" %}class="selected"{% endif %}><a href="{% query_string tab="branches" %}">Branches</a></li>
+            <li {% if tab == "known" %}class="selected"{% endif %}><a href="{% query_string tab="known" %}">Known Views ({{ known_views.count }})</a></li>
+            <li {% if tab == "unknown" %}class="selected"{% endif %}><a href="{% query_string tab="unknown" %}">Unknown Views ({{ unknown_views.count }})</a></li>
+            <li {% if tab == "branches" %}class="selected"{% endif %}><a href="{% query_string tab="branches" %}">Branches ({{ branches.count }})</a></li>
         </ol>
 
         {% if tab != "branches" %}
-            {% for view_row in view_rows %}
+            {% for view_row in views|group_n:2 %}
                 <div class="view-summary-row">
                     {% for view in view_row %}
                         {% with heading=view.issue.name %}
@@ -47,7 +47,7 @@
                 </div>
             {% endfor %}
         {% else %}
-            {% for branch_row in branch_rows %}
+            {% for branch_row in branches|group_n:2 %}
                 <div class="party-summary-row">
                     {% for branch in branch_row %}
                         {% party_summary branch %}

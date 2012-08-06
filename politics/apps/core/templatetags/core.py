@@ -3,6 +3,7 @@ from django import template
 from django.core.urlresolvers import reverse
 from django.template import Node
 from politics.apps.core.models import View
+from politics.utils import group_n as base_group_n
 
 
 register = template.Library()
@@ -72,13 +73,16 @@ def get(dictionary, key):
     return dictionary[key]
 
 
-@register.simple_tag
-def stance_icon(stance):
-    return {
-        View.OPPOSE: "icon-thumbs-down",
-        View.SUPPORT: "icon-thumbs-up",
-        View.UNCLEAR: "icon-question-sign",
-    }.get(stance, "")
+@register.filter
+def group_n(iterable, n):
+    """Collects the items in an iterable into groups of size ``n``.
+
+    :param iterable: The items to group.
+    :type  iterable: *Iterable*
+    :param        n: The group size.
+    :type         n: ``int``
+    """
+    return base_group_n(iterable, n)
 
 
 @register.filter
@@ -236,6 +240,15 @@ def percentage(value, precision=0):
         value *= 100
 
     return ("%." + str(precision) + "f%%") % value
+
+
+@register.simple_tag
+def stance_icon(stance):
+    return {
+        View.OPPOSE: "icon-thumbs-down",
+        View.SUPPORT: "icon-thumbs-up",
+        View.UNCLEAR: "icon-question-sign",
+    }.get(stance, "")
 
 
 class QueryStringNode(Node):
