@@ -435,9 +435,10 @@ def _set_permissions():
     sudo("chmod -R 750 \"{0}\" && chown -R {1}:www-data \"{0}\"".format(
             env.root_path, env.user))
 
-    # Make the static directory writable for django-compressor.
-    sudo("chmod -R 770 \"%s\"" % os.path.join(
-            env.repository_path, env.root_module_name, "static"))
+    # Make the media and static directories writable.
+    for directory in ("media", "static"):
+        sudo("chmod -R 770 \"%s\"" % os.path.join(
+                env.repository_path, env.root_module_name, directory))
 
 
 # Calculate the final host string and the site's name. We can't just use the
