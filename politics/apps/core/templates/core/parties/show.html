@@ -1,6 +1,6 @@
 {% extends "core/parties/base.html" %}
 
-{% load core %}
+{% load core thumbnail %}
 
 {% block html-class %}
     {{ block.super }}
@@ -20,36 +20,41 @@
 {% block content %}
     {{ block.super }}
     <div id="content-primary">
-        <h1><a href="{% url core:parties:list %}">Parties</a> / <strong>{{ party.name }}</strong></h1>
+        <h1>
+            <div class="picture"><img alt="Party picture" src="{{ party.get_picture|thumbnail_url:'party-picture' }}"/></div>
+            <strong {% if party.parent %}class="branch"{% endif %}>{{ party.name }}</strong>
+            <a class="edit icon-pencil" href="{% url core:parties:edit party.pk %}">Edit</a>
 
-        <a class="icon-pencil" href="{% url core:parties:edit party.pk %}">Edit</a>
-
-        {% if children %}
-            <h2 class="section">Branches</h2>
-            <ol class="parties">
-                {% for child in children %}
-                    <li>
-                        <a href="{% url core:parties:show child.pk child.slug %}">{{ child.name }}</a>
-                        <span>{{ party.view_percentage|floatformat:0 }}% of issues available</span>
-                    </li>
-                {% endfor %}
-            </ol>
-        {% endif %}
+            {% if party.parent %}
+                <span class="icon-sitemap">Branch of <strong><a href="{% url core:parties:show party.parent.pk party.parent.slug %}">{{ party.parent.name }}</a></strong></span>
+            {% endif %}
+        </h1>
 
         <ol class="tabs">
-            <li {% if request.GET.issues != "unknown" %}class="selected"{% endif %}><a href="{% query_string issues="known" %}" id="tab-known">Known</a></li>
-            <li {% if request.GET.issues == "unknown" %}class="selected"{% endif %}><a href="{% query_string issues="unknown" %}" id="tab-unknown">Unknown</a></li>
+            <li {% if tab == "known" %}class="selected"{% endif %}><a href="{% query_string tab="known" %}">Known Views</a></li>
+            <li {% if tab == "unknown" %}class="selected"{% endif %}><a href="{% query_string tab="unknown" %}">Unknown Views</a></li>
+            <li {% if tab == "branches" %}class="selected"{% endif %}><a href="{% query_string tab="branches" %}">Branches</a></li>
         </ol>
 
-        {% for view_row in view_rows %}
-            <div class="view-summary-row">
-                {% for view in view_row %}
-                    {% with heading=view.issue.name %}
-                        {% include "core/views/_summary.html" %}
-                    {% endwith %}
-                {% endfor %}
-            </div>
-        {% endfor %}
+        {% if tab != "branches" %}
+            {% for view_row in view_rows %}
+                <div class="view-summary-row">
+                    {% for view in view_row %}
+                        {% with heading=view.issue.name %}
+                            {% include "core/views/_summary.html" %}
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% else %}
+            {% for branch_row in branch_rows %}
+                <div class="party-summary-row">
+                    {% for branch in branch_row %}
+                        {% party_summary branch %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
 
     <div id="content-secondary">

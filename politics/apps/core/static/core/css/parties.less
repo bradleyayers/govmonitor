@@ -20,7 +20,7 @@ div.party-summary {
     }
 
     img {
-      .border-radius(5px);
+      .border-radius(3px);
       float: left;
       margin-right: 9px;
     }
@@ -78,15 +78,63 @@ html.form.parties #content-secondary h2 {
   margin-top: 0;
 }
 
-html.party #content-secondary {
-  h2.section a.help {
-    font-size: 11px;
+html.party {
+  h1 {
+    overflow: auto;
+
+    .edit {
+      font-size: 12px;
+
+      &::before {
+        padding-right: 0.3em;
+      }
+    }
+
+    .picture {
+      border: 1px solid @grey-border;
+      border-bottom: 2px solid #AAA;
+      .border-radius(5px);
+      float: left;
+      font-size: 0;
+      margin-right: 10px;
+
+      img {
+        border-radius: 3px;
+      }
+    }
+
+    > strong {
+      display: inline-block;
+      font-size: 20px;
+      padding-top: 17px;
+
+      &.branch {
+        padding-top: 8px;
+      }
+    }
+
+    span {
+      color: #666;
+      display: block;
+      font-size: 11px;
+      margin-top: 0.5em;
+
+      &::before {
+        padding-right: 0.3em;
+      }
+    }
   }
 
-  ol.similar-parties span {
-    color: #999;
-    display: inline-block;
-    text-align: right;
-    width: 2.9em;
+  #content-secondary {
+    h2.section a.help {
+      font-size: 11px;
+    }
+
+    ol.similar-parties span {
+      color: #999;
+      display: inline-block;
+      text-align: right;
+      width: 2.9em;
+    }
   }
 }
