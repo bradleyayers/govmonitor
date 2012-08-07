@@ -6,7 +6,6 @@ import logging
 from politics.apps.core.forms import PartyForm
 from politics.apps.core.models import Issue, Party, View
 from politics.apps.view_counts.decorators import record_view
-from politics.utils import group_n
 from politics.utils.decorators import render_to_template, pk_url, slug_url
 import re
 import reversion
@@ -62,7 +61,7 @@ def list(request):
 
     return {
         "average_view_percentage": average_view_percentage,
-        "party_rows": group_n(parties, 2)
+        "parties": parties
     }
 
 
