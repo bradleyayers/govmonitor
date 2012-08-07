@@ -31,7 +31,14 @@
 
     # Hook up the media directories for Apache to serve.
     Alias /media/ /DocumentRoot/example/example/media/
+    <Directory /DocumentRoot/example/example/media>
+        Options -Indexes
+    </Directory>
+
     Alias /static/ /DocumentRoot/example/example/static/
+    <Directory /DocumentRoot/example/example/static>
+        Options -Indexes
+    </Directory>
 
     # Configure mod_wsgi to run in daemon mode.
     WSGIDaemonProcess example processes=2 threads=15 user=example
