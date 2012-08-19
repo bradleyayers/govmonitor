@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 import logging
 from politics.apps.comments.views import comments as base_comments
+from politics.apps.core.templatetags.core import view_url
 from politics.apps.votes.views import votes as base_votes
 from politics.utils.decorators import pk_url, render_to_template
 import reversion
@@ -34,13 +35,7 @@ def edit(request, reference):
     :param reference: The reference being edited.
     :type  reference: :class:`Reference`
     """
-    return _form(request, reference)
-
-
-# Common view functionality.
-def _form(request, reference):
     form = ReferenceForm(instance=reference)
-    new_reference = reference.pk is None
 
     if request.method == "POST":
         form = ReferenceForm(request.POST, instance=reference)
@@ -53,30 +48,15 @@ def _form(request, reference):
 
             view = reference.view
             logging.getLogger("email").info("Reference Saved", extra={"body":
-                "%s %s a reference.\n\nhttp://govmonitor.org%s" % (
+                "%s edited a reference.\n\nhttp://govmonitor.org%s" % (
                     request.user.get_full_name(),
-                    "created" if new_reference else "edited",
-                    reverse("core:views:show", args=(view.pk, view.slug))
+                    view_url(view)
                 )
             })
 
-            return redirect("core:views:show", pk=view.pk, slug=view.slug)
+            return redirect(view_url(view))
 
     return {"form": form, "reference": reference}
-
-
-@login_required
-@pk_url(View)
-@render_to_template("core/references/form.html")
-def new(request, view):
-    """Create a new reference.
-
-    :param request: The HTTP request that was made.
-    :type  request: ``django.http.HttpRequest``
-    :param    view: The view the reference is to be added to.
-    :type     view: :class:`View`
-    """
-    return _form(request, Reference(author=request.user, view=view))
 
 
 @pk_url(Reference)

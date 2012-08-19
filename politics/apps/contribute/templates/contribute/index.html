@@ -1,5 +1,7 @@
 {% extends "core/base.html" %}
 
+{% load core %}
+
 {% block html-class %}
     {{ block.super }}
     contribute
@@ -14,7 +16,7 @@
             {% with view=completed_task.view %}
                 <div class="success">
                     Your reference was created and can be viewed
-                    <a href="{% url core:views:show slug=view.slug pk=view.pk %}">here</a>.
+                    <a href="{% view_url view %}">here</a>.
                     Thanks for contributing!
                 </div>
             {% endwith %}
@@ -24,8 +26,8 @@
                 <div class="information">
                     <p class="task">
                         Find a reference that details the view of
-                        <em><a href="{% url core:parties:show slug=party.slug pk=party.pk %}">{{ party.name }}</a></em>
-                        on <em><a href="{% url core:issues:show slug=issue.slug pk=issue.pk %}">{{ issue.name }}</a></em>.
+                        <em><a href="{% url core:parties:show party.pk party.slug %}">{{ party.name }}</a></em>
+                        on <em><a href="{% url core:issues:show issue.pk issue.slug %}">{{ issue.name }}</a></em>.
                     </p>
                     <p>Getting started:</p>
                     <ul>

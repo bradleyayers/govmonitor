@@ -1,5 +1,6 @@
 # coding=utf-8
 from ...models import Party
+from django.core.urlresolvers import reverse
 from django.test.client import Client
 from django.test import TransactionTestCase
 
@@ -16,11 +17,14 @@ class PartyViewsTestCase(TransactionTestCase):
 
     def test_edit(self):
         """The edit view should update an existing :class:`Party`."""
-        expected = "Updated Party!"
-        party_count = Party.objects.count()
-        response = self.client.post("/parties/1/edit/", {
-            "name": expected
+        path = reverse("core:parties:edit", kwargs={
+            "pk": self.party.pk,
+            "slug": self.party.slug
         })
 
+        expected = "Updated Party!"
+        party_count = Party.objects.count()
+        response = self.client.post(path, {"name": expected})
+        
         self.assertEqual(party_count, Party.objects.count())
         self.assertEqual(expected, Party.objects.get(pk=self.party.pk).name)

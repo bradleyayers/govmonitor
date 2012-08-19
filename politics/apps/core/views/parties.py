@@ -12,13 +12,17 @@ import reversion
 
 
 @login_required
+@slug_url(Party, required=False)
 @render_to_template("core/parties/form.html")
-def form(request, pk=None, parent=None):
-    # If we're editing a party, pk will be set.
-    party = Party()
-    if pk is not None:
-        party = get_object_or_404(Party, pk=pk)
-
+def form(request, party, parent=None):
+    """
+    :param request: The HTTP request.
+    :type  request: ``django.http.HttpRequest``
+    :param   party: The party or ``None``.
+    :type    party: ``politics.apps.core.models.Party`` or ``None``
+    :param  parent: The default ``parent`` value (used for child parties).
+    :type   parent: ``politics.apps.core.models.Party`` or ``None``
+    """
     initial = {}
     if parent is not None:
         initial["parent"] = parent
@@ -66,7 +70,7 @@ def list(request):
 
 
 @login_required
-@pk_url(Party)
+@slug_url(Party)
 def new_child(request, party):
     """Create a new party with the parent field pre-filled."""
     return form(request, None, party)

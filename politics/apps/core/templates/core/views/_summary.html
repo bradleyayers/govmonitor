@@ -1,9 +1,11 @@
 {% load core %}
 
 <div class="view-summary">
-    <h3><a href="{% url core:views:show view.pk view.slug %}">{{ heading }}</a></h3>
-    <ul class="stats">
-        <li class="updated icon-time">Last updated <strong>{{ view.updated_at|interval_string }}</strong> ago</li>
-    </ul>
-    <a class="stance {{ view.stance }}" href="{% url core:views:show view.pk view.slug %}">{{ view.get_stance_display }}</a>
+    <h3><a href="{% view_url view %}">{{ heading }}</a></h3>
+    {% if view.updated_at %}
+        <ul class="stats">
+            <li class="updated icon-time">Last updated <strong>{{ view.updated_at|interval_string }}</strong> ago</li>
+        </ul>
+    {% endif %}
+    <a class="stance {{ view.stance }}" href="{% view_url view %}">{{ view.get_stance_display }}</a>
 </div>

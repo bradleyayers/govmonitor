@@ -1,7 +1,6 @@
 {% extends "core/issues/base.html" %}
 
-{% load core %}
-{% load view_counts %}
+{% load core view_counts %}
 
 {% block html-class %}
     {{ block.super }}
@@ -43,12 +42,12 @@
                     <li class="views icon-eye-open"><strong>{{ issue|view_count }}</strong> views</li>
                 </ul>
                 {% if request.user.is_authenticated %}
-                    <a class="edit" href="{% url core:issues:edit issue.pk %}">Edit</a>
+                    <a class="edit" href="{% url core:issues:edit issue.pk issue.slug %}">Edit</a>
                 {% endif %}
             </footer>
         </div>
 
-        {% for view_row in view_rows %}
+        {% for view_row in views|group_n:2 %}
             <div class="view-summary-row">
                 {% for view in view_row %}
                     {% with heading=view.party.name %}

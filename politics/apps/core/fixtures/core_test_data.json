@@ -60,6 +60,15 @@
         }
     },
     {
+        "model": "core.Issue",
+        "pk": 3,
+        "fields": {
+            "description": "Mandatory detention of asylum seekers.",
+            "is_popular": false,
+            "name": "Mandatory detention"
+        }
+    },
+    {
         "model": "core.Party",
         "pk": 1,
         "fields": {
@@ -174,16 +183,6 @@
             "issue": 2,
             "party": 3,
             "stance": "oppose",
-            "updated_at": "2012-01-01 00:00:00"
-        }
-    },
-    {
-        "model": "core.View",
-        "pk": 8,
-        "fields": {
-            "issue": 2,
-            "party": 4,
-            "stance": "unknown",
             "updated_at": "2012-01-01 00:00:00"
         }
     },

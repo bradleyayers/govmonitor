@@ -57,27 +57,6 @@ class Issue(models.Model):
         tags = sum((list(issue.tags.all()) for issue in issues), [])
         return sorted(set(tags), key=tags.count, reverse=True)
 
-    @staticmethod
-    def create_views(instance, created, raw, **kwargs):
-        """Create initial views for an issue.
-
-        Called when an :class:`Issue` is saved.
-
-        :param instance: The issue that was saved.
-        :type  instance: ``politics.apps.core.models.Issue``
-        :param  created: Whether the issue is newly created.
-        :type   created: ``bool``
-        :param      raw: ``True`` if the issue was saved as a result of loading
-                         a fixture; ``False`` if it was just a normal save.
-        :type       raw: ``bool``
-        """
-        from politics.apps.core.models import Party, View
-
-        # Don't bother if we're loading a fixture as it will contain the views.
-        if created and not raw:
-            for party in Party.objects.all():
-                View(issue=instance, party=party).save()
-
     def delete(self, *args, **kwargs):
         # Explicitly remove all tags to ensure that the many-to-many relation
         # change signal fires and the tags are removed if they become unused.
@@ -91,7 +70,7 @@ class Issue(models.Model):
 
         views = self.view_set.all()
         known_views = views.exclude(stance=View.UNKNOWN)
-        return float(known_views.count()) / views.count() * 100
+        return float(known_views.count()) / max(1, views.count()) * 100
 
     @staticmethod
     def update_view_slugs(instance, **kwargs):
@@ -107,7 +86,6 @@ class Issue(models.Model):
             view.save(touch_updated_at=False)
 
 
-models.signals.post_save.connect(Issue.create_views, sender=Issue)
 models.signals.post_save.connect(Issue.update_view_slugs, sender=Issue)
 
 

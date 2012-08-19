@@ -7,29 +7,21 @@
     view
 {% endblock %}
 
-{% block title %}{{ block.super }} / {{ view.party.name }} / {{ view.issue.name }}{% endblock %}
+{% block title %}{{ block.super }} / {{ view.issue.name }} / {{ view.party.name }}{% endblock %}
 
 {% block javascript %}
     {{ block.super }}
-    {% vote_data current_reference references %}
-{% endblock %}
 
-{% block header-secondary %}
-    <div id="header-secondary">
-        <div class="right">
-            <a class="button" href="{% url core:views:new-reference view.pk %}">New Reference</a>
-        </div>
-    </div>
+    {# The user's votes on the references as a JS blob. #}
+    {% vote_data current_reference references %}
 {% endblock %}
 
 {% block content %}
     {{ block.super }}
     <div id="content-primary">
         <h1>
-            <a href="{% url core:parties:show view.party.pk view.party.slug %}">{{ view.party.name }}</a> /
-            <strong><a href="{% url core:issues:show view.issue.pk view.issue.slug %}">{{ view.issue.name }}</a></strong>
+            <a href="{% url core:issues:show view.issue.pk view.issue.slug %}">{{ view.issue.name }}</a> / <strong><a href="{% url core:parties:show view.party.pk view.party.slug %}">{{ view.party.name }}</a></strong>
         </h1>
-        <p>Found more information on this party's views? Create a <a href="{% url core:views:new-reference view.pk %}">new reference</a>.</p>
         <div class="references">
             {% if current_reference %}
                 <h2 class="section">Current Reference</h2>
@@ -43,6 +35,18 @@
                     {% include "core/views/_reference.html" %}
                 {% endfor %}
             {% endif %}
+            {% if not reference and not references %}
+                <p>No references have been submitted yet. Help out and find one! (<a href="{% url core:faq %}#question-finding-references">How?</a>)</p>
+            {% endif %}
         </div>
+        <h2 class="section">New Reference</h2>
+        <form action="" class="fields reference" method="post">
+            {% with form=reference_form %}
+                {% include "core/references/_form.html" %}
+            {% endwith %}
+            <div class="actions">
+                <input class="button" type="submit" value="Create"/>
+            </div>
+        </form>
     </div>
 {% endblock %}

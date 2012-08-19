@@ -372,3 +372,34 @@ def user_link(user, text=None):
     """
     path = reverse("core:users:show", args=[user.pk])
     return "<a href=\"%s\">%s</a>" % (path, text or user.get_full_name())
+
+
+@register.simple_tag
+def view_url(issue_or_view, party=None):
+    """Returns the path to a view.
+
+    This function can be called in two ways: the view itself can be given, or an
+    issue and a party (the corresponding view will be linked to). For example:
+
+    .. code-block:: django
+
+        {% view_url view %}
+        {% view_url issue party %}
+
+    :param issue_or_view: An issue or the view to link to.
+    :type  issue_or_view: ``politics.apps.core.models.Issue`` or
+                          ``politics.apps.core.models.View``
+    :param         party: A party or ``None``.
+    :type          party: ``politics.apps.core.models.Party`` or ``None``
+    """
+    issue = issue_or_view
+    if isinstance(issue_or_view, View):
+        party = issue.party
+        issue = issue.issue
+
+    return reverse("core:issues:view", kwargs={
+        "issue_pk": issue.pk,
+        "issue_slug": issue.slug,
+        "party_pk": party.pk,
+        "party_slug": party.slug
+    })

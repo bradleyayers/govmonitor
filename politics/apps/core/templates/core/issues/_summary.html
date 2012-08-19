@@ -12,7 +12,7 @@
         {% if views %}
             <ul>
                 {% for view in views %}
-                    <li><a class="{{ view.stance }} {% stance_icon view.stance %}" href="{% url core:views:show view.pk view.slug %}" title="{{ view.get_stance_display }}">{{ view.party.name }}</a></li>
+                    <li><a class="{{ view.stance }} {% stance_icon view.stance %}" href="{% view_url view %}" title="{{ view.get_stance_display }}">{{ view.party.name }}</a></li>
                 {% endfor %}
             </ul>
         {% else %}

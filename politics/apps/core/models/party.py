@@ -40,27 +40,6 @@ class Party(MPTTModel):
     def __unicode__(self):
         return self.name
 
-    @staticmethod
-    def create_views(instance, created, raw, **kwargs):
-        """Creates initial views for a new ``Party``.
-
-        Called when a :class:`Party` is saved.
-
-        :param instance: The party that was saved.
-        :type  instance: ``politics.apps.core.models.Party``
-        :param  created: Whether the party is newly created.
-        :type   created: ``bool``
-        :param      raw: ``True`` if the party was saved as a result of loading
-                         a fixture; ``False`` if it was just a normal save.
-        :type       raw: ``bool``
-        """
-        from . import Issue, View
-
-        # Don't bother if we're loading a fixture as it will contain the views.
-        if created and not raw:
-            for issue in Issue.objects.all():
-                View(issue=issue, party=instance).save()
-
     def get_picture(self):
         """
         :returns: The party's picture or the default if it doesn't have one.
@@ -89,8 +68,7 @@ class Party(MPTTModel):
 
         views = self.view_set.all()
         known_views = views.exclude(stance=View.UNKNOWN)
-        return known_views.count() * 100.0 / views.count()
+        return known_views.count() * 100.0 / max(1, views.count())
 
 
-models.signals.post_save.connect(Party.create_views, sender=Party)
 models.signals.post_save.connect(Party.update_view_slugs, sender=Party)

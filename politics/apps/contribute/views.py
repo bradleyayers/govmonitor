@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from politics.apps.core.forms import ReferenceForm
 from politics.apps.core.models import Reference, View
+from politics.apps.core.templatetags.core import view_url
 from politics.utils.decorators import render_to_template
 from politics.utils.views import login_path
 import logging
@@ -67,7 +68,7 @@ def index(request):
             logging.getLogger("email").info("Reference Saved", extra={"body":
                 "%s created a reference.\n\nhttp://govmonitor.org%s" % (
                     request.user.get_full_name(),
-                    reverse("core:views:show", args=(view.pk, view.slug))
+                    view_url(view)
                 )
             })
 

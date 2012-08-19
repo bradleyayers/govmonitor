@@ -5,9 +5,9 @@ from django.shortcuts import get_object_or_404, redirect
 from haystack.query import SearchQuerySet
 import logging
 from politics.apps.core.forms import IssueForm
+from politics.apps.core.managers import ViewManager
 from politics.apps.core.models import Issue, View
 from politics.apps.view_counts.decorators import record_view
-from politics.utils import group_n
 from politics.utils.decorators import render_to_template, slug_url
 from politics.utils.paginator import Paginator
 import reversion
@@ -32,13 +32,9 @@ def active(request):
 
 
 @login_required
+@slug_url(Issue, required=False, pk_key="issue_pk", slug_key="issue_slug")
 @render_to_template("core/issues/form.html")
-def form(request, pk=None):
-    # If we're editing an Issue, pk will be set.
-    issue = None
-    if pk is not None:
-        issue = get_object_or_404(Issue, pk=pk)
-
+def form(request, issue):
     form = IssueForm(instance=issue)
 
     if request.method == "POST":
@@ -56,13 +52,13 @@ def form(request, pk=None):
 
             logging.getLogger("email").info("Issue Saved", extra={"body":
                 "%s %s an issue.\n\nhttp://govmonitor.org%s" % (
-                    request.user.get_full_name(),
-                    "created" if pk is None else "edited",
+                    request.user.get_full_name(), "saved",
                     reverse("core:issues:show", args=(issue.pk, issue.slug))
                 )
             })
 
-            return redirect("core:issues:show", pk=issue.pk, slug=issue.slug)
+            return redirect("core:issues:show", issue_pk=issue.pk,
+                    issue_slug=issue.slug)
 
     return {"form": form}
 
@@ -81,7 +77,7 @@ def popular(request):
     }
 
 
-@slug_url(Issue)
+@slug_url(Issue, pk_key="issue_pk", slug_key="issue_slug")
 @record_view
 @render_to_template("core/issues/show.html")
 def show(request, issue):
@@ -89,13 +85,19 @@ def show(request, issue):
     related_issues = SearchQuerySet().models(Issue).more_like_this(issue)
     related_issues = [result.object for result in related_issues]
 
-    # Pass stance counts through for the pie chart.
-    views = issue.view_set.filter(party__tree_level=0).select_related().order_by("party__name")
-    stances = [(s[1], views.filter(stance=s[0]).count()) for s in View.STANCE_CHOICES]
+    # Retrieve the views of root parties.
+    views = ViewManager().get_views_for_issue(issue)
+    views = filter(lambda v: v.party.tree_level == 0, views)
+    views = sorted(views, key=lambda view: view.party.name.lower())
+
+    stances = []
+    for stance in View.STANCE_CHOICES:
+        count = sum(1 for view in views if view.stance == stance[0])
+        stances.append((stance[1], count))
 
     return {
         "issue": issue,
         "related_issues": related_issues,
         "stances": stances,
-        "view_rows": group_n(views, 2)
+        "views": views
     }

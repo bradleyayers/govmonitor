@@ -1,10 +1,8 @@
 # coding=utf-8
 from .views import *
 from django.conf.urls.defaults import include, patterns, url
+from politics.utils.urls import prefix
 
-
-# The pattern for slug URLs.
-slug_pattern = r"^(?P<pk>\d+)/(?:(?P<slug>[a-z0-9_-]*)/)?$"
 
 # /ajax/
 ajax_patterns = patterns("",
@@ -12,47 +10,58 @@ ajax_patterns = patterns("",
     url(r"^title/$", ajax.title, name="title"),
 )
 
+# /issues/{pk}-{slug}/
+issue_prefix = r"^(?P<issue_pk>\d+)(?:-(?P<issue_slug>[a-z0-9_-]*))?/"
+issue_patterns = prefix(issue_prefix, patterns("",
+    url(r"$", issues.show, name="show"),
+    url(r"edit/$", issues.form, name="edit"),
+    url(r"parties/(?P<party_pk>\d+)(?:-(?P<party_slug>[a-z0-9_-]*))?/",
+        views.show, name="view")
+))
+
 # /issues/
-issue_patterns = patterns("",
+issues_patterns = patterns("",
     url(r"^$", issues.popular),
     url(r"^active/$", issues.active, name="active"),
-    url(r"^(?P<pk>\d+)/edit/$", issues.form, name="edit"),
     url(r"^new/$", issues.form, name="new"),
     url(r"^popular/$", issues.popular, name="popular"),
-    url(slug_pattern, issues.show, name="show"),
-)
+) + issue_patterns
+
+# /parties/{pk}-{slug}/
+party_prefix = r"^(?P<pk>\d+)(?:-(?P<slug>[a-z0-9_-]*))?/"
+party_patterns = prefix(party_prefix, patterns("",
+    url(r"$", parties.show, name="show"),
+    url(r"edit/$", parties.form, name="edit"),
+    url(r"parties/new/$", parties.new_child, name="new-child")
+))
 
 # /parties/
-party_patterns = patterns("",
+parties_patterns = patterns("",
     url(r"^$", parties.list, name="list"),
-    url(r"^(?P<pk>\d+)/edit/$", parties.form, name="edit"),
     url(r"^new/$", parties.form, name="new"),
-    url(slug_pattern, parties.show, name="show"),
-    url(r"^(?P<pk>\d+)/parties/new/$", parties.new_child, name="new-child")
-)
+) + party_patterns
 
 # /references/
-reference_patterns = patterns("",
-    url(r"^(?P<pk>\d+)/comments/$", references.comments, name="comments"),
-    url(r"^(?P<pk>\d+)/edit/$", references.edit, name="edit"),
-    url(r"^(?P<pk>\d+)/votes/$", references.votes, name="votes"),
-)
+references_patterns = prefix(r"^(?P<pk>\d+)/", patterns("",
+    url(r"comments/$", references.comments, name="comments"),
+    url(r"edit/$", references.edit, name="edit"),
+    url(r"votes/$", references.votes, name="votes"),
+))
+
+# /tags/{id}-{slug}/
+tag_prefix = r"^(?P<pk>\d+)(?:-(?P<slug>[a-z0-9_-]*))?/"
+tag_patterns = prefix(tag_prefix, patterns("",
+    url(r"$", tags.show, name="show"),
+))
 
 # /tags/
-tag_patterns = patterns("",
+tags_patterns = patterns("",
     url(r"^$", tags.list, name="list"),
-    url(slug_pattern, tags.show, name="show"),
-)
+) + tag_patterns
 
 # /users/
-user_patterns = patterns("",
+users_patterns = patterns("",
     url(r"^(?P<pk>\d+)/$", users.show, name="show"),
-)
-
-# /views/
-view_patterns = patterns("",
-    url(slug_pattern, views.show, name="show"),
-    url(r"(?P<pk>\d+)/references/new/$", references.new, name="new-reference")
 )
 
 urlpatterns = patterns("",
@@ -67,10 +76,9 @@ urlpatterns = patterns("",
     url(r"^settings/$", core.settings, name="settings"),
 
     url(r"^ajax/", include(ajax_patterns, namespace="ajax")),
-    url(r"^issues/", include(issue_patterns, namespace="issues")),
-    url(r"^parties/", include(party_patterns, namespace="parties")),
-    url(r"^references/", include(reference_patterns, namespace="references")),
-    url(r"^tags/", include(tag_patterns, namespace="tags")),
-    url(r"^users/", include(user_patterns, namespace="users")),
-    url(r"^views/", include(view_patterns, namespace="views")),
+    url(r"^issues/", include(issues_patterns, namespace="issues")),
+    url(r"^parties/", include(parties_patterns, namespace="parties")),
+    url(r"^references/", include(references_patterns, namespace="references")),
+    url(r"^tags/", include(tags_patterns, namespace="tags")),
+    url(r"^users/", include(users_patterns, namespace="users")),
 )

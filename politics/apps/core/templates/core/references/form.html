@@ -1,5 +1,7 @@
 {% extends "core/base.html" %}
 
+{% load core %}
+
 {% block html-class %}
     {{ block.super }}
     reference
@@ -31,7 +33,7 @@
             {% include "core/references/_form.html" %}
             <div class="actions">
                 <input class="button" type="submit" value="Save"/>
-                <a href="{% url core:views:show reference.view.pk reference.view.slug %}">Cancel</a>
+                <a href="{% view_url reference.view %}">Cancel</a>
             </div>
         </form>
     </div>
