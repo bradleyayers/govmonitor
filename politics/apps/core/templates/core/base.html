@@ -46,9 +46,6 @@
         <script src="{{ STATIC_URL }}comments/js/views/commentable_view.js" type="text/javascript"></script>
         <script src="{{ STATIC_URL }}comments/js/index.js" type="text/javascript"></script>
 
-        <!-- Contribute -->
-        <script src="{{ STATIC_URL }}contribute/js/index.js" type="text/javascript"></script>
-
         <!-- Feedback -->
         <script src="{{ STATIC_URL }}feedback/js/views/form.js" type="text/javascript"></script>
         <script src="{{ STATIC_URL }}feedback/js/feedback.js" type="text/javascript"></script>
@@ -82,9 +79,6 @@
         <!-- Comments -->
         <link href="{{ STATIC_URL }}comments/css/comments.less" rel="stylesheet" type="text/less"/>
 
-        <!-- Contribute -->
-        <link href="{{ STATIC_URL }}contribute/css/contribute.less" rel="stylesheet" type="text/less"/>
-
         <!-- Feedback -->
         <link href="{{ STATIC_URL }}feedback/css/feedback.less" rel="stylesheet" type="text/less"/>
     {% endcompress %}
@@ -101,7 +95,6 @@
                     <li><a href="{% url core:issues:popular %}" id="header-issues">Issues</a></li>
                     <li><a href="{% url core:parties:list %}" id="header-parties">Parties</a></li>
                     <li><a href="{% url core:tags:list %}" id="header-tags">Tags</a></li>
-                    <li><a href="{% url contribute:index %}" id="header-contribute">Contribute</a></li>
                 </ol>
                 <div class="right">
                     <ol>
