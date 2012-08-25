@@ -35,7 +35,7 @@
                     {% include "core/views/_reference.html" %}
                 {% endfor %}
             {% endif %}
-            {% if not reference and not references %}
+            {% if not current_reference and not references %}
                 <p>No references have been submitted yet. Help out and find one! (<a href="{% url core:faq %}#question-finding-references">How?</a>)</p>
             {% endif %}
         </div>
