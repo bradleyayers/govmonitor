@@ -1,11 +1,11 @@
 # coding=utf-8
 from ...models import Issue
 from django.core.urlresolvers import reverse
-from django.test.client import Client
 from django.test import TransactionTestCase
+from django.test.client import Client
 
 
-class IssueViewsTestCase(TransactionTestCase):
+class IssueViewTestCase(TransactionTestCase):
     """Unit tests for :class:`Issue` views."""
 
     fixtures = ("core_test_data",)

@@ -1,7 +1,8 @@
 # coding=utf-8
 from django import template
+from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
-from django.template import Node
+from django.template import Node, TemplateSyntaxError
 from politics.apps.core.models import View
 from politics.utils import group_n as base_group_n
 
@@ -59,6 +60,50 @@ def _parse_token_kwargs(bits, parser):
         kwargs[key] = parser.compile_filter(value)
 
     return kwargs
+
+
+class AbsoluteURLNode(Node):
+    """The node used in the ``absolute_url`` tag."""
+
+    def __init__(self, name, args):
+        """
+        :param name: The view name.
+        :type  name: ``str``
+        :param args: Arguments required to resolve the URL.
+        :type  args: *Iterable*
+        """
+        super(AbsoluteURLNode, self).__init__()
+        self.name = name
+        self.args = args
+
+    def render(self, context):
+        site = Site.objects.get_current()
+        args = [arg.resolve(context) for arg in self.args]
+        return "http://%s%s" % (site.domain, reverse(self.name, args=args))
+
+
+@register.tag
+def absolute_url(parser, token):
+    """Similar to the built-in URL tag, but returns an absolute URL.
+
+    Uses the domain of the current site.
+    """
+    bits = token.split_contents()
+    name = bits.pop(0)
+
+    if len(bits) < 1:
+        raise TemplateSyntaxError("Malformed arguments to %s tag." % name)
+
+    name = bits.pop(0)
+    args = [parser.compile_filter(bit) for bit in bits]
+    return AbsoluteURLNode(name, args)
+
+
+@register.simple_tag(takes_context=True)
+def comma(context):
+    """Prints a comma after all but the last item in a for loop."""
+    is_last = context["forloop"]["last"]
+    return "," if not is_last else ""
 
 
 @register.filter
@@ -287,7 +332,6 @@ def query_string(parser, token):
         The current request must be available in the context as "request"; this
         will happen if ``django.core.context_processors.request`` is enabled.
     """
-    from django.template import TemplateSyntaxError
 
     bits = token.split_contents()
     name = bits.pop(0)

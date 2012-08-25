@@ -99,6 +99,10 @@ class Vote(models.Model):
         :param instance: The :class:`Vote` that was deleted or saved.
         :type  instance: :class:`Vote`
         """
+        # Don't bother if we're loading from a fixture.
+        if kwargs.get("raw"):
+            return
+
         # Returns the lower bound of a sample's Wilson score interval with 95%
         # confidence. n is the sample size, p is the observed proportion.
         def _wilson(n, p):

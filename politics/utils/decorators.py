@@ -1,8 +1,8 @@
 # coding=utf-8
 from django.core.urlresolvers import resolve
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import Http404, HttpResponse, HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect, render_to_response
-from django.template import RequestContext
+from django.template import loader, RequestContext
 from django.views.decorators.http import require_http_methods
 from functools import wraps
 import json
@@ -50,8 +50,13 @@ def render_json(function):
     """
     @wraps(function)
     def wrapper(request, *args, **kwargs):
-        # Pass finished responses straight through.
-        output = function(request, *args, **kwargs)
+        try:
+            output = function(request, *args, **kwargs)
+        except Http404:
+            # We don't want to display the HTML 404 page.
+            return HttpResponseNotFound(mimetype="application/json")
+
+        # Pass pre-built reponses straight through.
         if isinstance(output, HttpResponse):
             return output
 
@@ -62,20 +67,25 @@ def render_json(function):
 
 
 def render_to_template(template):
-    """A decorator for Django views that renders a context in a template.
+    """A view decorator that renders a template using the returned context.
 
     If the view returns a ``dict``, it will be used as the context when
     rendering ``template``; anything else will be returned unchanged.
-    """
-    def inner(function):
-        @wraps(function)
-        def wrapper(request, *args, **kwargs):
-            output = function(request, *args, **kwargs)
-            if not isinstance(output, dict):
-                return output
 
-            return render_to_response(
-                    template, output, context_instance=RequestContext(request))
+    :param template: The template to render.
+    :type  template: ``str``
+    """
+    def inner(view):
+        @wraps(view)
+        def wrapper(request, *args, **kwargs):
+            context = view(request, *args, **kwargs)
+
+            # Pass pre-built responses through.
+            if not isinstance(context, dict):
+                return context
+
+            return render_to_response(template, context,
+                    context_instance=RequestContext(request))
 
         return wrapper
 

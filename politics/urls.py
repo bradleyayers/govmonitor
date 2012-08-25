@@ -2,6 +2,7 @@
 from django.conf import settings
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
+from politics.apps.api.urls import urlpatterns as api_urlpatterns
 from politics.apps.comments.urls import urlpatterns as comments_urlpatterns
 from politics.apps.core.urls import urlpatterns as core_urlpatterns
 from politics.apps.feedback.urls import urlpatterns as feedback_urlpatterns
@@ -15,6 +16,7 @@ urlpatterns = patterns("",
     url(r"^admin/", include(admin.site.urls)),
 
     # Our patterns.
+    url(r"^api/", include(api_urlpatterns, namespace="api")),
     url(r"^comments/", include(comments_urlpatterns, namespace="comments")),
     url(r"^feedback/", include(feedback_urlpatterns, namespace="feedback")),
     url(r"^", include(core_urlpatterns, namespace="core")),

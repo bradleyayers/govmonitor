@@ -223,6 +223,7 @@
         "fields": {
             "author": 1,
             "published_on": "2012-01-01",
+            "score": 0.2686367,
             "stance": "support",
             "text": "This is a reference.",
             "title": "A Reference from a.com",

@@ -1,0 +1,17 @@
+{% load core %}
+
+{
+    "name": {{ issue.name|json|safe }},
+    "url": "{% absolute_url core:issues:show issue.pk issue.slug %}",
+    "views": [
+        {% for view in views %}
+            {
+                "party": {
+                    "name": {{ view.party.name|json|safe }}
+                },
+                "stance": "{{ view.stance }}",
+                "url": "{% absolute_url core:issues:view issue.pk issue.slug view.party.pk view.party.slug %}"
+            }{% comma %}
+        {% endfor %}
+    ]
+}

@@ -17,6 +17,8 @@ class ViewTestCase(TransactionTestCase):
     def test_no_valid_references_is_unknown(self):
         """If a view has no references with score above 0.5, its stance should
             be unknown."""
+        # Save the reference to force stance calculation.
+        Reference.objects.get(pk=1).save()
         self.assertEqual(View.UNKNOWN, View.objects.get(pk=1).stance)
 
     def test_valid_reference(self):

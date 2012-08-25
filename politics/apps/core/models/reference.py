@@ -75,19 +75,16 @@ class Reference(models.Model):
         return self.url
 
     @staticmethod
-    def create_author_vote(instance, created, raw, **kwargs):
+    def create_author_vote(instance, created, **kwargs):
         """Cast a vote on a newly created reference from its author.
 
         :param instance: The reference that was saved.
         :type  instance: ``politics.apps.core.models.Reference``
         :param  created: Whether the reference is newly created.
         :type   created: ``bool``
-        :param      raw: ``True`` if the reference was created as a result of
-                         loading a fixture; ``False`` for a normal save.
-        :type       raw: ``bool``
         """
         # Don't bother if we're loading a fixture as it will contain the votes.
-        if created and not raw:
+        if created and not kwargs.get("raw"):
             Vote(author=instance.author, content_object=instance,
                     type=Vote.UP).save()
 
@@ -133,6 +130,10 @@ class Reference(models.Model):
                          Careful: it's not in the database for the latter.
         :type  instance: :class:`Reference`
         """
+        # Don't bother if we're loading from a fixture.
+        if kwargs.get("raw"):
+            return
+
         try:
             instance.view.refresh_stance()
         # Deleting a `View` cascades to its references (here), but, at that

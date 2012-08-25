@@ -89,7 +89,7 @@ def _notify_object_of_comment_creation(instance, created, **kwargs):
     :type  instance: ``politics.apps.comments.models.Comment``
     """
     try:
-        if created:
+        if created and not kwargs.get("raw"):
             instance.content_object.handle_comment_created(instance)
     except AttributeError:
         pass
