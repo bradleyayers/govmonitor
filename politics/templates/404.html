@@ -1,5 +1,10 @@
-{% extends "base.html" %}
+{% extends "core/base.html" %}
 
-{% block body %}
-    404
+{% block title %}{{ block.super }} / Not Found{% endblock %}
+
+{% block content %}
+    <div class="full" id="content-primary">
+        <h1><strong>Not Found</strong></h1>
+        <p>We page you requested doesn't exist! Try searching for it.</p>
+    </div>
 {% endblock %}
