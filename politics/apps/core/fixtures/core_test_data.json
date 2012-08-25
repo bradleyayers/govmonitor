@@ -69,6 +69,15 @@
         }
     },
     {
+        "model": "core.Issue",
+        "pk": 4,
+        "fields": {
+            "description": "Offshore processing of asylum seekers.",
+            "is_popular": false,
+            "name": "Offshore processing"
+        }
+    },
+    {
         "model": "core.Party",
         "pk": 1,
         "fields": {
@@ -114,6 +123,18 @@
             "tree_level": 2,
             "tree_right": 4,
             "tree_id": 1
+        }
+    },
+    {
+        "model": "core.Party",
+        "pk": 5,
+        "fields": {
+            "name": "The Greens",
+            "parent": null,
+            "tree_left": 1,
+            "tree_level": 0,
+            "tree_right": 4,
+            "tree_id": 3
         }
     },
     {
@@ -183,6 +204,16 @@
             "issue": 2,
             "party": 3,
             "stance": "oppose",
+            "updated_at": "2012-01-01 00:00:00"
+        }
+    },
+    {
+        "model": "core.View",
+        "pk": 8,
+        "fields": {
+            "issue": 4,
+            "party": 1,
+            "stance": "support",
             "updated_at": "2012-01-01 00:00:00"
         }
     },

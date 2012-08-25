@@ -66,11 +66,13 @@ class Issue(models.Model):
     @property
     def percentage_views_known(self):
         """Returns the percentage of views that are known for this issue."""
-        from politics.apps.core.models import View
+        from . import Party, View
 
-        views = self.view_set.all()
-        known_views = views.exclude(stance=View.UNKNOWN)
-        return float(known_views.count()) / max(1, views.count()) * 100
+        root_parties = Party.objects.filter(tree_level=0)
+        known_views = (self.view_set.filter(party__in=root_parties)
+                .exclude(stance=View.UNKNOWN))
+
+        return known_views.count() * 100.0 / max(1, root_parties.count())
 
     @staticmethod
     def update_view_slugs(instance, **kwargs):

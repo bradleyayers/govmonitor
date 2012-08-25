@@ -60,7 +60,7 @@ def list(request):
     # Only show "root" parties (not sub-parties).
     parties = sorted(Party.objects.filter(tree_level=0), key=_party_key)
 
-    average_view_percentage = sum(p.view_percentage for p in parties)
+    average_view_percentage = sum(p.percentage_views_known for p in parties)
     average_view_percentage = float(average_view_percentage) / len(parties)
 
     return {

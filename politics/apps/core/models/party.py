@@ -58,17 +58,18 @@ class Party(MPTTModel):
             view.save(touch_updated_at=False)
 
     @property
-    def view_percentage(self):
+    def percentage_views_known(self):
         """Calculates the percentage of the party's views that are known.
 
         :returns: The percentage of the party's views that are known.
         :rtype: ``float``
         """
-        from . import View
+        from . import Issue, View
 
-        views = self.view_set.all()
-        known_views = views.exclude(stance=View.UNKNOWN)
-        return known_views.count() * 100.0 / max(1, views.count())
+        issues = Issue.objects.all()
+        known_views = self.view_set.exclude(stance=View.UNKNOWN)
+
+        return known_views.count() * 100.0 / max(1, issues.count())
 
 
 models.signals.post_save.connect(Party.update_view_slugs, sender=Party)
