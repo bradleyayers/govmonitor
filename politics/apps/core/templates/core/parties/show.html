@@ -31,8 +31,7 @@
         </h1>
 
         <ol class="tabs">
-            <li {% if tab == "known" %}class="selected"{% endif %}><a href="{% query_string tab="known" %}">Known Views ({{ known_views.count }})</a></li>
-            <li {% if tab == "unknown" %}class="selected"{% endif %}><a href="{% query_string tab="unknown" %}">Unknown Views ({{ unknown_views.count }})</a></li>
+            <li {% if tab == "views" %}class="selected"{% endif %}><a href="{% query_string tab="views" %}">Views ({{ views.count }})</a></li>
             <li {% if tab == "branches" %}class="selected"{% endif %}><a href="{% query_string tab="branches" %}">Branches ({{ branches.count }})</a></li>
         </ol>
 

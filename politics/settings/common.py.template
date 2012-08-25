@@ -109,6 +109,7 @@ INSTALLED_APPS = (
     "south",
 
     "politics.apps.comments",
+    "politics.apps.contribute",
     "politics.apps.core",
     "politics.apps.feedback",
     "politics.apps.south_libraries",

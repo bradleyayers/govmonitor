@@ -7,6 +7,10 @@ from django.db.models import Count
 
 class Migration(DataMigration):
 
+    depends_on = (
+        ("contribute", "0002_delete_task"),
+    )
+
     def forwards(self, orm):
         views = orm.View.objects.annotate(reference_count=Count("reference"))
         views.filter(reference_count=0).delete()
