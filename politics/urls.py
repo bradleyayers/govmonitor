@@ -16,7 +16,7 @@ urlpatterns = patterns("",
     url(r"^admin/", include(admin.site.urls)),
 
     # Our patterns.
-    url(r"^api/", include(api_urlpatterns, namespace="api")),
+    url(r"^api/1/", include(api_urlpatterns, namespace="api")),
     url(r"^comments/", include(comments_urlpatterns, namespace="comments")),
     url(r"^feedback/", include(feedback_urlpatterns, namespace="feedback")),
     url(r"^", include(core_urlpatterns, namespace="core")),
