@@ -72,6 +72,7 @@ urlpatterns = patterns("",
     url(r"^login/$", core.log_in, name="login"),
     url(r"^logout/$", core.log_out, name="logout"),
     url(r"^register/$", core.register, name="register"),
+    url(r"^request/$", core.request, name="request"),
     url(r"^search/$", core.search, name="search"),
     url(r"^settings/$", core.settings, name="settings"),
 

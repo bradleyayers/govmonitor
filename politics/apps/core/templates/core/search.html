@@ -2,11 +2,15 @@
 
 {% load core %}
 
+{% block html-class %}
+    {{ block.super }} search
+{% endblock %}
+
 {% block title %}{{ block.super }} / Search{% endblock %}
 
 {% block content %}
     <div id="content-primary">
-        <h2 class="section">{{ issues|length }} Issues</h2>
+        <h2 class="section">Issues ({{ issues|length }})</h2>
         {% if page.object_list %}
             {% for issue in page.object_list %}
                 {% issue_summary issue %}
@@ -14,11 +18,21 @@
 
             {% page_links page %}
         {% else %}
-            <i>No issues.</i>
+            <p>No issues.</p>
         {% endif %}
+        <form action="" class="request" method="post">
+            {% csrf_token %}
+            Can't find what you're looking for? Enter your email or Twitter handle and we'll notify you when information on <strong>{{ query }}</strong> is added.
+            <div class="inputs">
+                <input name="contact" type="text"/>
+                <input name="query" type="hidden" value="{{ query }}"/>
+                <input class="button" type="submit" value="Notify me!"/>
+            </div>
+            <p class="success">Done! We'll keep you in the loop.</p>
+        </form>
     </div>
     <div id="content-secondary">
-        <h2 class="section">{{ tags|length }} Tags</h2>
+        <h2 class="section">Tags ({{ tags|length }})</h2>
         {% if tags %}
             <ol>
                 {% for tag in tags %}

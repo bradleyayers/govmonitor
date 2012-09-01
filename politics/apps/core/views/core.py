@@ -3,7 +3,9 @@ from ..forms import LoginForm, UserForm
 from ..models import Issue, Party, Reference, Tag, View
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect
+from django.views.decorators.http import require_POST
 from haystack.query import SearchQuerySet
 import logging
 from politics.utils.decorators import render_to_template
@@ -75,6 +77,30 @@ def register(request):
     return {"form": form}
 
 
+@require_POST
+def request(request):
+    """Sends a topic request.
+
+    If a user performs a search and isn't happy with the results, they can
+    request to be notified when information is added. This view handles request.
+    """
+    required = {"contact", "query"}
+    if set(request.POST.keys()) & required != required:
+        return HttpResponseBadRequest()
+
+    username = "An anonymous user"
+    if request.user.is_authenticated():
+        username = request.user.get_full_name()
+
+    logging.getLogger("email").info("User Request", extra={"body":
+        "%s (%s) wants to be notified about \"%s\"." % (
+            username, request.POST["contact"], request.POST["query"]
+        )
+    })
+
+    return HttpResponse()
+
+
 @render_to_template("core/search.html")
 def search(request):
     """The search page."""
@@ -107,6 +133,7 @@ def search(request):
     return {
         "issues": issues,
         "page": Paginator(issues, 25).page(request.GET.get("page", 1)),
+        "query": query,
         "tags": (tags + related_tags)[:20]
     }
 
