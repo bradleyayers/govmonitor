@@ -25,6 +25,14 @@ class PartyViewsTestCase(TransactionTestCase):
         expected = "Updated Party!"
         party_count = Party.objects.count()
         response = self.client.post(path, {"name": expected})
-        
+
         self.assertEqual(party_count, Party.objects.count())
         self.assertEqual(expected, Party.objects.get(pk=self.party.pk).name)
+
+    def test_new_child(self):
+        response = self.client.get(reverse("core:parties:new-child", kwargs={
+            "pk": self.party.pk,
+            "slug": self.party.slug
+        }))
+
+        self.assertEqual(200, response.status_code)

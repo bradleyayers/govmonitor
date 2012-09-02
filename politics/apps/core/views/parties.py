@@ -73,7 +73,7 @@ def list(request):
 @slug_url(Party)
 def new_child(request, party):
     """Create a new party with the parent field pre-filled."""
-    return form(request, None, party)
+    return form(request, parent=party)
 
 
 @slug_url(Party)
