@@ -131,24 +131,26 @@ LOGGING = {
     },
     "handlers": {
         "mail_admins": {
-            "class": "politics.utils.log.AsyncAdminEmailHandler",
+            "class": "django.utils.log.AdminEmailHandler",
             "formatter": "default"
         },
-        "mail_admins_error": {
+        "mail_admins_async": {
             "class": "politics.utils.log.AsyncAdminEmailHandler",
-            "formatter": "default",
-            "level": "ERROR"
+            "formatter": "default"
         }
     },
     "loggers": {
         "": {
-            "handlers": ["mail_admins_error"],
+            "handlers": ["mail_admins"],
         },
         "django.request": {
-            "propagate": True
+            # We can't send it to celery as exceptions can't be pickled.
+            "handlers": ["mail_admins"],
+            "level": "ERROR",
+            "propagate": False
         },
         "email": {
-            "handlers": ["mail_admins"],
+            "handlers": ["mail_admins_async"],
             "level": "INFO",
             "propagate": False
         }
