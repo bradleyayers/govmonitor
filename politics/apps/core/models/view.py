@@ -1,19 +1,8 @@
 # coding=utf-8
-from autoslug.fields import AutoSlugField
 from datetime import date, datetime, time
 from django.core.urlresolvers import reverse
 from django.db import models
 import reversion
-
-
-def _get_view_slug(view):
-    """Builds a view's slug."""
-    from . import Issue, Party
-
-    try:
-        return "%s %s" % (view.party.name, view.issue.name)
-    except (Issue.DoesNotExist, Party.DoesNotExist):
-        return ""
 
 
 class View(models.Model):
@@ -56,20 +45,13 @@ class View(models.Model):
     # How notable/interesting this view is; higer values are more notable. This
     # is used to draw attention to views that users may find interesting.
     notability = models.FloatField(default=0)
-
     party = models.ForeignKey("Party")
-
-    # Issue.name has a maximum length of 128 characters, while Party.name is
-    # 64 characters. Add 1 for the space and we get a maximum length of 193.
-    slug = AutoSlugField(always_update=True, populate_from=_get_view_slug,
-                         max_length=193)
 
     # The party's apparent stance on the issue: the stance of the
     # :class:`Reference` with the greatest score. While this value could just
     # be calculated when required, we store it to make things nice and speedy.
     stance = models.CharField(choices=STANCE_CHOICES, default=UNKNOWN,
                               max_length=7)
-
     updated_at = models.DateTimeField()
 
     class Meta:
@@ -80,7 +62,12 @@ class View(models.Model):
 
     def get_absolute_url(self):
         """Returns the view's absolute URL."""
-        return reverse("core:views:show", args=(self.pk, self.slug))
+        return reverse("core:issues:view", kwargs={
+            "issue_pk": self.issue.pk,
+            "issue_slug": self.issue.slug,
+            "party_pk": self.party.pk,
+            "party_slug": self.party.slug
+        })
 
     def get_current_reference(self):
         """Fetch the view's currently "winning" reference.

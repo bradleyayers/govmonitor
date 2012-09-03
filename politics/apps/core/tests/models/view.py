@@ -1,5 +1,6 @@
 # coding=utf-8
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.db import IntegrityError
 from django.test import TransactionTestCase
 from politics.apps.core.models import Reference, View
@@ -13,6 +14,17 @@ class ViewTestCase(TransactionTestCase):
 
     def setUp(self):
         self.view = View.objects.get(pk=1)
+
+    def test_get_absolute_url(self):
+        """``get_absolute_url()`` should return the view's absolute path."""
+        expected = reverse("core:issues:view", kwargs={
+            "issue_pk": self.view.issue.pk,
+            "issue_slug": self.view.issue.slug,
+            "party_pk": self.view.party.pk,
+            "party_slug": self.view.party.slug
+        })
+
+        self.assertEqual(expected, self.view.get_absolute_url())
 
     def test_no_valid_references_is_unknown(self):
         """If a view has no references with score above 0.5, its stance should

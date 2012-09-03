@@ -22,6 +22,8 @@ class Issue(models.Model):
     :type       is_popular: ``bool``
     :ivar             name: The name of the issue.
     :type             name: ``str``
+    :ivar             slug: A slug version of the issue's name.
+    :type             slug: ``str``
     :ivar             tags: The tags assigned to this issue.
     :type             tags: :class:`Tag`
     :ivar       updated_at: When the issue was last updated.
@@ -73,22 +75,6 @@ class Issue(models.Model):
                 .exclude(stance=View.UNKNOWN))
 
         return known_views.count() * 100.0 / max(1, root_parties.count())
-
-    @staticmethod
-    def update_view_slugs(instance, **kwargs):
-        """Update a issue's views' slugs.
-
-        Called when an issue is saved to ensure that view slugs are correct
-        (the issue's name might have been changed).
-
-        :param instance: The :class:`Issue` that was saved.
-        :type  instance: :class:`Issue`
-        """
-        for view in instance.view_set.all():
-            view.save(touch_updated_at=False)
-
-
-models.signals.post_save.connect(Issue.update_view_slugs, sender=Issue)
 
 
 # As tags are deleted when they become unused, we must store them alongside

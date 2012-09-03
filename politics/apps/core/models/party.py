@@ -47,16 +47,6 @@ class Party(MPTTModel):
         """
         return self.picture if self.picture else "party_pictures/default.png"
 
-    @staticmethod
-    def update_view_slugs(instance, **kwargs):
-        """Update a party's views' slugs.
-
-        Called when a party is saved to ensure that view slugs are correct
-        (the party's name might have been changed).
-        """
-        for view in instance.view_set.all():
-            view.save(touch_updated_at=False)
-
     @property
     def percentage_views_known(self):
         """Calculates the percentage of the party's views that are known.
@@ -70,6 +60,3 @@ class Party(MPTTModel):
         known_views = self.view_set.exclude(stance=View.UNKNOWN)
 
         return known_views.count() * 100.0 / max(1, issues.count())
-
-
-models.signals.post_save.connect(Party.update_view_slugs, sender=Party)
