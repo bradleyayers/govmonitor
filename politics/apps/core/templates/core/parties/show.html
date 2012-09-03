@@ -22,12 +22,18 @@
     <div id="content-primary">
         <h1>
             <div class="picture"><img alt="Party picture" src="{{ party.get_picture|thumbnail_url:'party-picture' }}"/></div>
-            <strong {% if party.parent %}class="branch"{% endif %}>{{ party.name }}</strong>
+            <strong {% if party.parent or party.website_url %}class="stats"{% endif %}>{{ party.name }}</strong>
             <a class="edit icon-pencil" href="{% url core:parties:edit party.pk %}">Edit</a>
 
-            {% if party.parent %}
-                <span class="icon-sitemap">Branch of <strong><a href="{% url core:parties:show party.parent.pk party.parent.slug %}">{{ party.parent.name }}</a></strong></span>
-            {% endif %}
+            <ul class="stats">
+                {% if party.parent %}
+                    <li class="icon-sitemap">Branch of <strong><a href="{% url core:parties:show party.parent.pk party.parent.slug %}">{{ party.parent.name }}</a></strong></li>
+                {% endif %}
+
+                {% if party.website_url %}
+                    <li class="icon-globe"><strong><a href="{{ party.website_url }}">{{ party.website_url }}</a></strong></li>
+                {% endif %}
+            </ul>
         </h1>
 
         <ol class="tabs">

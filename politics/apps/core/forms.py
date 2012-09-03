@@ -128,9 +128,11 @@ class LoginForm(forms.Form):
 class PartyForm(forms.ModelForm):
     """A form for creating/editing :class:`Party` objects."""
 
+    website_url = forms.URLField(label="Website", required=False)
+
     class Meta:
         model = Party
-        fields = ("name", "parent", "picture")
+        fields = ("name", "parent", "picture", "website_url")
 
     def __init__(self, *args, **kwargs):
         super(PartyForm, self).__init__(*args, **kwargs)

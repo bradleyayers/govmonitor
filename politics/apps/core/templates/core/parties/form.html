@@ -35,6 +35,12 @@
                 </div>
             </fieldset>
             <fieldset>
+                <label for="id_website_url">Website</label>
+                <div>
+                    {{ form.website_url }}
+                </div>
+            </fieldset>
+            <fieldset>
                 <label for="id_picture">Picture</label>
                 <div>
                     <img alt="Party picture" src="{{ form.instance.get_picture|thumbnail_url:'party-picture' }}"/>
@@ -43,7 +49,7 @@
             </fieldset>
             {% if form.errors %}
                 <div class="errors">
-                    <p>Oops! The party couldn't be created because:</p>
+                    <p>Oops! The party couldn't be saved because:</p>
                     <ul>
                         {% for field_name, errors in form.errors.items %}
                             {% with field=form|get:field_name %}
@@ -77,6 +83,10 @@
                 <li>Avoid acronyms/initialisms.</li>
                 <li>Try to use the name that's registered with the electoral commission.</p>
             </ul>
+        </div>
+        <div id="help-website_url">
+            <h2 class="section">Website</h2>
+            <p>The address of the party's official website homepage.</p>
         </div>
     </div>
 {% endblock %}

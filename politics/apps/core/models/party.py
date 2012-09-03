@@ -7,16 +7,18 @@ from mptt.models import MPTTModel, TreeForeignKey
 class Party(MPTTModel):
     """A political party.
 
-    :ivar created_at: When the party model was created.
-    :type created_at: ``datetime.datetime``
-    :ivar       name: The name of the party.
-    :type       name: ``str``
-    :ivar     parent: The parent party of which this is a subsidiary.
-    :type     parent: :class:`Party`
-    :ivar    picture: The party's picture.
-    :type    picture: ``django.db.models.FileField``
-    :ivar       slug: A slug version of the party's name.
-    :type       slug: ``str``
+    :ivar  created_at: When the party model was created.
+    :type  created_at: ``datetime.datetime``
+    :ivar        name: The name of the party.
+    :type        name: ``str``
+    :ivar      parent: The parent party of which this is a subsidiary.
+    :type      parent: :class:`Party` or ``None``
+    :ivar     picture: The party's picture.
+    :type     picture: ``django.db.models.FileField``
+    :ivar        slug: A slug version of the party's name.
+    :type        slug: ``str``
+    :ivar website_url: The URL of the party's website (optional).
+    :type website_url: ``str`` or ``None``
     """
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -27,6 +29,7 @@ class Party(MPTTModel):
             upload_to="party_pictures")
     slug = AutoSlugField(always_update=True, max_length=64,
             populate_from="name")
+    website_url = models.URLField(blank=True)
 
     class Meta:
         app_label = "core"
