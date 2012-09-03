@@ -87,7 +87,6 @@ def show(request, issue):
 
     # Retrieve the views of root parties.
     views = ViewManager().get_views_for_issue(issue)
-    views = filter(lambda v: v.party.tree_level == 0, views)
     views = sorted(views, key=lambda view: view.party.name.lower())
 
     stances = []
