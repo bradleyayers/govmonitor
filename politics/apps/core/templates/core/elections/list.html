@@ -1,0 +1,21 @@
+{% extends "core/elections/base.html" %}
+
+{% load core %}
+
+{% block title %}{{ block.super }} / Elections{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    <div id="content-primary">
+        <h1><strong>Elections</strong></h1>
+
+        {% for election in elections %}
+            {% election_summary election %}
+        {% endfor %}
+    </div>
+
+    <div id="content-secondary">
+        <h2 class="section">About Elections</h2>
+        <p>Listed here are recent or upcoming elections. Click through to see relevant issues and the parties involved.</p>
+    </div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "core/elections/base.html" %}
+
+{% load core %}
+
+{% block title %}{{ block.super }} / {{ election.name }}{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    <div id="content-primary">
+        <h1>
+            <a href="{% url core:elections:list %}">Elections</a> /
+            <strong>{{ election.name }}</strong>
+        </h1>
+
+        <ol class="tabs">
+            <li {% if tab == "issues" %}class="selected"{% endif %}>
+                <a href="{% url core:elections:show election.pk election.slug %}">Issues ({{ issues|length }})</a>
+            </li>
+            <li {% if tab == "parties" %}class="selected"{% endif %}>
+                <a href="{% url core:elections:show-parties election.pk election.slug %}">Parties ({{ parties|length }})</a>
+            </li>
+        </ol>
+
+        {% if tab == "issues" %}
+            {% for issue in issues %}
+                {% issue_summary issue %}
+            {% endfor %}
+        {% else %}
+            {% for party_row in parties|group_n:2 %}
+                <div class="party-summary-row">
+                    {% for party in party_row %}
+                        {% party_summary party %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}

@@ -10,6 +10,18 @@ ajax_patterns = patterns("",
     url(r"^title/$", ajax.title, name="title"),
 )
 
+# /elections/{pk}-{slug}/
+election_prefix = r"^(?P<pk>\d+)(?:-(?P<slug>[a-z0-9_-]*))?/"
+election_patterns = prefix(election_prefix, patterns("",
+    url(r"$", elections.show, name="show"),
+    url(r"parties/$", elections.show, {"tab": "parties"}, name="show-parties")
+))
+
+# /elections/
+elections_patterns = patterns("",
+    url(r"^$", elections.list, name="list")
+) + election_patterns
+
 # /issues/{pk}-{slug}/
 issue_prefix = r"^(?P<issue_pk>\d+)(?:-(?P<issue_slug>[a-z0-9_-]*))?/"
 issue_patterns = prefix(issue_prefix, patterns("",
@@ -77,6 +89,7 @@ urlpatterns = patterns("",
     url(r"^settings/$", core.settings, name="settings"),
 
     url(r"^ajax/", include(ajax_patterns, namespace="ajax")),
+    url(r"^elections/", include(elections_patterns, namespace="elections")),
     url(r"^issues/", include(issues_patterns, namespace="issues")),
     url(r"^parties/", include(parties_patterns, namespace="parties")),
     url(r"^references/", include(references_patterns, namespace="references")),

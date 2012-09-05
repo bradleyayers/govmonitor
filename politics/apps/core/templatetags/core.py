@@ -106,6 +106,19 @@ def comma(context):
     return "," if not is_last else ""
 
 
+@register.inclusion_tag("core/elections/_summary.html")
+def election_summary(election):
+    """Renders a summary of an election.
+
+    :param election: The election.
+    :type  election: ``politics.apps.core.models.Election``
+    """
+    return {
+        "election": election,
+        "parties": election.parties.all()
+    }
+
+
 @register.filter
 def get(dictionary, key):
     """Retrieve a value from a dictionary using the given key.

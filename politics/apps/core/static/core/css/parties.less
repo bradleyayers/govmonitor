@@ -1,6 +1,6 @@
 @import "util";
 
-div.party-summary {
+.party-summary {
   background: @grey-background;
   border: 1px solid @grey-border;
   .border-radius(5px);
@@ -31,8 +31,12 @@ div.party-summary {
   }
 }
 
-div.party-summary-row {
+.party-summary-row {
   overflow: auto;
+
+  &:last-child .party-summary {
+    margin-bottom: 0;
+  }
 
   > :last-child {
     float: right;

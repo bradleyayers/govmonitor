@@ -10,7 +10,7 @@
 }
 
 // Secondary
-html.issues #header,
+html.issues:not(.home) #header,
 html.parties #header,
 html.view #header {
   background-color: #84C961;
@@ -76,9 +76,10 @@ html.view #header {
 
 // Highlight the current item.
 #header-primary a:hover,
+html.elections #header-elections,
 html.faq #header-help,
 html.log-in #header-log-in,
-html.issues #header-issues,
+html.issues:not(.home) #header-issues,
 html.parties #header-parties,
 html.tags #header-tags {
   background-color: #84C961;
@@ -262,7 +263,7 @@ h2.section {
 }
 
 ol.tabs {
-  border-bottom: 2px solid #E5E5E5;
+  border-bottom: 2px solid #DDD;
   margin-bottom: 14px;
   padding-bottom: 8px;
 

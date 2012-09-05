@@ -61,7 +61,7 @@ def list(request):
     parties = sorted(Party.objects.filter(tree_level=0), key=_party_key)
 
     average_view_percentage = sum(p.percentage_views_known for p in parties)
-    average_view_percentage = float(average_view_percentage) / len(parties)
+    average_view_percentage = float(average_view_percentage) / max(1, len(parties))
 
     return {
         "average_view_percentage": average_view_percentage,

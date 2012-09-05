@@ -1,0 +1,39 @@
+@import "util";
+
+.election-summary {
+  background: @grey-background;
+  border: 1px solid @grey-border;
+  .border-radius(5px);
+  margin-bottom: 1.5em;
+
+  h3 {
+    font-size: 18px;
+    line-height: 20px;
+    margin: 9px 0 9px 10px;
+
+    a {
+      color: @text-colour;
+    }
+  }
+
+  .parties {
+    background-color: #FFF;
+    .border-radius(0 0 5px 5px);
+    border-top: 1px solid @grey-border;
+    font-size: 0;
+    margin: 0;
+    padding: 5px;
+
+    img {
+        .border-radius(3px);
+        margin-right: 5px;
+    }
+  }
+
+  em {
+    color: #999;
+    display: block;
+    font-size: 13px;
+    margin: 2px 0 6px 2px;
+  }
+}

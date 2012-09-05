@@ -1,0 +1,18 @@
+{% load thumbnail %}
+
+<div class="election-summary">
+    <h3><a href="{% url core:elections:show election.pk election.url %}">{{ election.name }}</a></h3>
+    <ul class="stats">
+        <li class="icon-time">Held on <strong>{{ election.held_on|date:"d F Y" }}</strong></li>
+        <li class="icon-group"><strong>{{ parties|length }}</strong> parties</li>
+    </ul>
+    <div class="parties">
+        {% if parties %}
+            {% for party in parties %}
+                <img src="{{ party.get_picture|thumbnail_url:"party-icon" }}" title="{{ party.name }}"/>
+            {% endfor %}
+        {% else %}
+            <em>No parties.</em>
+        {% endif %}
+    </div>
+</div>
