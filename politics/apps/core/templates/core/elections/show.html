@@ -35,4 +35,14 @@
             {% endfor %}
         {% endif %}
     </div>
+
+    <div id="content-secondary">
+        {% if tab == "issues" %}
+            <h2 class="section">About Issues</h2>
+            <p>This page lists the election's big issues or those that may be of interest to voters.</p>
+        {% else %}
+            <h2 class="section">About Parties</h2>
+            <p>This page lists the parties that are participating in the election. This list might not be complete, so consult the appropriate electoral commission.</p>
+        {% endif %}
+    </div>
 {% endblock %}
