@@ -1,7 +1,9 @@
 # coding=utf-8
+import logging
 from politics.apps.core.forms import ReferenceForm
 from politics.apps.core.managers import ViewManager
 from politics.apps.core.models import Issue, Party, Reference, View
+from politics.apps.core.templatetags.core import view_url
 from politics.apps.view_counts.decorators import record_view
 from politics.utils.decorators import render_to_template, slug_url
 from random import random
@@ -39,6 +41,12 @@ def show(request, issue, party):
                 reference_form.save()
 
             reference_form = ReferenceForm()
+            logging.getLogger("email").info("Reference Created", extra={"body":
+                "%s created a reference.\n\nhttp://govmonitor.org%s" % (
+                    request.user.get_full_name(),
+                    view_url(view)
+                )
+            })
 
     # The currently winning reference.
     current_reference = view.get_current_reference()
