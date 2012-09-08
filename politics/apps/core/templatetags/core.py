@@ -113,9 +113,12 @@ def election_summary(election):
     :param election: The election.
     :type  election: ``politics.apps.core.models.Election``
     """
+    parties = election.parties.all()
+    parties = sorted(parties, key=lambda party: party.name.lower())
+
     return {
         "election": election,
-        "parties": election.parties.all()
+        "parties": parties
     }
 
 
