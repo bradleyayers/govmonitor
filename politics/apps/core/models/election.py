@@ -31,3 +31,6 @@ class Election(models.Model):
 
     class Meta:
         app_label = "core"
+
+    def __unicode__(self):
+        return self.name
