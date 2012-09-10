@@ -183,7 +183,7 @@ def interval_string(value, reference=None):
 
 
 @register.inclusion_tag("core/issues/_summary.html")
-def issue_summary(issue):
+def issue_summary(issue, parties=None):
     """Renders a summary of an issue suitable for display in a list of issues.
 
     :param issue: The issue.
@@ -191,6 +191,10 @@ def issue_summary(issue):
     """
     views = View.objects.exclude(stance=View.UNKNOWN).filter(issue=issue)
     views = views.order_by("party__name").select_related("party")
+
+    if parties:
+        views = views.filter(party__in=parties)
+
     return {"issue": issue, "views": views}
 
 

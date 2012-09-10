@@ -23,7 +23,7 @@
 
         {% if tab == "issues" %}
             {% for issue in issues %}
-                {% issue_summary issue %}
+                {% issue_summary issue parties %}
             {% endfor %}
         {% else %}
             {% for party_row in parties|group_n:2 %}
