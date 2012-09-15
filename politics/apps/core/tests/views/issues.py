@@ -24,3 +24,7 @@ class IssueViewTestCase(TransactionTestCase):
         }))
 
         self.assertEqual(response.status_code, 200)
+
+    def test_new(self):
+        response = self.client.get(reverse("core:issues:new"))
+        self.assertEqual(response.status_code, 200)

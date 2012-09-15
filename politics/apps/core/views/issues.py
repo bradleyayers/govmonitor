@@ -13,22 +13,17 @@ from politics.utils.paginator import Paginator
 import reversion
 
 
-# The number of parties that should be displayed in the view tables. The
-# view_table template tag will select the parties with the most information.
-NUMBER_OF_PARTIES = 5
-
-
-@render_to_template("core/issues/active.html")
-def active(request):
+@render_to_template("core/issues/list.html")
+def list(request):
     """Shows active issues: those that have been updated recently."""
     issues = Issue.objects.order_by("-updated_at")
     page = Paginator(issues, 25).page(request.GET.get("page", 1))
 
     # Extract the set of tags from the most recently updated issues.
-    tags = sum((list(issue.tags.all()) for issue in issues), [])
+    tags = sum((tuple(issue.tags.all()) for issue in issues), tuple())
     tags = sorted(set(tags), key=tags.index)
 
-    return {"number_of_parties": NUMBER_OF_PARTIES, "page": page, "tags": tags}
+    return {"page": page, "tags": tags}
 
 
 @login_required
@@ -61,20 +56,6 @@ def form(request, issue):
                     issue_slug=issue.slug)
 
     return {"form": form}
-
-
-@render_to_template("core/issues/popular.html")
-def popular(request):
-    """Shows issues that have been marked as popular."""
-    # Fetch issues that are marked as popular and paginate them.
-    issues = Issue.objects.filter(is_popular=True).order_by("name")
-    page = Paginator(issues, 25).page(request.GET.get("page", 1))
-
-    return {
-        "number_of_parties": NUMBER_OF_PARTIES,
-        "page": page,
-        "tags": Issue.common_tags(page.object_list)
-    }
 
 
 @slug_url(Issue, pk_key="issue_pk", slug_key="issue_slug")

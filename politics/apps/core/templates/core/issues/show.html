@@ -20,7 +20,7 @@
 {% block content %}
     {{ block.super }}
     <div id="content-primary">
-        <h1><a href="{% url core:issues:popular %}">Issues</a> / <strong>{{ issue.name }}</strong></h1>
+        <h1><a href="{% url core:issues:list %}">Issues</a> / <strong>{{ issue.name }}</strong></h1>
 
         <div class="issue">
             <div class="description markdown">

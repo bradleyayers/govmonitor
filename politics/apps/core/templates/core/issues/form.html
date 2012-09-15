@@ -20,7 +20,7 @@
     {{ block.super }}
     <div id="content-primary">
         <h1>
-            <a href="{% url core:issues:popular %}">Issues</a> /
+            <a href="{% url core:issues:list %}">Issues</a> /
             {% if form.instance.pk %}
                 {% with issue=form.instance %}
                     <a href="{% url core:issues:show issue.pk issue.slug %}">{{ issue.name }}</a> / <strong>Edit</strong>

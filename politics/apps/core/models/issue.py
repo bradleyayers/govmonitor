@@ -17,9 +17,6 @@ class Issue(models.Model):
     :type      description: ``str``
     :ivar description_html: The issue's description converted to HTML.
     :type description_html: ``str``
-    :ivar       is_popular: Whether the issue is "popular" and should thus be
-                            shown on the home page.
-    :type       is_popular: ``bool``
     :ivar             name: The name of the issue.
     :type             name: ``str``
     :ivar             slug: A slug version of the issue's name.
@@ -33,7 +30,6 @@ class Issue(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     description = MarkdownField(blank=True, disable=["images"], on_change=True)
     description_html = models.TextField(blank=True)
-    is_popular = models.BooleanField(default=False)
     name = models.CharField(max_length=128)
     slug = AutoSlugField(always_update=True, max_length=128,
                          populate_from="name")

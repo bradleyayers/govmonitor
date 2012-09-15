@@ -46,7 +46,6 @@
         "pk": 1,
         "fields": {
             "description": "A tax on carbon emissions.",
-            "is_popular": true,
             "name": "Carbon tax"
         }
     },
@@ -55,7 +54,6 @@
         "pk": 2,
         "fields": {
             "description": "Legalising marriage between gay and lesbian couples.",
-            "is_popular": true,
             "name": "Gay marriage"
         }
     },
@@ -64,7 +62,6 @@
         "pk": 3,
         "fields": {
             "description": "Mandatory detention of asylum seekers.",
-            "is_popular": false,
             "name": "Mandatory detention"
         }
     },
@@ -73,7 +70,6 @@
         "pk": 4,
         "fields": {
             "description": "Offshore processing of asylum seekers.",
-            "is_popular": false,
             "name": "Offshore processing"
         }
     },

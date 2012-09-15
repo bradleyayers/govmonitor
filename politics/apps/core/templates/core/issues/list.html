@@ -1,18 +1,8 @@
 {% extends "core/issues/base.html" %}
 
-{% load cache %}
 {% load core %}
 
-{% block html-class %}
-    {{ block.super }}
-
-    {# The home page is distinct from the popular issues page. #}
-    {% if request.path != "/" %}
-        popular
-    {% endif %}
-{% endblock %}
-
-{% block title %}{{ block.super }} / Popular Issues{% endblock %}
+{% block title %}{{ block.super }} / Issues{% endblock %}
 
 {% block content %}
     {{ block.super }}
@@ -26,7 +16,7 @@
                 </form>
             </div>
         {% else %}
-            <h1><a href="{% url core:issues:popular %}">Issues</a> / <strong>Popular</strong></h1>
+            <h1><strong>Issues</strong></h1>
         {% endif %}
 
         {% for issue in page.object_list %}
@@ -36,13 +26,13 @@
         {% page_links page %}
     </div>
     <div id="content-secondary">
-        <h2 class="section">About Popular Issues</h2>
+        <h2 class="section">About Issues</h2>
         <p>
-            These issues have recently been featured in the media or they are
-            being discussed at some level of government.
+            These are the most recently active issues: those that have been
+            added, updated, or a party's stance on them has changed.
         </p>
-        <h2 class="section"><a href="{% url core:tags:list %}">Popular Tags</a></h2>
-        {% for tag in tags|slice:":10" %}
+        <h2 class="section"><a href="{% url core:tags:list %}">Active Tags</a></h2>
+        {% for tag in tags|slice:":15" %}
             {% tag_link tag %}
         {% endfor %}
     </div>

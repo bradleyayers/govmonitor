@@ -33,10 +33,8 @@ issue_patterns = prefix(issue_prefix, patterns("",
 
 # /issues/
 issues_patterns = patterns("",
-    url(r"^$", issues.popular),
-    url(r"^active/$", issues.active, name="active"),
+    url(r"^$", issues.list, name="list"),
     url(r"^new/$", issues.form, name="new"),
-    url(r"^popular/$", issues.popular, name="popular"),
 ) + issue_patterns
 
 # /parties/{pk}-{slug}/
@@ -77,7 +75,7 @@ users_patterns = patterns("",
 )
 
 urlpatterns = patterns("",
-    url(r"^$", issues.popular, name="home"),
+    url(r"^$", issues.list, name="home"),
     url(r"^about/$", core.about, name="about"),
     url(r"^contact/$", core.contact, name="contact"),
     url(r"^faq/$", core.faq, name="faq"),
