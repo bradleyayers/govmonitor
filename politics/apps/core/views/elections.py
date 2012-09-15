@@ -1,6 +1,7 @@
 # coding=utf-8
 from politics.apps.core.models import Election
 from politics.utils.decorators import render_to_template, slug_url
+from politics.utils.paginator import Paginator
 
 
 @render_to_template("core/elections/list.html")
@@ -25,9 +26,13 @@ def show(request, election, tab="issues"):
     :param      tab: The tab to display ("issues" or "issues").
     :type       tab: ``str``
     """
+    issues = sorted(election.issues.all(), key=lambda issue: issue.name.lower())
+    page = Paginator(issues, 25).page(request.GET.get("page", 1))
+
     return {
         "election": election,
         "issues": election.issues.all(),
+        "page": page,
         "parties": election.parties.all(),
         "tab": tab
     }

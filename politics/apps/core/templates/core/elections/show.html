@@ -22,9 +22,11 @@
         </ol>
 
         {% if tab == "issues" %}
-            {% for issue in issues %}
+            {% for issue in page.object_list %}
                 {% issue_summary issue parties %}
             {% endfor %}
+
+            {% page_links page %}
         {% else %}
             {% for party_row in parties|group_n:2 %}
                 <div class="party-summary-row">
