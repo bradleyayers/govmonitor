@@ -9,7 +9,7 @@ import sys
 ROOT = os.path.abspath(os.path.join(__file__, "../../.."))
 
 # Use our virtual environment.
-site.addsitedir(os.path.join(ROOT, "environment/lib/python2.7/site-packages"))
+site.addsitedir(os.path.join(ROOT, ".env/lib/python2.7/site-packages"))
 
 # Environment settings.
 sys.path.append(ROOT)

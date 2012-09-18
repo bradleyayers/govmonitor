@@ -164,7 +164,7 @@ def deploy():
                     if result.failed:
                         print yellow("Couldn't preserve the file '%s'." % path)
 
-            with prefix("source environment/bin/activate"):
+            with _virtualenv():
                 # Install requirements. We're working in the original
                 # repository so we've got the requirements cache!
                 print "> Installing requirements."
@@ -226,7 +226,7 @@ def download_data():
     print yellow("Make sure celeryd is running!")
 
     with cd(env.repository_path):
-        with prefix("source environment/bin/activate"):
+        with _virtualenv():
             # Some models need to be excluded for the data to load properly
             # (e.g. contenttypes), others just aren't necessary.
             command = ("%s/manage.py dumpdata "
@@ -254,7 +254,7 @@ def download_data():
 
     print "> Loading data."
     with lcd("../%s" % env.root_module_name):
-        with prefix("source ../environment/bin/activate"):
+        with prefix("source ../.env/bin/activate"):
             local("rm database.sqlite3")
             local("./manage.py syncdb --migrate --noinput")
             local("./manage.py loaddata '%s'" % fixture_path)
@@ -320,7 +320,7 @@ def maintenance(state="", quiet=False):
 def migrate():
     """Runs all South migrations on the server."""
     with cd(env.repository_path):
-        with prefix("source environment/bin/activate"):
+        with _virtualenv():
             run("%s/manage.py migrate --noinput" % env.root_module_name)
 
     print green("Done!")
@@ -330,7 +330,7 @@ def migrate():
 def rebuild_search_index():
     """Rebuild the search index (run ``manage.py rebuild_index``)."""
     with cd(env.repository_path):
-        with prefix("source environment/bin/activate"):
+        with _virtualenv():
             run("%s/manage.py rebuild_index --no-input" % env.root_module_name)
 
 
@@ -439,6 +439,12 @@ def _set_permissions():
     for directory in ("media", "static"):
         sudo("chmod -R 770 \"%s\"" % os.path.join(
                 env.repository_path, env.root_module_name, directory))
+
+
+def _virtualenv():
+    """A contextmanager to run commands within the virtualenv.
+    """
+    return prefix(". .env/bin/activate")
 
 
 # Calculate the final host string and the site's name. We can't just use the
