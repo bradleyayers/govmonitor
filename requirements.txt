@@ -30,7 +30,7 @@ django-celery-transactions==0.1.2
 # django_compressor
 django-appconf==0.4.1
 BeautifulSoup==3.2.1
-git+git://github.com/chrisdoble/django_compressor.git
+https://github.com/chrisdoble/django_compressor/tarball/master
 
 # django-social-auth
 httplib2==0.7.4

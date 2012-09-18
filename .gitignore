@@ -2,8 +2,10 @@
 *.sqlite3
 celerybeat-schedule
 celeryev.pid
+/*.sublime-*
 /*/settings/common.py
 /*/settings/production.py
 /*/static/CACHE
+/.env
 /environment
 /requirements_cache
